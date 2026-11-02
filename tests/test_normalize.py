@@ -89,3 +89,34 @@ def test_usdc_pool_swap_carries_usdc():
     post = [bal(1, MINT, "trader", 0), bal(2, MINT, "u", 100), bal(3, USDC, "u", 450)]
     r = parse_tx(tx(pre, post, keys, (0,) * 4, (0,) * 4), {VD}, {VS}, "t", {"u"})[0]
     assert (r["kind"], r["usdc_raw"], r["sol_lamports"]) == ("swap", 50, 0)
+
+
+def test_fee_collector_is_not_a_buyer():
+    pre = [bal(1, MINT, AUTH, 1000), bal(2, WSOL, AUTH, 500, 9), bal(3, MINT, "trader", 0), bal(4, MINT, "fee", 0)]
+    post = [bal(1, MINT, AUTH, 900), bal(2, WSOL, AUTH, 600, 9), bal(3, MINT, "trader", 99), bal(4, MINT, "fee", 1)]
+    keys = ("trader", VD, VS, "ata", "feeAta")
+    rows = parse_tx(tx(pre, post, keys, (0,) * 5, (0,) * 5), {VD}, {VS}, "t")
+    got = {r["owner"]: (r["kind"], r["sol_lamports"]) for r in rows}
+    assert got["trader"] == ("swap", -100) and got["fee"] == ("fee_share", 0)
+
+
+def test_study_parser_matches_expected_on_real_shape():
+    """parse_swaps de l'étude : frais écartés, réserve d'un autre venue écartée, comptage des rejets."""
+    import importlib.util
+    import pathlib
+    import sys
+    from collections import Counter
+    code = pathlib.Path(__file__).resolve().parent.parent / "etude_final" / "code"
+    sys.path.insert(0, str(code))
+    spec = importlib.util.spec_from_file_location("col50", code / "col_50_ctrl.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    keys = ("trader", VD, VS, "ata", "feeAta", "otherD", "otherS")
+    pre = [bal(1, MINT, AUTH, 1000), bal(2, WSOL, AUTH, 500, 9), bal(3, MINT, "trader", 0), bal(4, MINT, "fee", 0),
+           bal(5, MINT, "amm2", 50), bal(6, WSOL, "amm2", 50, 9)]
+    post = [bal(1, MINT, AUTH, 900), bal(2, WSOL, AUTH, 600, 9), bal(3, MINT, "trader", 99), bal(4, MINT, "fee", 1),
+            bal(5, MINT, "amm2", 60), bal(6, WSOL, "amm2", 40, 9)]
+    st = Counter()
+    rows = m.parse_swaps(tx(pre, post, keys, (0,) * 7, (0,) * 7), MINT, VD, VS, st)
+    assert [(r["owner"], r["qty"], r["sol"]) for r in rows] == [("trader", 99, -100)]
+    assert st["parts_de_frais"] == 1 and st["non_signataire_deux_cotes"] == 1 and st["swaps"] == 1

@@ -10,12 +10,14 @@ kind :
   lp_add / lp_remove   liquidité déposée ou retirée, y compris à sens unique sur un DLMM
   mint_supply     arrivée de l'offre à la création
   internal        mouvement de venue sans propriétaire final (arbitrage entre pools)
+  fee_share       part de jetons sous 5 % du swap versée à un tiers (frais de référent, de bot)
 """
 from __future__ import annotations
 
 from .config import BONDING_CURVE, MINT, WSOL
 
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+FEE_SHARE = 0.05  # mesuré : médiane 0,85 %, p90 1 %, 3 adresses sur 1 931 swaps du 14 au 21/07
 RAYDIUM_AUTH = "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"
 
 
@@ -154,14 +156,19 @@ def parse_tx(row: dict, ray_dmaga: set, ray_wsol: set, source: str, venues: set 
     want_pos = venue_d < 0
     same = {o: v for o, v in others.items() if (v > 0) == want_pos}
     rows = []
+    full = sum(same.values())
+    fees = {o: v for o, v in same.items() if full and abs(v) < FEE_SHARE * abs(full)}
+    same = {o: v for o, v in same.items() if o not in fees}
     total = sum(same.values())
+    for o, v in fees.items():
+        rows.append(make("fee_share", venue, o, v, n=len(same)))
     for o, v in sorted(same.items(), key=lambda kv: -abs(kv[1])):
         # plusieurs bénéficiaires : répartition à la quantité (cas routeur, frais de référent)
         share = v / total if total else 0
         rows.append(make("swap", venue, o, v, sol=int(round(-venue_s * share)), usdc=int(round(-venue_u * share)),
                          pool_token=venue_d, pool_sol=venue_s, n=len(same)))
     for o, v in others.items():
-        if o not in same:
+        if o not in same and o not in fees:
             rows.append(make("transfer", venue, o, v, n=len(others)))
     if not same:
         rows.append(make("internal", venue, None, -venue_d, sol=-venue_s, usdc=-venue_u, pool_token=venue_d,

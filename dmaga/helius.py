@@ -90,7 +90,7 @@ class Helius:
         opts = {"transactionDetails": details, "sortOrder": sort, "limit": limit}
         if details == "full":
             opts["encoding"] = "jsonParsed"
-            opts["maxSupportedTransactionVersion"] = 0
+            opts["maxSupportedTransactionVersion"] = 1  # des transactions version 1 existent depuis 2026
         if token:
             opts["paginationToken"] = token
         if filters:

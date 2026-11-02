@@ -1,4 +1,6 @@
 """Constantes de l'enquête et chemins. Aucune clé n'est écrite ici ni journalisée."""
+import hashlib
+import json
 import os
 import re
 from pathlib import Path
@@ -25,16 +27,23 @@ _KEY = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
 
 
 def helius_keys() -> list[str]:
-    """Clés lues à l'exécution dans ~/Downloads/.env, dédoublonnées, jamais recopiées."""
+    """Pool de recherche : sources et empreintes de ~/.config/forensics_v2/helius_sources.json.
+
+    Les clés de ~/Downloads/.env et du bot servent à des services en production : on n'y touche pas.
+    Aucune valeur de clé n'est recopiée ni journalisée.
+    """
+    cfg = json.loads((Path.home() / ".config" / "forensics_v2" / "helius_sources.json").read_text())
+    allowed = set(cfg["pool_fingerprints"])
     keys: list[str] = []
-    env = Path.home() / "Downloads" / ".env"
-    for line in env.read_text(errors="replace").splitlines():
-        if "HELIUS" in line.upper() and "=" in line and not line.lstrip().startswith("#"):
-            for k in _KEY.findall(line):
-                if k not in keys:
-                    keys.append(k)
+    for src in cfg["sources"]:
+        p = Path(src["path"]).expanduser()
+        if not p.exists():
+            continue
+        for k in _KEY.findall(p.read_text(errors="replace")):
+            if hashlib.sha256(k.encode()).hexdigest()[:8] in allowed and k not in keys:
+                keys.append(k)
     if not keys:
-        raise RuntimeError("aucune clé Helius trouvée dans ~/Downloads/.env")
+        raise RuntimeError("aucune clé du pool de recherche trouvée")
     return keys
 
 
