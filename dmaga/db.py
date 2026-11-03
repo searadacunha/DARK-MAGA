@@ -19,9 +19,14 @@ def connect(mem="2GB", threads=3):
         # FAT32 : macOS sème des fichiers ._ que le joker de DuckDB ramasserait
         files = sorted(str(p) for p in (BIG / sub).glob("*.parquet") if not p.name.startswith("._"))
         con.execute(f"CREATE VIEW {view}_all AS SELECT * FROM read_parquet({files!r})")
-    # une transaction du mint peut aussi toucher le pool : la version pool (ou courbe) fait foi
-    con.execute("""CREATE VIEW trades AS SELECT * FROM trades_all WHERE source <> 'mint'
-                   UNION ALL BY NAME SELECT * FROM trades_all t WHERE source = 'mint' AND NOT EXISTS
-                   (SELECT 1 FROM trades_all p WHERE p.signature = t.signature AND p.source <> 'mint')""")
+    final = BIG / "trades.parquet"
+    if final.exists():  # table matérialisée par scripts/ana_19_export.py, l'anti-jointure coûte plusieurs minutes
+        con.execute(f"CREATE VIEW trades AS SELECT * FROM read_parquet('{final}')")
+        con.execute("CREATE VIEW vault AS SELECT DISTINCT * FROM vault_all")
+        return con
+    # une transaction peut venir de plusieurs historiques : une seule version, tout le parseur voit la même chose
+    con.execute("""CREATE VIEW trades AS WITH r AS (SELECT *, CASE source WHEN 'pool' THEN 0 WHEN 'curve' THEN 1 WHEN 'mint' THEN 2 ELSE 3 END pr FROM trades_all),
+                   b AS (SELECT signature, min(pr) m FROM r GROUP BY 1)
+                   SELECT r.* EXCLUDE (pr) FROM r JOIN b ON r.signature = b.signature AND r.pr = b.m""")
     con.execute("CREATE VIEW vault AS SELECT DISTINCT * FROM vault_all")
     return con

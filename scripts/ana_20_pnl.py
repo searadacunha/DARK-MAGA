@@ -55,7 +55,7 @@ def main():
     missing_px = 0
     n = 0
     cur = con.execute(f"""SELECT owner, kind, token_delta, sol_lamports, block_time, signature, slot, tx_index, venue, usdc_raw
-                          FROM trades WHERE kind IN ('swap','transfer','lp_add','lp_remove','fee_share') AND owner IS NOT NULL {where}
+                          FROM trades WHERE kind IN ('swap','transfer','lp_add','lp_remove','fee_share','swap_other') AND owner IS NOT NULL {where}
                           ORDER BY slot, tx_index""")
     while True:
         rows = cur.fetchmany(50000)

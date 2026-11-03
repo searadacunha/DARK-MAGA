@@ -15,6 +15,15 @@ INFRA = {
     "TSLvdd1pWpHVjahSpsvCXUbgwsL3JAcvokwaKt1eokM": "Pump.fun mint authority",
 }
 
+# Reprises du dépôt WSMO (code/05_trace_origin.py), issues d'études antérieures : service, sans nom certifié ici.
+WSMO = {
+    "G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t": "Service de swap G2Y (attribué ChangeNOW par les études WSMO)",
+    "BmFdpraQhkiDQE6SnfG5omcA1VwzqfXrwtNYBwWTymy6": "Échange, hot wallet (études WSMO)",
+    "2snHHreXbpJ7UwZxPe37gnUNf7Wx7wv6UKDSR2JckKuS": "Pont, solveur (études WSMO)",
+    "u6PJ8DtQuPFnfmwHbGFULQ4u4EgjDiyYKjVEsynXq2w": "Service de swap (études WSMO)",
+    "is6MTRHEgyFLNTfYcuV4QBWLjrZBfmhVNYR6ccgr8KV": "Échange, hot wallet (études WSMO)",
+}
+
 
 def load() -> dict[str, tuple[str, str]]:
     if _LABELS:
@@ -23,6 +32,8 @@ def load() -> dict[str, tuple[str, str]]:
     # lignes de la forme ('solana', 'adresse', 'Binance', 'Binance 1', ...), avec ou sans cast
     for m in re.finditer(r"([1-9A-HJ-NP-Za-km-z]{32,44})'[^,]*,\s*'([^']+)'\s*,\s*'([^']*)'", p.read_text()):
         _LABELS[m.group(1)] = (m.group(3) or m.group(2), "dune spellbook cex_solana_addresses")
+    for a, n in WSMO.items():
+        _LABELS.setdefault(a, (n, "études WSMO, code/05_trace_origin.py"))
     for a, n in INFRA.items():
         _LABELS[a] = (n, "lu dans les transactions")
     return _LABELS

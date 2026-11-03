@@ -11,12 +11,15 @@ kind :
   mint_supply     arrivée de l'offre à la création
   internal        mouvement de venue sans propriétaire final (arbitrage entre pools)
   fee_share       part de jetons sous 5 % du swap versée à un tiers (frais de référent, de bot)
+  swap_other      échange contre un autre jeton que SOL ou stablecoin : quantité connue, valeur non comptée
 """
 from __future__ import annotations
 
 from .config import BONDING_CURVE, MINT, WSOL
 
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+STABLE = {USDC, USDT}  # 6 décimales toutes les deux, comptés ensemble dans usdc_raw
 FEE_SHARE = 0.05  # mesuré : médiane 0,85 %, p90 1 %, 3 adresses sur 1 931 swaps du 14 au 21/07
 RAYDIUM_AUTH = "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"
 
@@ -90,7 +93,7 @@ def parse_tx(row: dict, ray_dmaga: set, ray_wsol: set, source: str, venues: set 
                 "n_owners": n, "owner_native_delta": sol_delta(row, keys, owner) if owner else 0,
                 "owner_wsol_delta": sum(d["delta"] for d in deltas if d["mint"] == WSOL and d["owner"] == owner)}
 
-    venue_d, venue_s, venue_u = 0, 0, 0
+    venue_d, venue_s, venue_u, venue_x = 0, 0, 0, 0
     touched = set()
     others: dict[str, int] = {}
     for d in deltas:
@@ -101,9 +104,11 @@ def parse_tx(row: dict, ray_dmaga: set, ray_wsol: set, source: str, venues: set 
             elif d["mint"] == WSOL:
                 venue_s += d["delta"]
                 touched.add(d["owner"])
-            elif d["mint"] == USDC:
+            elif d["mint"] in STABLE:
                 venue_u += d["delta"]
                 touched.add(d["owner"])
+            elif d["owner"] != RAYDIUM_AUTH:
+                venue_x += d["delta"]  # réserve d'une paire DMAGA contre un autre jeton
         elif d["mint"] == MINT:
             others[d["owner"]] = others.get(d["owner"], 0) + d["delta"]
     curve_d = sum(d["delta"] for d in dmaga if d["owner"] == BONDING_CURVE)
@@ -134,6 +139,10 @@ def parse_tx(row: dict, ray_dmaga: set, ray_wsol: set, source: str, venues: set 
 
     quote = venue_s if venue_s else venue_u
     same_sign = bool(quote) and (venue_d > 0) == (quote > 0)
+    if not quote and venue_x and (venue_x > 0) != (venue_d > 0):
+        # DMAGA contre un autre jeton : pas de valeur en SOL, jamais pris pour un dépôt de liquidité
+        return [make("swap_other", venue, o, v, pool_token=venue_d, n=len(others)) for o, v in others.items()] or \
+            [make("internal", venue, None, -venue_d, pool_token=venue_d)]
     if same_sign or not quote:
         # les deux réserves varient dans le même sens, ou une seule varie : dépôt ou retrait de liquidité
         kind = "lp_add" if venue_d > 0 else "lp_remove"

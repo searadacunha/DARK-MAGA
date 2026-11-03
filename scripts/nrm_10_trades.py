@@ -66,7 +66,8 @@ def process_slice(args):
                 rows.extend(res)
                 keys = _keys(tx)
                 for dl in token_deltas(tx, keys):
-                    if dl["account"] in VAULT_DMAGA or dl["account"] in VAULT_WSOL:
+                    # réserves de tous les venues : leur chaîne de soldes prouve qu'aucune transaction ne manque
+                    if dl["account"] in VAULT_DMAGA or dl["account"] in VAULT_WSOL or (dl["mint"] == MINT and dl["owner"] in VENUES):
                         vrows.append({"signature": tx["transaction"]["signatures"][0], "slot": tx["slot"],
                                       "tx_index": tx.get("transactionIndex"), "block_time": tx.get("blockTime"),
                                       "vault": dl["account"], "pre": dl["pre"], "post": dl["post"]})
@@ -82,6 +83,7 @@ def process_slice(args):
 
 
 def main():
+    (BIG / "trades.parquet").unlink(missing_ok=True)  # la table finale est périmée dès qu'on renormalise
     if "--force" in sys.argv:
         for p in list((BIG / "trades_shards").glob("*")) + list((BIG / "vault_shards").glob("*")):
             p.unlink(missing_ok=True)  # FAT32 : le ._ disparaît avec son fichier
@@ -90,6 +92,8 @@ def main():
         labels.append((f"full_pool/{p.name}", "pool"))
     for p in sorted((RAW / "full_mint").glob("t*")):
         labels.append((f"full_mint/{p.name}", "mint"))
+    for p in sorted((RAW / "full_venue").glob("[!.]*")):
+        labels.append((f"full_venue/{p.name}", "venue"))
     total = Counter()
     with Pool(3, maxtasksperchild=8) as pool:
         for i, r in enumerate(pool.imap_unordered(process_slice, labels), 1):

@@ -48,6 +48,8 @@ def slices_from_sigs(label: str, until: int = 2**40, since: int = 0) -> list[tup
                     start, n = bt, 0
                 n += 1
                 last = bt
+    # liste épuisée avant `until` : la dernière tranche s'arrête à la dernière signature lue. C'est ainsi qu'un trou
+    # est apparu le 02/11 (23:36 à minuit le 23/07), repéré par chk_20_vault_chain.py. Toujours relancer ce contrôle.
     out.append((start, last + 1, n))
     return out
 
@@ -59,11 +61,20 @@ def main():
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--rps", type=float, default=6)
     ap.add_argument("--source", choices=["pool", "mint"], default="pool")
+    ap.add_argument("--calendar", action="store_true", help="tranches de calendrier, sans relire les signatures")
     a = ap.parse_args()
     h = Helius(rps=a.rps, timeout=240)
     log = logger("col_02_full")
     addr = RAYDIUM_POOL if a.source == "pool" else MINT
-    cuts = [c for c in slices_from_sigs(f"sigs_{a.source}", a.until, a.since) if c[1] > a.since and c[0] < a.until]
+    if a.calendar:
+        # l'activité retombe vite : 6 h jusqu'au 01/09/2024, puis 1 jour jusqu'au 01/01/2025, puis 7 jours
+        cuts, t, end = [], a.since, int(time.time())
+        while t < min(a.until, end):
+            step = 6 * 3600 if t < 1725148800 else 86400 if t < 1735689600 else 7 * 86400
+            cuts.append((t, t + step, 0))
+            t += step
+    else:
+        cuts = [c for c in slices_from_sigs(f"sigs_{a.source}", a.until, a.since) if c[1] > a.since and c[0] < a.until]
     log(f"tranches {a.source}={len(cuts)} signatures={sum(c[2] for c in cuts)}")
     jobs = [("full_curve", BONDING_CURVE, None)] if a.source == "pool" and not a.since else []
     for gte, lt, _ in cuts:

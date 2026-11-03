@@ -94,7 +94,7 @@ class Wallet:
                 self.lp_sol_in += -sol_lamports
             else:
                 self.lp_sol_out += sol_lamports
-        elif kind in ("transfer", "fee_share"):
+        elif kind in ("transfer", "fee_share", "swap_other"):
             self.n_transfers += 1
             if token_delta > 0:
                 self.qty += token_delta
