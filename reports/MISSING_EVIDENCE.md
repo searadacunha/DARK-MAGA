@@ -6,7 +6,7 @@ Ce qui n'a pas pu être établi, et pourquoi. Une absence n'est jamais rapporté
 | Élément | État | Cause | Ce qui débloquerait |
 |---|---|---|---|
 | Recherche X native (tous les posts d'un compte, toutes les réponses) | Non faite | Pas d'accès API X ; crédits Grok épuisés (HTTP 403) ; `twscrape` et `twikit` exigent un compte connecté, non utilisés par choix | Accès API X ou export d'un compte |
-| Posts de @kikisknees du 14 au 26/07/2024 | 1 407 sur 1 419 supprimés. Texte récupéré pour 225 d'entre eux via Wayback | La Wayback a refusé la suite (connexion refusée, 503) | Reprendre la lecture Wayback plus tard, `evidence/x_cdx/kikisknees.json*` liste les identifiants |
+| Posts de @kikisknees du 14 au 26/07/2024 | 1 407 sur 1 419 indisponibles, dont 1 378 supprimés par l'auteur. Texte récupéré pour 208 via Wayback, plus 17 de @DarkMagaCoin | La Wayback a refusé la suite (connexion refusée, 503) | Reprendre la lecture Wayback plus tard, `evidence/x_cdx/kikisknees.json*` liste les identifiants |
 | Images des posts supprimés de @kikisknees, dont la réponse à Musk du 21/07 16:00:08 UTC | Perdues | Médias en 404 sur X, absents de la Wayback (10 essais sur les posts décisifs le 03/11) | Capture d'écran d'époque. **Sans elle, on ne sait pas si le visuel a été publié avant @ChrisWinig** |
 | Thread d'@Aristos_Revenge du 08/10/2024 | Texte lu par Thread Reader seulement | 20 posts supprimés par l'auteur ; compte Wayback vide | Copie originale |
 | Post d'@Aristos_Revenge du 21/07 20:56 UTC | Texte connu par le seul Daily Dot | Supprimé, absent de la Wayback | Capture d'époque |
@@ -14,6 +14,9 @@ Ce qui n'a pas pu être établi, et pourquoi. Une absence n'est jamais rapporté
 | Historique complet des avatars des comptes | Non établi | X ne le fournit pas | Captures datées |
 | Post original de @ai_9684xtpa | Trouvé, id `1815243177475121253` ; d'autres versions citées par la presse non retrouvées | Pas de recherche native | API X |
 | Source sociale du wallet `9PrmF8sfoD2YShtWUghrGEYgxwabpnzog8gT1V6LEtdq` | **Non retrouvée** | Ni WebSearch, ni Exa, ni les archives. Les transactions sont vérifiées, la citation d'août 2024 non | Benjamin peut fournir le lien s'il l'a |
+
+## Audits non réalisés
+Trois auditeurs à l'aveugle de la méthode (fuites, statistiques, protocole) n'ont pas été lancés. `etude_final/audit/` n'existe pas. L'amendement 001 a été décidé par l'agent, pas par Benjamin : voir l'amendement 002.
 
 ## Le DM à Musk
 Le DM revendiqué par @DarkMagaCoin n'est **ni prouvé ni réfuté**. Un DM n'est pas observable sans la capture ou le compte. Le Daily Dot note que le compte n'a pas répondu à la demande de preuve. Le fichier d'origine du visuel n'est pas disponible : seule une capture de l'app Photos, dont la date est modifiable, a été publiée (`IMG_5658`, fuseau inconnu).

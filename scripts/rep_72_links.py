@@ -9,6 +9,7 @@ from pathlib import Path
 from dmaga.config import BIG, DATA, RAW
 from dmaga.db import connect
 from dmaga.helius import Helius
+from dmaga.frfmt import fr
 from dmaga.labels import label
 
 con = connect()
@@ -40,6 +41,10 @@ wal = {r[0]: r[1:] for r in con.execute(f"""SELECT owner, realized_sol, net_sol_
     transfer_in_qty, transfer_out_qty, residual_qty FROM read_parquet('{BIG}/wallets.parquet')""").fetchall()}
 groups = json.loads((DATA / "prevent_groups.json").read_text())
 G0 = groups[0]
+GS = json.loads((DATA / "group_split.json").read_text())
+COL = json.loads((DATA / "collector.json").read_text())
+weak4 = next(x for x in GS["ponts_faibles"] if any(m.startswith("Ei5yGz8") for m in x["members"]))
+core_held = G0["held_before_musk_M"] - weak4["held_M"]
 tot_float = 938.0
 
 tests = {}
@@ -65,18 +70,11 @@ rows_s1 = [[n, ts(r["E"]), f"{r['sol_achete']:,.1f}", f"{r['mediane_sol_passe']:
 
 # préparation et consolidation : virements de SOL avant le lancement, relus sur la chaîne
 prep = []
-# adresse vue tronquée à l'écran : résolue depuis les virements réels, jamais retapée
-G41 = {x["fromUserAccount"] for x in h.call("getTransfersByAddress", ["AW63YBXXsGcLPpsDTSrpBMdQ9QXtxTiHsTbcVkY6UFv5", {"direction": "in", "mint": NATIVE, "limit": 20, "sortOrder": "asc"}])["data"]
-       if x["fromUserAccount"] and x["fromUserAccount"].startswith("G41vRrsHSh")}
-assert len(G41) == 1, G41
-G41 = G41.pop()
 for a, b in (("74qFhHypY1zi8oS2KahqmwLfV8zMVbBiJ8uDdki8xPEb", "6t2dz4jm3S8vJZCkWPhBxHStxFTC8wNV9QttTzfQrG7M"),
              ("AtZjv3DuV9cLn3Jxm72TMSdTN4aM6CrBaGyxUC4c2wDk", "6t2dz4jm3S8vJZCkWPhBxHStxFTC8wNV9QttTzfQrG7M"),
              ("6t2dz4jm3S8vJZCkWPhBxHStxFTC8wNV9QttTzfQrG7M", "8YrEVPQqhs1zNsGUS5inFFqy5ziHaWdnVZXqysLThAh"),
              ("6t2dz4jm3S8vJZCkWPhBxHStxFTC8wNV9QttTzfQrG7M", "99Xrt5uuu2FdsgGzKo3wvs28Bw2KuUgxaeV5rTQZLkb"),
-             ("6t2dz4jm3S8vJZCkWPhBxHStxFTC8wNV9QttTzfQrG7M", "AtZjv3DuV9cLn3Jxm72TMSdTN4aM6CrBaGyxUC4c2wDk"),
-             (G41, "AW63YBXXsGcLPpsDTSrpBMdQ9QXtxTiHsTbcVkY6UFv5"),
-             (G41, "GFpqfjEQFhXRbWEJCwUqKuNjSNTCgqAsANMbVyTGmi1p")):
+             ("6t2dz4jm3S8vJZCkWPhBxHStxFTC8wNV9QttTzfQrG7M", "AtZjv3DuV9cLn3Jxm72TMSdTN4aM6CrBaGyxUC4c2wDk")):
     try:
         r = h.call("getTransfersByAddress", [b, {"with": a, "direction": "in", "mint": NATIVE, "limit": 100, "sortOrder": "asc", "filters": {"blockTime": {"lt": 1720926325}, "amount": {"gte": 50_000_000}}}])["data"]
     except Exception as e:
@@ -87,6 +85,10 @@ for a, b in (("74qFhHypY1zi8oS2KahqmwLfV8zMVbBiJ8uDdki8xPEb", "6t2dz4jm3S8vJZCkW
             prep.append([ts(x["blockTime"]), f"`{x['fromUserAccount']}`", f"`{x['toUserAccount']}`", x["uiAmount"], f"`{x['signature']}`"])
 prep.sort(key=lambda r: r[0])
 
+G41 = GS["g41"]["address"]
+g41_rows = [[ts(x["t"]), f"`{x['dst']}`", x["sol"], "oui" if x["dans_le_groupe"] else "non", "oui" if x["a_achete_sur_le_marche"] else "non", f"`{x['sig']}`"] for x in GS["g41"]["avant_le_mint"]]
+salve_rows = [[c["salve"], ts(c["t"]), f"`{c['wallet']}`", c["sol"], "créateur" if c["createur"] else "groupe" if c["groupe"] else "autre", "oui" if c["signe_par_expediteur"] else "non", f"`{c['signature']}`"] for c in COL["salves"]]
+coin = COL["detail_coinbase"]
 edges = [[ts(e["t"]), f"`{e['src']}`", f"`{e['dst']}`", f"{e['M']:,.3f}", f"`{e['sig']}`"] for e in G0["edges_top"]]
 g_rows = [[i + 1, g["n"], g["edges"], f"{g['held_before_musk_M']:,.1f}", f"{100 * g['held_before_musk_M'] / tot_float:.1f} %", f"{g['bought_M']:,.1f}", f"{g['bought_sol']:,.1f}", f"{g['realized_sol']:,.0f}", f"{g['net_sol']:,.0f}", f"{g['proceeds_usd'] - g['cost_usd']:,.0f}"] for i, g in enumerate(groups[:12])]
 members = [[f"`{m}`", f"{wal[m][2]:,.2f}" if m in wal else "n/d", f"{wal[m][3] / 1e6:,.2f}" if m in wal else "n/d", f"{wal[m][0]:,.1f}" if m in wal else "n/d", f"{wal[m][10] / 1e6:,.1f}" if m in wal else "n/d", f"{wal[m][11] / 1e6:,.1f}" if m in wal else "n/d", ts(wal[m][7]) if m in wal else "n/d"] for m in sorted(G0["members"], key=lambda m: wal[m][7] if m in wal and wal[m][7] else 9e12)]
@@ -142,17 +144,35 @@ Règle : transfert direct d'au moins 1 M de jetons avant le 21/07/2024 19:03:27 
 
 {table(["#", "Wallets", "Arêtes", "Détenu avant Musk M", "Part des jetons hors pools", "Acheté M", "SOL engagé", "Réalisé SOL", "Flux net SOL", "P&L USD"], g_rows)}
 
-## 3. Le groupe n° 1 : {G0['n']} wallets, niveau B
-- **{G0['held_before_musk_M']:,.1f} M de jetons avant Musk.** En première heure, le groupe achète {first_h[2]:,.1f} M de jetons pour {first_h[0]:,.1f} SOL.
-- **{quiet[3]} swap entre le visuel de Winig et la borne haute du changement de photo.** Son geste du jour se fait avant : répartition le 21/07 entre 07:57 et 08:33 UTC.
-- **Ventes :** {after6[1]:,.1f} SOL dans les 6 h après Musk, {after24[1]:,.1f} SOL dans les 18 h suivantes. Total sur la durée : {G0['proceeds_usd']:,.0f} $ reçus pour {G0['cost_usd']:,.0f} $ dépensés.
-- Contient `5QhJJc…`, le wallet de la capture de @0xRamonos. Chacune des {G0['edges']} arêtes a été relue sur la chaîne : la source signe, sans programme d'échange (`reports/data_checks/group_edges_check.json`).
-- **Explications alternatives :** un groupe de personnes qui se partagent des jetons, sans propriétaire unique ; des ventes de gré à gré ; un chemin qui rassemble des wallets sans rapport par une ou deux arêtes, notamment `5QhJJc → 7mdCAs8C` ou `NxtXcm → GFpqfj`. Aucun nom n'est établi.
+## 3. Le premier groupe : {G0['n']} wallets, niveaux distincts
+Descriptif, hors plan gelé : le seuil de 1 M a été choisi après avoir vu DMAGA.
+- **A, les transferts :** {G0['edges']} transferts directs d'au moins 1 M, chacun relu sur la chaîne, la source signe sans programme d'échange (`reports/data_checks/group_edges_check.json`).
+- **Plafond, pas une mesure :** {G0['held_before_musk_M']:,.1f} M détenus avant Musk, {100 * G0['held_before_musk_M'] / tot_float:.1f} % des {tot_float:,.0f} M hors pools. Le groupe tient par une arête égale au seuil (`NxtXcmEW… → GFpqfj…`, 1,000 M). Au-dessus du seuil, il se coupe en {GS['seuil_strict_tailles'][0]} et {GS['seuil_strict_tailles'][1]} wallets.
+- **B, {G0['n'] - len(weak4['members'])} wallets, {core_held:,.1f} M, {100 * core_held / tot_float:.1f} % :** plusieurs éléments indépendants concordent : les transferts ; le financement de 0,5 SOL avant le mint par `{G41}` ; une sortie commune en salves de moins de 3 minutes (ci-dessous).
+- **C, {len(weak4['members'])} wallets, {weak4['held_M']:,.1f} M :** autour de `Ei5yGz8…`, reliés au reste par une seule transaction de {weak4['M']:,.1f} M.
+- **Tôt :** {GS['acheteurs_premiere_heure']} des {G0['n']} achètent en première heure, {first_h[2]:,.1f} M pour {first_h[0]:,.1f} SOL. Les autres entrent plus tard ou reçoivent leurs jetons.
+- **{quiet[3]} swap entre le visuel de Winig et la borne haute du changement de photo.** Ses gestes du jour précèdent le visuel : répartition 07:57-08:33 UTC, transfert à 11:10, regroupement de 25,5 M à 14:22-14:25.
+- **Ventes :** {after6[1]:,.1f} SOL dans les 6 h après Musk, {after24[1]:,.1f} SOL dans les 18 h suivantes. Résultat favorable à une lecture modeste : ces {GS['ventes_24h']['groupe_sol']:,.0f} SOL en 24 h font **{GS['ventes_24h']['part_pct']:.1f} % des {GS['ventes_24h']['marche_sol']:,.0f} SOL vendus sur le marché**. Le groupe vend {GS['ventes_24h']['groupe_M']:,.1f} M par swap, soit {GS['ventes_24h']['part_du_detenu_pct']:.1f} % du détenu, plus {GS['ventes_24h']['transferts_hors_groupe_M']:,.1f} M transférés hors du groupe. Les {GS['ventes_24h']['autres_detenteurs_n']} autres détenteurs d'au moins 1 M vendent {GS['ventes_24h']['autres_part_pct']:.1f} % (exploratoire).
+- **Total sur la durée :** {G0['proceeds_usd']:,.0f} $ reçus pour {G0['cost_usd']:,.0f} $ dépensés.
+- Contient `5QhJJc…`, le wallet de la capture de @ramonos (URL @0xRamonos).
+- **Explications alternatives :** un groupe de personnes qui se partagent des jetons, sans propriétaire unique ; des ventes de gré à gré ; un même service de gestion. Aucun nom n'est établi.
 
-### Préparation : virements de SOL autour du lancement
-Création du mint : {ts(EV['creation_mint'])} UTC.
+### Financement avant le mint : `{G41}`
+Wallet actif depuis {ts(GS['g41']['first_tx'])[:10]}, financé par ses propres ventes et par des échanges de jetons. Mint créé le {ts(EV['creation_mint'])} UTC. Virements d'au moins 0,05 SOL de ce wallet, de 24 h avant le mint à 1 h après :
 
+{table(["UTC", "Vers", "SOL", "Dans le groupe", "A acheté sur le marché", "Signature"], g41_rows)}
+
+Virements de 0,5 SOL rapprochés avant le mint vers des wallets sans historique : A pour les virements, **finalité non établie**. Une partie reçoit ensuite des jetons de `GFpqfj…` le 21/07 à 08:00 UTC, sans acheter sur le marché.
+
+### Autres virements de SOL avant le lancement
 {table(["UTC", "De", "Vers", "SOL", "Signature"], prep)}
+
+### Sortie commune : `{COL['address']}`
+Sur tout son historique : {COL['n_in']} entrées de {COL['expediteurs']} expéditeurs, {COL['total_in_sol']:,.1f} SOL entrés, {COL['total_out_sol']:,.1f} SOL sortis, dont **{COL['part_coinbase_pct']:.1f} % vers Coinbase 1, 2 et 3**. Délai médian entre une entrée et la sortie suivante : {COL['delai_median_s']} s. Comportement proche d'une adresse de dépôt ou d'un relais personnel vers un compte d'échange : non tranché. Non étiquetée, {COL['expediteurs']} expéditeurs seulement : pas un service de masse. Mais rien n'empêche un tiers d'y envoyer des fonds.
+
+{table(["Salve", "UTC", "Expéditeur", "SOL", "Rôle", "Signe", "Signature"], salve_rows)}
+
+Groupes d'avant Musk ayant au moins un membre parmi ces expéditeurs : {len(COL['groupes_touches'])}, cumul {COL['ensemble_elargi_held_M']:,.1f} M de jetons détenus (plafond, niveau C pour l'ensemble élargi).
 
 ### Transferts directs de DMAGA du groupe, par date
 {table(["UTC", "De", "Vers", "Jetons M", "Signature"], edges)}
@@ -160,7 +180,12 @@ Création du mint : {ts(EV['creation_mint'])} UTC.
 ### Membres
 {table(["Wallet", "Acheté SOL", "Acheté M", "Réalisé SOL", "Reçu par transfert M", "Sorti par transfert M", "1er achat"], members)}
 
-## 4. Faux liens écartés
+## 4. État des relectures
+- **Fait :** audit des échecs silencieux avant le gel (5 bloquants, 8 majeurs, 8 mineurs, corrections appliquées, non re-auditées) ; contrôles positifs et de bout en bout ; reproduction en copie neuve, `tests.json` et `verdict.json` identiques ; un audit indépendant des conclusions, rendu FAIL, dont les corrections sont intégrées ici sans nouvel audit.
+- **Non fait :** auditeurs à l'aveugle des fuites, des statistiques et du protocole. `etude_final/audit/` n'existe pas : la porte d'audit de la méthode n'est pas ouverte.
+- **Registre :** voir `python3 ~/.claude/skills/etude-gelee/scripts/registre.py compter etude_final`.
+
+## 5. Faux liens écartés
 | Lien apparent | Pourquoi il est écarté |
 |---|---|
 | Le créateur et `9PrmF8…` ont le même premier financeur `GJRs4FwHtemZ5ZE9x3FNvJ8TMwitKTh21yxdRPqn7npE` | Coinbase 3 selon Dune Spellbook. Rupture de traçabilité, pas un lien |
@@ -170,7 +195,7 @@ Création du mint : {ts(EV['creation_mint'])} UTC.
 | `5QhJJc…` et le créateur envoient des jetons vers `JD25qVdtd65FoiXNmR89JjmoJdYk9sjYQeSTZAALFiMy` | Exécutant de Jupiter DCA : signataire, programme `DCA265Vj`, `InitiateFlashFill`. Ce sont deux ordres DCA, pas un destinataire commun |
 | Le « créateur » DAS `TSLvdd1pWpHVjahSpsvCXUbgwsL3JAcvokwaKt1eokM` commun avec Kekius | Autorité de mint de Pump.fun, présente sur tous ses tokens |
 """
-Path("reports/COORDINATION.md").write_text(coord)
+Path("reports/COORDINATION.md").write_text(fr(coord))
 
 gas = h.call("getTransfersByAddress", [C, {"with": Q, "limit": 100, "sortOrder": "asc"}])["data"]
 moved = h.call("getTransfersByAddress", [C, {"mint": MINT, "direction": "out", "limit": 100, "sortOrder": "asc"}])["data"]
@@ -187,30 +212,34 @@ link_rows.sort(key=lambda r: datetime.strptime(r[0], "%d/%m/%Y %H:%M:%S"))
 sources_in = ", ".join(f"{x['uiAmount']} SOL de {lab(x['fromUserAccount']) or x['fromUserAccount'][:8] + '…'} ({ts(x['blockTime'])[:10]})" for x in creator_in)
 
 rep = []
-for name, addr, src in (("9PrmF8", P9, "mission ; source sociale non retrouvée"), ("GXZvX", GX, "@ai_9684xtpa, id 1815243177475121253, adresse entière dans le lien"), ("5QhJJc", Q, "@0xRamonos, id 1815221876190294470, capture"), ("H3QsBr", H3, "@ashrobinqt, id 1815233925662306427, capture")):
+for name, addr, src in (("9PrmF8", P9, "fourni par la mission, source sociale non retrouvée"), ("GXZvX", GX, "@ai_9684xtpa, id 1815243177475121253, adresse entière dans le lien"), ("5QhJJc", Q, "@ramonos (URL @0xRamonos), id 1815221876190294470, capture"), ("H3QsBr", H3, "@ashrobin (URL @ashrobinqt), id 1815233925662306427, capture")):
     v = wal[addr]
-    rep.append([f"`{addr}`", src, f"{v[2]:,.2f}", f"{v[0]:,.1f}", f"{v[5] - v[6]:,.0f}", ts(v[7]), f"{v[9]}/{v[8]}", f"{v[10] / 1e6:,.2f}", f"{v[11] / 1e6:,.2f}"])
+    rep.append([f"`{addr}`", src, f"{v[2]:,.2f}", f"{v[0]:,.1f}", f"{v[5] - v[6]:,.0f}", ts(v[7]), f"{v[8]}/{v[9]}", f"{v[10] / 1e6:,.2f}", f"{v[11] / 1e6:,.2f}"])
 attr = f"""# Attribution : liens vérifiables, hypothèses, niveaux
 
 Généré par `scripts/rep_72_links.py`. Échelle : **A** vérifié directement, **B** fortement corroboré, **C** indice, **D** non vérifié ou contredit. Aucune identité civile n'est recherchée ni établie. Un wallet cité n'est accusé de rien.
 
 ## Conclusion courte
-**Aucun lien documenté entre un wallet et un compte du noyau (@DarkMagaCoin, @kikisknees, @Aristos_Revenge, @ChrisWinig).** Aucun de ces comptes n'a publié d'adresse dans ce qui est archivé. Le lien compte ↔ wallet reste une lacune, pas une absence prouvée. Le corpus X est partiel.
+**Aucun lien documenté entre un wallet et un compte du noyau (@DarkMagaCoin, @kikisknees, @Aristos_Revenge, @ChrisWinig).** Aucun de ces comptes n'a publié d'adresse de wallet dans ce qui est archivé (le mint, lui, est publié). Le lien compte ↔ wallet reste une lacune, pas une absence prouvée. Le corpus X est partiel.
 
-## Les quatre pistes publiques
+## Les quatre pistes
 {table(["Wallet", "Source", "Acheté SOL", "Réalisé SOL", "P&L USD", "1er achat UTC", "Ach./Vte", "Reçu transfert M", "Sorti transfert M"], rep)}
 
-- **Les quatre désignent-ils une même entité ?** Non établi, et rien ne le soutient pour `H3QsBr…`, `GXZvX…` et `9PrmF8…` : après retrait des services, aucun chemin direct ne les relie entre eux ni au groupe de lancement (`H3QsBr…` n'a aucune arête directe, `GXZvX…` une seule voisine, `9PrmF8…` une petite composante de 9 wallets). Une absence d'arête n'exclut pas un lien par échange : les quatre passent par des échanges (A pour le fait, C pour toute interprétation).
+- **Les quatre désignent-ils une même entité ?** Non établi, et rien ne le soutient pour `H3QsBr…`, `GXZvX…` et `9PrmF8…` : après retrait des services, aucun transfert direct ne les relie entre eux ni au groupe, et aucun n'envoie vers `{COL['address']}`. Une absence d'arête n'exclut pas un lien par échange : les quatre passent par des échanges (A pour le fait, C pour toute interprétation).
 - **Rapprochement des captures :** `5QhJJc…HScd` et `H3QsBr…T6cc` sont uniques parmi les propriétaires de DMAGA pour ce préfixe et ce suffixe. Pour `H3QsBr…`, 1 087 $ recalculés contre 1 086 $ sur la capture et 16,82 M contre 16,8 M (A). Pour `5QhJJc…`, la capture dit 37 transactions et 28,4 M : l'écart avec les 208 achats totaux s'explique en partie par des ordres DCA Jupiter (keepers `DCAK…`) et des transferts (B). La date « 3 jours » du post correspond aux achats DCA du 17 au 19/07, alors que le wallet achetait dès le 14/07.
 
-## Lien entre le créateur et `5QhJJc…` : A pour la transaction, B pour une action concertée en 2025, C pour un acteur unique au lancement
+## Lien entre le créateur et le groupe : A pour les transactions, B pour une action concertée, C pour un acteur unique dès le lancement
 {table(["UTC", "De", "Vers", "Montant", "Actif", "Ce que c'est", "Signature"], link_rows)}
 
-En plus de deux ans, le créateur n'a reçu que {len(creator_in)} virements d'au moins 0,003 SOL : {sources_in}. Le virement de `5QhJJc…` arrive 35 secondes avant qu'il vide sa position.
-- **Vérifié (A) :** ces transactions et leurs signataires (`reports/data_checks/group_edges_check.json`).
-- **Fortement corroboré (B) :** en juillet 2025, celui qui contrôle `5QhJJc…` et celui qui contrôle le wallet créateur agissent ensemble, ou sont la même personne.
-- **Indice seulement (C) :** qu'ils étaient déjà le même acteur au lancement. Les deux financements Coinbase à 8 minutes d'écart, 33 et 25 minutes avant la création, vont dans ce sens, mais un hot wallet sert tout le monde. Une clé peut aussi changer de main en un an. L'usage commun de Jupiter DCA ne vaut rien seul : l'outil est répandu.
-- **Ce qui n'est pas établi :** qui. @0xRamonos a seulement commenté ce wallet : **rien ne le relie à lui ni à personne au-delà de sa publication.**
+En plus de deux ans, le créateur n'a reçu que {len(creator_in)} virements d'au moins 0,003 SOL : {sources_in}. Le virement de `5QhJJc…` arrive 35 secondes avant qu'il ouvre un ordre de vente sur tous ses jetons.
+
+**Second élément, indépendant :** le 26/01/2025, en 190 secondes, le créateur (0,593 SOL), `5QhJJc…` (0,125) et `7FGoCB63…` (0,1) envoient du SOL à `{COL['address']}`, qui a {COL['expediteurs']} expéditeurs sur toute sa vie et renvoie {COL['part_coinbase_pct']:.1f} % de ses fonds vers Coinbase. Le 23/07/2024, en 164 secondes, `{GS['g41']['address']}`, `C73Yv9iH…`, `AtZjv3Du…` et `EGtyQEgM…` y envoient 8 SOL chacun ou presque. Chaque virement est signé par son expéditeur (`data/collector.json`, tableau dans `reports/COORDINATION.md`).
+
+- **Vérifié (A) :** ces transactions et leurs signataires.
+- **Fortement corroboré (B) :** le créateur et une partie du groupe agissent ensemble, ou sont la même personne, au moins en 2025 : virement de gaz, sortie commune en salves.
+- **Indice (C) :** un seul acteur dès le lancement. Les financements Coinbase à 8 minutes d'écart et les virements de 0,5 SOL avant le mint vont dans ce sens, sans le démontrer : un hot wallet sert tout le monde, une clé peut changer de main, et rien n'empêche un tiers d'envoyer vers une adresse.
+- **Ce qui n'est pas établi :** qui. @ramonos a seulement commenté ce wallet : **rien ne le relie à lui ni à personne au-delà de sa publication.**
+- **Autre fait, non interprété :** le 13/07/2025, le créateur envoie 4 500 USDC à `Hx1UvdgMqZBQRrSAKhSSfc7Hvcb2Mk4dFrcrQpYG6urT`, reçoit 7,40 M de DMAGA en lots, puis les transfère à `BuHUkjUyWGTwz1suyWpqY6ZcYLX9rbfRsT5nnHFGXykc`, wallet très actif créé la veille. `Hx1Uvdg…` est probablement l'escrow d'un ordre DCA d'achat (non vérifié).
 
 ## Relations documentées (`data/social_links.parquet`)
 Types distincts : `mention_tierce` (un compte commente un wallet), `declaration_publique` (ce qu'un compte affirme), `interaction_sociale` (réponses et mentions). Aucune arête `wallet_revendique` : zéro.
@@ -220,5 +249,5 @@ Déclarations de l'équipe, toutes à prendre pour ce qu'elles sont : « $DMAGA 
 - **« Musk ou ses proches ont organisé »** : D. Aucun élément ne relie un wallet à Musk ou à son entourage. Il a adopté une image publique.
 - **« Ansem, deBridge, la Solana Foundation »** (récit de Benjamin du 02/08) : D. Rien dans ces données. Non testé en profondeur : aucune adresse fournie.
 """
-Path("reports/ATTRIBUTION.md").write_text(attr)
+Path("reports/ATTRIBUTION.md").write_text(fr(attr))
 print("COORDINATION et ATTRIBUTION écrits", len(prep), "virements de préparation,", len(link_rows), "lignes de lien")

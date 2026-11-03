@@ -17,16 +17,11 @@ Pool de recherche (5 clés) lu à l'exécution par `dmaga/config.py`, empreintes
 Jamais écrites. Les clés de `~/Downloads/.env` servent à des services : environ 45 min de collecte les ont utilisées
 le 02/11 avant la bascule, à signaler à Benjamin. Une transcription du 02/08 contient une clé en clair.
 
-## Avancement (03/11 01:25 UTC)
-1. Audit, accès, signatures : FAIT. Mint 6 624 533 signatures, pool 9 875 478.
-2. Téléchargement complet pool + mint : FAIT, 514 + 476 tranches, trou du 23/07 23:36-minuit comblé.
-3. Venues : `scripts/col_03_venues.py` (74 venues) : quasi fini, `raw/full_venue/`. Découverte des venues à relancer sur le brut complet si besoin.
-4. Flux wallets : `scripts/col_30_flows.py "$V/tmp/prio3.csv" 6 6` en cours (856 wallets). Reprise : relancer, ce qui existe est sauté.
-5. Comparateurs : sélection FAITE (523 superset, 213 bande principale, DMAGA retenu, S=21/07 19:00, 1,29 M$).
-   `etude_final/code/col_50_ctrl.py swaps` en cours, principaux d'abord. Puis `ana_10_table.py`, `gel.py ajouter` de la table si voulu, `ana_50_tests.py`, `ana_90_verdict.py`.
-6. Après venues et flux : `scripts/run_derive.sh` complet (dis_05, nrm_10 --force, chk_20, ana_20, ana_21, ana_22, ana_50), `scripts/chk_21_venue_chain.py`, `scripts/ana_19_export.py`, `ana_31_select.py`, flux des nouveaux, `ana_32_hops.py 1`, `ana_30_flows.py`, `ana_60_clusters.py`, `exp_70_funder_share.py`.
-7. Rapports : `rep_65_social_links.py`, `rep_70_reports.py`, `rep_75_timeline.py`, `rep_80_viz.py`, `chk_90_selfcheck.py`. CASE_REPORT, COORDINATION, ATTRIBUTION, MISSING_EVIDENCE à écrire à la main sur ces sorties.
-8. Dépôt GitHub privé `Dark-MAGA-Investigation` à créer et pousser une fois validé. Pas de données lourdes.
+## Avancement (03/11 04:30 UTC)
+Enquête livrée, verdict gelé rendu, audit des conclusions FAIL corrigé sans nouvel audit. Publié sur le dépôt privé.
+Reste à décider par Benjamin : les 3 auditeurs à l'aveugle (fuites, statistiques, protocole) ; valider l'amendement 001 (amendement 002) ; un second audit des conclusions.
+Pour tout recalcul : `scripts/run_derive.sh`, puis `ana_60`, `ana_61`, `ana_62`, `ana_64`, `ana_65`, puis `rep_65`, `rep_70`, `rep_72`, `rep_75`, `rep_80`, `rep_90`, `chk_63`, `chk_90`. Toujours sous `scripts/guard.py`.
+`/Volumes/PHI-Data/Dark-MAGA-Investigation/` ne contient qu'un venv abandonné.
 
 ## Faits établis (voir preuves dans les fichiers)
 - Création : signature fePxr7ER…, slot 277417695, 14/07/2024 02:05:25 UTC, créateur 8YLEuUtZ4eFMJbf46oNb1CeG6dYFWGyxnQSh9hrgzBzR,
@@ -37,6 +32,8 @@ le 02/11 avant la bascule, à signaler à Benjamin. Une transcription du 02/08 c
   17-19/07 par keepers DCAK…), GXZvXsD6hxaLeFvQisWpdAwsayJxga7w9EeafhFZG2Ra (@ai_9684xtpa, 48,5 SOL, 14,69 M).
 
 ## Corrections déjà faites, à ne pas reproduire
+- « 28 h après Butler » était faux : 3 h 54. 3LoAYH et consorts = comptes publiés par Jupiter. JD25…, JD1d…, JD38…, DCAK… = exécutants Jupiter DCA. AYymVrc, sYBdq543 = escrows DCA.
+- Le 03/11, `ana_60_clusters.py` version Python a monté à 2,3 Go, swap 10 Go, disque 7,77 Go, sous la pause de PolySentinel. Réécrit en DuckDB, 521 Mo. Plus aucun calcul lourd hors `guard.py`.
 - Couverture : pool + mint ne voient pas les swaps directs CLMM ou Orca (GCvHhE vend 478 M sans achat visible). D'où `full_venue/`.
 - `etude/` : registre contaminé par mon test e2e, lignes 9-22 synthétiques étiquetées réelles. Étude = `etude_final/`, gelée le 02/11 23:47 UTC.
 - GJRs4FwH…, H8sMJSCQ…, 2AQdpHJ2… = Coinbase 3, 1, 2 (Dune spellbook) : financeur commun du créateur et de 9PrmF8 = pas un lien.

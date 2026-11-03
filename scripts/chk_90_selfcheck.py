@@ -42,6 +42,9 @@ ALLOW = {"7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump", "87g44hEXP7R8ZxoAJtz941
          "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo", "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
          "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"}
 known |= ALLOW
+# réponses de la chaîne archivées telles quelles par les scripts de vérification
+for extra in (DATA / "group_split.json", DATA / "collector.json", DATA / "prevent_groups.json", Path("reports/data_checks/group_edges_check.json")):
+    known |= set(B58.findall(extra.read_text()))
 # candidats tiers cités par leur source dans les constats sociaux (Wifejak, homonymes) : présents dans le document, pas dans les données
 known |= set(B58.findall(Path("docs/SOCIAL_FINDINGS.md").read_text()))
 

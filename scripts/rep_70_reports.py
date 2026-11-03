@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 
 from dmaga.config import BIG, DATA
 from dmaga.db import connect
+from dmaga.frfmt import fr
 from dmaga.labels import label
 from dmaga.venues import load as load_venues
 
@@ -107,7 +108,7 @@ Leur stock vient de transferts sans prix. Cas typique : `GCvHhEUYQwTJ8jyf8Lc4bv8
 {table(["#", "Wallet", "Jetons M", "Valeur SOL au dernier prix", "Acheté SOL", "Réalisé SOL", "Cohorte"], rows2)}
 """
 os.makedirs("reports", exist_ok=True)
-open("reports/TOP_TRADERS.md", "w").write(txt)
+open("reports/TOP_TRADERS.md", "w").write(fr(txt))
 
 # ---- EARLY_BUYERS
 first = con.execute("""SELECT owner, first_buy_slot, first_buy_tx_index, first_buy_time, first_buy_sol, first_buy_qty, bought_sol, realized_sol, residual_qty, first_buy_sig
@@ -155,5 +156,5 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 
 {table(["#", "Wallet", "Slot", "UTC", "1er achat SOL", "1er achat M", "Acheté SOL", "Réalisé SOL", "Résiduel M"], rows)}
 """
-open("reports/EARLY_BUYERS.md", "w").write(txt)
+open("reports/EARLY_BUYERS.md", "w").write(fr(txt))
 print("TOP_TRADERS", len(top), "EARLY_BUYERS", len(first), "pré-événement", len(pre))
