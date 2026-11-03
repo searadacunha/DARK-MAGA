@@ -17,7 +17,7 @@ Pool de recherche (5 clés) lu à l'exécution par `dmaga/config.py`, empreintes
 Jamais écrites. Les clés de `~/Downloads/.env` servent à des services : environ 45 min de collecte les ont utilisées
 le 02/11 avant la bascule, à signaler à Benjamin. Une transcription du 02/08 contient une clé en clair.
 
-## Avancement (03/11 04:30 UTC)
+## Avancement (03/11 04:15 UTC)
 Enquête livrée, verdict gelé rendu, audit des conclusions FAIL corrigé sans nouvel audit. Publié sur le dépôt privé.
 Reste à décider par Benjamin : les 3 auditeurs à l'aveugle (fuites, statistiques, protocole) ; valider l'amendement 001 (amendement 002) ; un second audit des conclusions.
 Pour tout recalcul : `scripts/run_derive.sh`, puis `ana_60`, `ana_61`, `ana_62`, `ana_64`, `ana_65`, puis `rep_65`, `rep_70`, `rep_72`, `rep_75`, `rep_80`, `rep_90`, `chk_63`, `chk_90`. Toujours sous `scripts/guard.py`.
