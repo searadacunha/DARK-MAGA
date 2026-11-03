@@ -202,7 +202,7 @@ Path("reports/COORDINATION.md").write_text(rendu(coord, INTERPRETATION=INTERPRET
                                                  N02V=verifie("N02"), N03=assertion("N03"), N03V=verifie("N03")))
 
 rep = []
-for name, addr, src in (("9PrmF8", P9, "fourni par la mission, source sociale non retrouvée"), ("GXZvX", GX, "@ai_9684xtpa, id 1815243177475121253, adresse entière dans le lien"), ("5QhJJc", Q, "@ramonos (URL @0xRamonos), id 1815221876190294470, capture"), ("H3QsBr", H3, "@ashrobin (URL @ashrobinqt), id 1815233925662306427, capture")):
+for name, addr, src in (("9PrmF8", P9, "fils de tiers d'août 2024 et @XHEILIGX, 30/03/2024, voir audits/2026-11-03/work_E/X_FOLLOWUP.md, partie 6"), ("GXZvX", GX, "@ai_9684xtpa, id 1815243177475121253, adresse entière dans le lien"), ("5QhJJc", Q, "@ramonos (URL @0xRamonos), id 1815221876190294470, capture"), ("H3QsBr", H3, "@ashrobin (URL @ashrobinqt), id 1815233925662306427, capture")):
     v = wal[addr]
     rep.append([f"`{addr}`", src, f"{v[2]:,.2f}", f"{v[0]:,.1f}", f"{v[5] - v[6]:,.0f}", ts(v[7]), f"{v[8]}/{v[9]}", f"{v[10] / 1e6:,.2f}", f"{v[11] / 1e6:,.2f}"])
 attr = f"""# Attribution : liens vérifiables, hypothèses, niveaux

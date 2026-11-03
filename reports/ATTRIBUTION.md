@@ -8,7 +8,7 @@ Généré par `scripts/rep_72_links.py`. **Audit du 03/11 : NON VALIDÉ tant que
 ## Les quatre pistes
 | Wallet | Source | Acheté SOL | Réalisé SOL | P&L USD | 1er achat UTC | Ach./Vte | Reçu transfert M | Sorti transfert M |
 |---|---|---|---|---|---|---|---|---|
-| `9PrmF8sfoD2YShtWUghrGEYgxwabpnzog8gT1V6LEtdq` | fourni par la mission, source sociale non retrouvée | 281,19 | 1 747,8 | 317 215 | 14/07/2024 02:28:56 | 26/39 | 0,00 | 0,16 |
+| `9PrmF8sfoD2YShtWUghrGEYgxwabpnzog8gT1V6LEtdq` | fils de tiers d'août 2024 et @XHEILIGX, 30/03/2024, voir audits/2026-11-03/work_E/X_FOLLOWUP.md, partie 6 | 281,19 | 1 747,8 | 317 215 | 14/07/2024 02:28:56 | 26/39 | 0,00 | 0,16 |
 | `GXZvXsD6hxaLeFvQisWpdAwsayJxga7w9EeafhFZG2Ra` | @ai_9684xtpa, id 1815243177475121253, adresse entière dans le lien | 48,50 | 2 540,1 | 458 663 | 14/07/2024 02:15:41 | 4/103 | 0,00 | 0,00 |
 | `5QhJJcFZu2ashyKyWSTGHcsyo6ZBCbpVuJqeutvQHScd` | @ramonos (URL @0xRamonos), id 1815221876190294470, capture | 53,36 | 74,2 | 12 118 | 14/07/2024 02:10:11 | 208/13 | 37,79 | 76,26 |
 | `H3QsBrrivimFJmSpTXuvig2n1Bh7JuYxrriRSEszT6cc` | @ashrobin (URL @ashrobinqt), id 1815233925662306427, capture | 7,27 | 5 490,9 | 990 744 | 14/07/2024 16:43:58 | 2/48 | 0,00 | 0,00 |

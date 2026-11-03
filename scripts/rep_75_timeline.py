@@ -39,9 +39,10 @@ def fdv(t):
 
 
 posts = {}
-for line in (DATA / "x_posts.jsonl").open():
-    r = json.loads(line)
-    posts.setdefault(r["id"], r)
+for src_ in (DATA / "x_posts.jsonl", Path("audits/2026-11-03/work_E/x_posts_new.jsonl")):
+    for line in src_.open():
+        r = json.loads(line)
+        posts.setdefault(r["id"], r)
 rec = {}
 for line in Path("evidence/x_wayback/recovered.jsonl").open():
     r = json.loads(line)
@@ -80,18 +81,22 @@ R = [
     T(1720922222, "Création de la chaîne Telegram @DMAGACoin", "B", "« Channel created » 01:57:02 UTC, evidence/web/tg_DMAGACoin.html"),
     T(1720922725, "Création du mint par 8YLEuUtZ…, achat de 7,1 M pour 0,2 SOL", "A", f"signature `{sig_create}`, slot 277417695. Environ 3 h 54 après Butler. Le thread d'@Aristos_Revenge ne date pas le mint : il écrit que @kikisknees a lancé @DarkMagaCoin et les pfp deux jours avant Butler"),
     T(1720923331, "Migration vers Raydium, 10 min après la création", "A", f"signature `{sig_pool}`"),
-    P(1812321235688157500, "Premier post archivé de @DarkMagaCoin", "A"),
+    T(snow(1812312706826854843), "Premier post de @DarkMagaCoin, avec le mint", "A", "id 1812312706826854843, lu sur la capture du repost 1812317575411351639"),
     T(1720927892, "dmaga.xyz en ligne, mint affiché", "A", "capture Wayback 03:31:32 UTC, evidence/web/wb_dmaga_xyz_*"),
     P(1812521301682069933, "@kikisknees promeut le token", "B"),
     P(1813004360592552354, "@kanpai annonce des avatars rouges aux yeux bleus", "A"),
     P(1813681762188345683, "@DarkMagaCoin présente @ChrisWinig comme créateur de l'équipe", "A"),
-    P(1814779160377602331, "@pmarca publie une image rouge aux yeux laser", "A", "Pas le visuel de Musk."),
-    P(1815004677160776126, "@pmarca, nouvelle image", "A"),
-    P(1815006501896872388, "@kikisknees sollicite publiquement @pmarca sur Elon", "B"),
+    P(1813310692243480937, "@FrancoAppr répond à Musk avec une image de Musk aux yeux laser, autre composition", "A", "Lien avec l'avatar : C."),
+    P(1814063148917256375, "@kikisknees à Musk : « We are building an army for you for that purpose. $DMAGA »", "A", "Même image que le post du 16/07, pHash 0. Rien ne montre que Musk l'a vue."),
+    P(1814763940410499481, "@pmarca publie une image rouge aux yeux laser, avec un lien vers une réponse de @kikisknees", "A", "Pas le visuel de Musk. L'id du corpus était celui d'un repost."),
+    P(1814920352134537332, "@pmarca, nouvelle image", "A", "L'id du corpus était celui d'un repost."),
+    P(1815006501896872388, "@kikisknees répond à @pmarca, plus ancienne image connue de la composition de Musk, sans drapeau", "A", "Contexte de plaisanterie sur la Lune."),
     P(1815018442589663572, "@kikisknees cite la capitalisation", "B", "À comparer à la colonne capitalisation."),
     P(1815053805077086351, "Musk écrit « Whoa » sur un article du NY Post", "A"),
-    P(1815054158367432804, "@kikisknees répond à Musk avec une image", "B", "Média perdu : impossible de dire si c'est le visuel."),
-    P(1815054750775173447, "@ChrisWinig publie le visuel en réponse à Musk", "A", "Plus ancienne image identique au corpus (pHash distance 0 avec l'avatar)."),
+    P(1815053713330876681, "@GreatBambin0 envoie à Musk la variante sans drapeau", "A", "Plus ancien envoi connu de cette composition à Musk."),
+    P(1815054158367432804, "@kikisknees répond à Musk avec une image", "A", "Image retrouvée : le Trump « dark maga » de @DarkMagaCoin, pas le visuel de Musk."),
+    P(1815054374982324401, "@FrancoAppr répond à Musk avec l'image identique à l'avatar", "A", "Plus ancienne image identique connue, pHash 0."),
+    P(1815054750775173447, "@ChrisWinig publie le visuel en réponse à Musk", "A", "pHash 0, 90 s après @FrancoAppr."),
     P(1815096055337496944, "@kikisknees répond à Musk avec une image", "B", "Média perdu."),
     P(1815098229903839717, "@kikisknees répond à @PragmaticPrim8 et Musk avec une image", "B", "Média perdu."),
     T(1721583960, "Annonce du retrait de Joe Biden", "C", "17:46 UTC, donnée de la mission, non revérifiée dans un fichier"),
@@ -99,7 +104,7 @@ R = [
     T(1721589800, "Envoi probable du nouvel avatar", "B", "snowflake de profile_images/1815105297410666496 : 19:23:20,585 UTC. L'id date le téléversement ; lecture à confirmer"),
     P(1815107030606385507, "Borne haute : premier post qui montre le nouvel avatar", "A"),
     P(1815107751745601643, "@DarkMagaCoin réagit", "A"),
-    P(1815107774113587625, "@ChrisWinig réagit", "A"),
+    P(1815107549903135205, "@ChrisWinig réagit", "A", "L'id du corpus était celui d'un repost."),
     P(1815116229117690314, "@kikisknees revendique le pfp", "B"),
     P(1815125720785391758, "@kikisknees : surprise et visuel « fait pour lui »", "B"),
     T(1721595380, "@Aristos_Revenge promeut l'outil de pfp et le token", "B", "id 1815128699831796065, supprimé ; texte connu par le seul Daily Dot"),

@@ -53,6 +53,10 @@ for extra in (DATA / "group_split.json", DATA / "collector.json", DATA / "preven
     known |= set(B58.findall(extra.read_text()))
 # candidats tiers cités par leur source dans les constats sociaux (Wifejak, homonymes) : présents dans le document, pas dans les données
 known |= set(B58.findall(Path("docs/SOCIAL_FINDINGS.md").read_text()))
+# flux et enquête X du 03/11 : sorties écrites par script, chaque adresse copiée du brut
+for extra in ("audits/2026-11-03/work_G/flow_boundaries.csv", "audits/2026-11-03/work_G/g43_orders.csv", "audits/2026-11-03/work_G/g30_in.csv", "audits/2026-11-03/work_E/x_posts_new.jsonl"):
+    known |= set(B58.findall(Path(extra).read_text()))
+known.add("Caw4RrwkmxqtbLSFzgSs6id3XiFxWQxs2t1mrn5a3mME")
 
 bad = {}
 n = 0

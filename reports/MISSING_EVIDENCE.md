@@ -5,15 +5,15 @@ Ce qui n'a pas pu être établi, et pourquoi. Une absence n'est jamais rapporté
 ## X et archives
 | Élément | État | Cause | Ce qui débloquerait |
 |---|---|---|---|
-| Recherche X native (tous les posts d'un compte, toutes les réponses) | Non faite | Pas d'accès API X ; crédits Grok épuisés (HTTP 403) ; `twscrape` et `twikit` exigent un compte connecté, non utilisés par choix | Accès API X ou export d'un compte |
+| Recherche X native (tous les posts d'un compte, toutes les réponses) | Partielle : 30 recherches en lecture seule le 03/11, `audits/2026-11-03/work_E/x_search_log.jsonl` | Une recherche ne rend pas une image seule sans mot-clé | Accès API X ou export d'un compte |
 | Posts de @kikisknees du 14 au 26/07/2024 | 1 407 sur 1 419 indisponibles, dont 1 378 supprimés par l'auteur. Texte récupéré pour 208 via Wayback, plus 17 de @DarkMagaCoin | La Wayback a refusé la suite (connexion refusée, 503) | Reprendre la lecture Wayback plus tard, `evidence/x_cdx/kikisknees.json*` liste les identifiants |
-| Images des posts supprimés de @kikisknees, dont la réponse à Musk du 21/07 16:00:08 UTC | Perdues | Médias en 404 sur X, absents de la Wayback (10 essais sur les posts décisifs le 03/11) | Capture d'écran d'époque. **Sans elle, on ne sait pas si le visuel a été publié avant @ChrisWinig** |
+| Images des posts supprimés de @kikisknees | En partie retrouvées dans la Wayback sous `?format=...&name=orig`, dont celle de 16:00:08 UTC : Trump « dark maga », pas le visuel de Musk | La plupart des 164 images 900 x 900 d'avant le 21/07 12:51 restent à relire | Reprendre la Wayback |
 | Thread d'@Aristos_Revenge du 08/10/2024 | Texte lu par Thread Reader seulement | 20 posts supprimés par l'auteur ; compte Wayback vide | Copie originale |
 | Post d'@Aristos_Revenge du 21/07 20:56 UTC | Texte connu par le seul Daily Dot | Supprimé, absent de la Wayback | Capture d'époque |
 | Réponses, citations et portée complètes | Partielles | Les points d'accès publics ne listent pas les réponses | API X |
 | Historique complet des avatars des comptes | Non établi | X ne le fournit pas | Captures datées |
 | Post original de @ai_9684xtpa | Trouvé, id `1815243177475121253` ; d'autres versions citées par la presse non retrouvées | Pas de recherche native | API X |
-| Source sociale du wallet `9PrmF8sfoD2YShtWUghrGEYgxwabpnzog8gT1V6LEtdq` | **Non retrouvée** | Ni WebSearch, ni Exa, ni les archives. Les transactions sont vérifiées, la citation d'août 2024 non | Benjamin peut fournir le lien s'il l'a |
+| Source sociale du wallet `9PrmF8sfoD2YShtWUghrGEYgxwabpnzog8gT1V6LEtdq` | **Retrouvée :** fils de tiers d'août 2024, et @XHEILIGX le 30/03/2024, indice C | Il manque une revendication, une signature, ou la réception de $PEZI à vérifier sur la chaîne | `audits/2026-11-03/work_E/X_FOLLOWUP.md`, partie 6 |
 
 ## Audits
 Audit du 03/11 (A données, B statistiques, C attribution, D confrontation) : **NON VALIDÉ tant que les décisions de Benjamin et un nouvel audit des conclusions manquent**, voir `audits/2026-11-03/`.
