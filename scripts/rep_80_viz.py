@@ -7,11 +7,11 @@ import csv
 import json
 from pathlib import Path
 
-from dmaga.config import BIG, DATA
 from dmaga.db import connect
 from dmaga.labels import label
+from dmaga.paths import BIG, DATA, SOURCES
 
-con = connect()
+con = connect(mem="700MB")
 con.execute(f"CREATE VIEW w AS SELECT * FROM read_parquet('{BIG}/wallets.parquet')")
 con.execute(f"CREATE VIEW l AS SELECT * FROM read_parquet('{BIG}/link_edges.parquet')")
 
@@ -26,7 +26,7 @@ events = json.loads((DATA / "events.json").read_text())
 CORE = {"DarkMagaCoin", "kikisknees", "Aristos_Revenge", "ChrisWinig", "elonmusk", "pmarca", "koreanjewcrypto", "ai_9684xtpa", "ramonos", "ashrobin"}
 posts = []
 seen = set()
-for line in (DATA / "x_posts.jsonl").open():
+for line in (SOURCES / "x_posts.jsonl").open():
     r = json.loads(line)
     if r["id"] in seen or r.get("author") not in CORE or r.get("status") != "ok":
         continue

@@ -2,7 +2,9 @@
 """PnL par wallet, au coût moyen, sur l'historique normalisé. Rend data/wallets.parquet + prix minute.
 
 Prix du pool : réserve WSOL / réserve DMAGA après chaque transaction. Prix USD : clôture SOLUSDT 1 min.
-Valorisation résiduelle : quantité restante × prix du pool à la date de coupure, indiquée en clair.
+Résiduel : somme des derniers soldes vus des comptes du wallet (accounts.parquet), plus les transferts vus par les seuls flux après ce solde.
+Plus sûr que les flux seuls, qui ratent les mouvements hors du brut des wallets non tracés.
+`residual_flux_qty` garde l'ancienne mesure. Un compte avec une rupture rend le wallet partiel. Valorisation : résiduel × prix du pool à la coupure.
 """
 import csv
 import io
@@ -13,9 +15,10 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from dmaga.config import BIG, RAW
+from dmaga.config import RAW
 from dmaga.db import connect
-from dmaga.pnl import Wallet
+from dmaga.paths import BIG, exige_v2
+from dmaga.pnl import Wallet, residuel_corrige
 from dmaga.venues import load as load_venues
 
 VD = "5HuEsLbebeuottMsFW3hHcXTrKVsu3WUNSQnSr6aX4eL"
@@ -45,9 +48,10 @@ def sol_usd() -> dict[int, float]:
 
 
 def main():
+    exige_v2()
     cutoff = int(sys.argv[1]) if len(sys.argv) > 1 else None
     px = sol_usd()
-    con = connect()
+    con = connect(mem="500MB")
     where = f"AND block_time < {cutoff}" if cutoff else ""
     wallets: dict[str, Wallet] = {}
     usd_cost: dict[str, float] = {}
@@ -99,15 +103,23 @@ def main():
     price_sol = (last_sol[0] / 1e9) / (last_dmaga[0] / 1e6)
     ref_t = last_dmaga[1]
     ref_usd = px.get(ref_t // 60)
+    w_ac = f"WHERE block_time < {cutoff}" if cutoff else ""
+    soldes = dict(con.execute(f"""SELECT owner, sum(p) FROM (SELECT account, arg_max(owner, (slot, tx_index)) owner, arg_max(post, (slot, tx_index)) p
+                                  FROM read_parquet('{BIG}/accounts.parquet') {w_ac} GROUP BY 1) GROUP BY 1""").fetchall())
+    ruptures = dict(con.execute(f"SELECT coalesce(owner, prev_owner), count(*) FROM read_parquet('{BIG}/account_ruptures.parquet') {w_ac} GROUP BY 1").fetchall())
+    dernier_vu = dict(con.execute(f"SELECT owner, max(block_time) FROM read_parquet('{BIG}/accounts.parquet') {w_ac} GROUP BY 1").fetchall())
+    soldes = residuel_corrige(soldes, dernier_vu, con.execute(f"SELECT src, dst, q, block_time FROM x {w_ac}").fetchall())
     rows = []
     for w in wallets.values():
+        residual = soldes.get(w.owner, 0) / 1e6
+        rupt = ruptures.get(w.owner, 0)
         rows.append({
             "owner": w.owner, "n_buys": w.n_buys, "n_sells": w.n_sells, "n_transfers": w.n_transfers,
             "bought_qty": w.bought_qty / 1e6, "bought_sol": w.bought_sol / 1e9, "sold_qty": w.sold_qty / 1e6,
             "sold_sol": w.sold_sol / 1e9, "realized_sol": w.realized / 1e9, "cost_usd": usd_cost.get(w.owner, 0.0),
             "proceeds_usd": usd_proceeds.get(w.owner, 0.0),
-            "residual_qty": w.qty / 1e6, "residual_cost_sol": w.cost / 1e9,
-            "residual_value_sol_at_cutoff": w.qty / 1e6 * price_sol,
+            "residual_qty": residual, "residual_flux_qty": w.qty / 1e6, "n_ruptures": rupt, "residual_cost_sol": w.cost / 1e9,
+            "residual_value_sol_at_cutoff": residual * price_sol,
             "lp_token_in": w.lp_token_in / 1e6, "lp_token_out": w.lp_token_out / 1e6,
             "lp_sol_in": w.lp_sol_in / 1e9, "lp_sol_out": w.lp_sol_out / 1e9,
             "net_sol_all": (w.sold_sol - w.bought_sol + w.lp_sol_out - w.lp_sol_in) / 1e9,
@@ -118,7 +130,8 @@ def main():
             "first_buy_sol": (w.first_buy_sol or 0) / 1e9, "first_buy_qty": (w.first_buy_qty or 0) / 1e6,
             "first_sell_time": w.first_sell_time, "last_sell_time": w.last_sell_time,
             "last_activity_time": w.last_activity_time, "venues": ",".join(sorted(w.venues)),
-            "completeness": w.completeness, "valuation_ref_time": ref_t,
+            "completeness": "partiel: rupture de chaîne d'un compte" if rupt and w.completeness.startswith("complet") else w.completeness,
+            "valuation_ref_time": ref_t,
         })
     table = pa.Table.from_pylist(rows)
     BIG.mkdir(parents=True, exist_ok=True)

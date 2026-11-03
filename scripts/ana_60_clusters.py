@@ -18,16 +18,19 @@ import networkx as nx
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from dmaga.config import BIG, DATA
 from dmaga.db import connect
+from dmaga.hot_presume import HOT_PRESUME
 from dmaga.labels import load as load_labels
+from dmaga.paths import BIG, DATA, exige_v2
 from dmaga.venues import load as load_venues
+
+exige_v2()
 
 INFRA = ["5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1", "39azUYFWPz3VHgKCf3VChUwbpURdCHRxjWVowf5jUJjg",
          "87g44hEXP7R8ZxoAJtz941tsVftpEXC1LqAFTf2ZHtkH", "PNLCQcVCD26aC7ZWgRyr5ptfaR7bBrWdTFgRWwu2tvF"]
-con = connect(mem="900MB", threads=2)
+con = connect(mem="700MB", threads=2)
 con.execute("CREATE TEMP TABLE svc(a VARCHAR)")
-con.executemany("INSERT INTO svc VALUES (?)", [[a] for a in set(load_labels()) | set(load_venues()) | set(INFRA)])
+con.executemany("INSERT INTO svc VALUES (?)", [[a] for a in set(load_labels()) | set(load_venues()) | set(INFRA) | HOT_PRESUME])
 F, X = f"read_parquet('{BIG}/funding_edges.parquet')", f"read_parquet('{BIG}/exit_flows.parquet')"
 W, E, N = f"read_parquet('{BIG}/wallets.parquet')", f"read_parquet('{BIG}/token_edges.parquet')", f"read_parquet('{BIG}/nodes.parquet')"
 con.execute(f"INSERT INTO svc SELECT address FROM {N} WHERE kind <> 'wallet'")

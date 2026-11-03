@@ -2,20 +2,20 @@
 """Solidité du groupe d'avant Musk : sensibilité au seuil, sous-ensembles, ventes comparées. DESCRIPTIF, hors plan gelé.
 
 Le groupe de 33 tient par une arête égale au seuil de 1 M. On le découpe en retirant cette arête et le pont de 15 M du 18/07,
-puis on regarde ce qui relie encore les morceaux (SOL, financeur). Sortie : data/group_split.json. Réseau : lecture du financeur G41.
+puis on regarde ce qui relie encore les morceaux (SOL, financeur). Sortie : data/group_split.json. Aucun réseau : le recalcul relit
+les réponses du financeur G41 archivées dans le group_split.json du dépôt (collecte du 03/11, code de collecte dans l'historique git).
 """
 import json
 
 import networkx as nx
 
-from dmaga.config import BIG, DATA
 from dmaga.db import connect
-from dmaga.helius import Helius
-from dmaga.labels import label
+from dmaga.paths import BIG, DATA, SOURCES, exige_v2
 
-EV = {e["name"]: e["t"] for e in json.loads((DATA / "events.json").read_text())}
+exige_v2()
+EV ={e["name"]: e["t"] for e in json.loads((DATA / "events.json").read_text())}
 T_LOW, T_HIGH, T0 = EV["musk_borne_basse"], EV["musk_borne_haute"], EV["creation_mint"]
-con = connect()
+con = connect(mem="700MB")
 W = f"read_parquet('{BIG}/wallets.parquet')"
 g = json.loads((DATA / "prevent_groups.json").read_text())[0]
 members = set(g["members"])
@@ -101,32 +101,11 @@ sol_between = []
 for a, b, q, t, s in con.execute(f"SELECT src, dst, amount, block_time, signature FROM read_parquet('{BIG}/link_edges.parquet') WHERE type='sol_direct' AND block_time<{T_LOW}").fetchall():
     if a in idx and b in idx and idx[a] != idx[b]:
         sol_between.append({"src": a, "dst": b, "sol": q, "t": t, "sig": s})
-h = Helius(rps=4)
-# le financeur commun cité par l'audit, résolu depuis les virements réels
-src = {x["fromUserAccount"] for x in h.call("getTransfersByAddress", ["AW63YBXXsGcLPpsDTSrpBMdQ9QXtxTiHsTbcVkY6UFv5", {"direction": "in", "limit": 20, "sortOrder": "asc",
-       "mint": "So11111111111111111111111111111111111111111"}])["data"] if x["fromUserAccount"] and x["fromUserAccount"].startswith("G41vRrsHSh")}
-assert len(src) == 1
-G41 = src.pop()
-out_rows, tok = [], None
-for _ in range(10):
-    c = {"direction": "out", "mint": "So11111111111111111111111111111111111111111", "limit": 100, "sortOrder": "asc",
-         "filters": {"blockTime": {"gte": T0 - 86400, "lt": T0 + 3600}, "amount": {"gte": 50_000_000}}}
-    if tok:
-        c["paginationToken"] = tok
-    r = h.call("getTransfersByAddress", [G41, c])
-    out_rows += r["data"]
-    tok = r.get("paginationToken")
-    if not tok:
-        break
-in_rows = h.call("getTransfersByAddress", [G41, {"direction": "in", "mint": "So11111111111111111111111111111111111111111", "limit": 100, "sortOrder": "desc",
-                                                 "filters": {"blockTime": {"lt": T0}, "amount": {"gte": 100_000_000}}}])["data"]
-first = h.txs_page(G41, details="signatures", sort="asc", limit=1)["data"][0]["blockTime"]
-recent = h.txs_page(G41, details="signatures", sort="desc", limit=1000)
+# le financeur commun cité par l'audit : réponses réseau archivées, seuls les indicateurs locaux sont recalculés
+g41 = json.loads((SOURCES / "group_split.json").read_text())["g41"]
+G41 = g41["address"]
 bought = {r[0] for r in con.execute(f"SELECT owner FROM {W} WHERE n_buys>0").fetchall()}
-g41 = {"address": G41, "first_tx": first, "recent_page": len(recent["data"]), "more": bool(recent.get("paginationToken")), "label": label(G41),
-       "avant_le_mint": [{"dst": x["toUserAccount"], "sol": x["uiAmount"], "t": x["blockTime"], "sig": x["signature"], "dans_le_groupe": x["toUserAccount"] in members,
-                          "a_achete_sur_le_marche": x["toUserAccount"] in bought} for x in out_rows],
-       "financeurs": [{"src": x["fromUserAccount"], "label": label(x["fromUserAccount"]), "sol": x["uiAmount"], "t": x["blockTime"], "sig": x["signature"]} for x in in_rows[:12]]}
+g41["avant_le_mint"] = [{**x, "dans_le_groupe": x["dst"] in members, "a_achete_sur_le_marche": x["dst"] in bought} for x in g41["avant_le_mint"]]
 
 # ventes en 24 h : groupe contre marché, et contre les autres détenteurs d'au moins 1 M à la borne basse
 end = T_HIGH + 86400
@@ -163,6 +142,5 @@ print("sous-ensembles", [(s["n"], round(s["held_M"], 1), s["first_hour_buyers"],
 print("SOL entre sous-ensembles", [(x["src"][:8], x["dst"][:8], round(x["sol"], 2), x["t"]) for x in sol_between][:8])
 print("G41", G41, "1re tx", g41["first_tx"], "récentes", g41["recent_page"], g41["more"], "avant mint", len(g41["avant_le_mint"]))
 print(" vers", [(x["dst"][:8], x["sol"], x["t"], x["dans_le_groupe"], x["a_achete_sur_le_marche"]) for x in g41["avant_le_mint"]][:22])
-print(" financeurs", [(x["src"][:10], x["label"], x["sol"], x["t"]) for x in g41["financeurs"]][:8])
-print("ventes", {k: round(v, 1) if isinstance(v, float) else v for k, v in res["ventes_24h"].items()})
+print("ventes",{k: round(v, 1) if isinstance(v, float) else v for k, v in res["ventes_24h"].items()})
 print("60 s", res["premieres_60s"], "fenêtres", res["achats_fenetre"], "1er financeur", res["premier_financeur"], "gestes", len(res["gestes_du_jour"]))

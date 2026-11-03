@@ -10,12 +10,13 @@ from datetime import datetime, timezone
 
 import networkx as nx
 
-from dmaga.config import BIG, DATA
 from dmaga.db import connect
 from dmaga.labels import label
+from dmaga.paths import BIG, DATA, exige_v2
 
+exige_v2()
 T_LOW = 1721588607
-con = connect()
+con = connect(mem="700MB")
 con.execute(f"CREATE VIEW l AS SELECT * FROM read_parquet('{BIG}/link_edges.parquet')")
 con.execute(f"CREATE VIEW w AS SELECT * FROM read_parquet('{BIG}/wallets.parquet')")
 E = con.execute(f"SELECT src, dst, amount, block_time, signature FROM l WHERE type='token_direct' AND amount>=1000000 AND block_time<{T_LOW}").fetchall()

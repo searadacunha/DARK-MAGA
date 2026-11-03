@@ -1,8 +1,8 @@
 """Nombres à la française dans un texte Markdown, sauf entre accents graves (adresses, chemins, signatures)."""
 import re
 
-_THOUS = re.compile(r"(?<![\w.,/:-])(\d{1,3}(?:,\d{3})+)(\.\d+)?(?![\w/:])")
-_DEC = re.compile(r"(?<![\w.,/:-])(\d+)\.(\d+)(?![\w/:]|\.\d)")
+_THOUS = re.compile(r"(?<![\w.,/:])(?<!\d-)([1-9]\d{0,2}(?:,\d{3})+)(\.\d+)?(?![\w/:])")  # 0,032 est déjà un décimal français
+_DEC = re.compile(r"(?<![\w.,/:])(?<!\d-)(\d+)\.(\d+)(?![\w/:]|\.\d)")
 
 
 def fr(text: str) -> str:
@@ -14,4 +14,6 @@ def fr(text: str) -> str:
 
 
 if __name__ == "__main__":
+    assert fr("0,032 SOL") == "0,032 SOL"
+    assert fr("-1,234.5 et -42.5, 07:57-08:33") == "-1 234,5 et -42,5, 07:57-08:33"
     assert fr("5,491 SOL et 0.032 SOL, `H3.x,123` 21/07 19:03:27 1,234.5") == "5 491 SOL et 0,032 SOL, `H3.x,123` 21/07 19:03:27 1 234,5"

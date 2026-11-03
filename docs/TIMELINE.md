@@ -8,7 +8,7 @@ indirecte ou une lecture à confirmer ; C, non revérifié dans un fichier du pr
 |---|---|---|---|---|
 | 11/06/2024 16:25:03 | Création du compte X @DarkMagaCoin | A |  | 11/06/2024 16:25:03 UTC, evidence/web/profiles/fx_DarkMagaCoin.json |
 | 13/07/2024 22:11:00 | Tentative d'assassinat de Donald Trump à Butler | C |  | 13/07 22:11 UTC, connaissance générale et mission, non revérifiée dans un fichier |
-| 14/07/2024 01:32:23 | Le futur créateur reçoit 0,5 SOL de Coinbase 3 | A |  | premier mouvement du wallet ; étiquette Dune. Rupture de traçabilité à l'échange |
+| 14/07/2024 01:32:23 | Le futur créateur reçoit 0,5 SOL de Coinbase 3 | A |  | premier mouvement du wallet ; étiquette Dune. Premier d'une série de 13 wallets en 507 s, voir `docs/CASE_REPORT.md`, N01 |
 | 14/07/2024 01:57:02 | Création de la chaîne Telegram @DMAGACoin | B |  | « Channel created » 01:57:02 UTC, evidence/web/tg_DMAGACoin.html |
 | 14/07/2024 02:05:25 | Création du mint par 8YLEuUtZ…, achat de 7,1 M pour 0,2 SOL | A |  | signature `fePxr7ER3EDxtkXysbcbbCcaztCHMwKBESs2XQzQee8xkBH2u53ULZMP1gMSK9bgGJKj14NcGwpR64YJR3nPiw6`, slot 277417695. Environ 3 h 54 après Butler. Le thread d'@Aristos_Revenge ne date pas le mint : il écrit que @kikisknees a lancé @DarkMagaCoin et les pfp deux jours avant Butler |
 | 14/07/2024 02:15:31 | Migration vers Raydium, 10 min après la création | A | 55 k$ | signature `2zmB9nbUp6FJrymbnHJ8f4sxzqtkGTiaCCb3VHABS6UC9nkjvWb4mnbftzBtUoTxpNvwEuWC19hmfqhchEiCuTMc` |

@@ -12,10 +12,10 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from dmaga.config import DATA
+from dmaga.paths import DATA, SOURCES
 
 posts = {}
-for line in (DATA / "x_posts.jsonl").open():
+for line in (SOURCES / "x_posts.jsonl").open():
     r = json.loads(line)
     if r.get("text"):
         posts.setdefault(r["id"], {"author": r.get("author"), "text": r["text"], "reply": r.get("reply_to_user"), "src": "x_posts.jsonl"})

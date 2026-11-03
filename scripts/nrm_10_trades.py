@@ -15,13 +15,16 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from dmaga.config import BIG, MINT, RAW, WSOL
-from dmaga.normalize import _keys, parse_tx, token_deltas
+from dmaga.config import MINT, RAW, WSOL
+from dmaga.normalize import CPMM_AUTH, _keys, parse_tx, token_deltas
+from dmaga.paths import BIG, exige_v2
 from dmaga.venues import load as load_venues
 
 VAULT_DMAGA = {"5HuEsLbebeuottMsFW3hHcXTrKVsu3WUNSQnSr6aX4eL"}
 VAULT_WSOL = {"3p7DbnWekWjtMQkey6fp1emdwXbAAxecnYuD5eU9ZZPH"}
 VENUES = set(load_venues())
+# la tranche qui comble le trou du 23/07 demande 6 h et recouvre t1721779200 (complète), le brut reste tel quel : coupée à minuit ici
+FIN_DE_TRANCHE = {"full_pool/t1721777789": 1721779200}
 
 SCHEMA = pa.schema([
     ("signature", pa.string()), ("slot", pa.int64()), ("tx_index", pa.int32()), ("block_time", pa.int64()),
@@ -32,7 +35,7 @@ SCHEMA = pa.schema([
 ])
 VAULT_SCHEMA = pa.schema([
     ("signature", pa.string()), ("slot", pa.int64()), ("tx_index", pa.int32()), ("block_time", pa.int64()),
-    ("vault", pa.string()), ("pre", pa.int64()), ("post", pa.int64()),
+    ("vault", pa.string()), ("mint", pa.string()), ("pre", pa.int64()), ("post", pa.int64()),
 ])
 
 
@@ -50,11 +53,17 @@ def process_slice(args):
         raise RuntimeError(f"{label}: tranche incomplète")
     rows, vrows = [], []
     c = Counter()
+    fin = FIN_DE_TRANCHE.get(label)
     for p in sorted(d.glob("p*.jsonl.gz")):
+        if p.name.startswith("._"):
+            continue
         with gzip.open(p, "rt") as f:
             for line in f:
                 tx = json.loads(line)
                 c["tx"] += 1
+                if fin and tx["blockTime"] >= fin:
+                    c["tx_hors_tranche"] += 1
+                    continue
                 if tx["meta"].get("err") is not None:
                     c["tx_failed"] += 1
                     continue
@@ -66,11 +75,12 @@ def process_slice(args):
                 rows.extend(res)
                 keys = _keys(tx)
                 for dl in token_deltas(tx, keys):
-                    # réserves de tous les venues : leur chaîne de soldes prouve qu'aucune transaction ne manque
-                    if dl["account"] in VAULT_DMAGA or dl["account"] in VAULT_WSOL or (dl["mint"] == MINT and dl["owner"] in VENUES):
+                    # réserves de tous les venues, côté DMAGA et côté WSOL : leur chaîne de soldes prouve qu'aucune transaction ne manque
+                    if dl["account"] in VAULT_DMAGA or dl["account"] in VAULT_WSOL or (dl["mint"] == MINT and dl["owner"] in VENUES) \
+                            or (dl["mint"] == WSOL and dl["owner"] in VENUES and dl["owner"] != CPMM_AUTH):
                         vrows.append({"signature": tx["transaction"]["signatures"][0], "slot": tx["slot"],
                                       "tx_index": tx.get("transactionIndex"), "block_time": tx.get("blockTime"),
-                                      "vault": dl["account"], "pre": dl["pre"], "post": dl["post"]})
+                                      "vault": dl["account"], "mint": dl["mint"], "pre": dl["pre"], "post": dl["post"]})
     if c["tx"] != st["n"]:
         raise RuntimeError(f"{label}: {c['tx']} lues pour {st['n']} au curseur")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -83,10 +93,12 @@ def process_slice(args):
 
 
 def main():
+    exige_v2()
     (BIG / "trades.parquet").unlink(missing_ok=True)  # la table finale est périmée dès qu'on renormalise
     if "--force" in sys.argv:
-        for p in list((BIG / "trades_shards").glob("*")) + list((BIG / "vault_shards").glob("*")):
-            p.unlink(missing_ok=True)  # FAT32 : le ._ disparaît avec son fichier
+        for sub in ("trades_shards", "vault_shards"):
+            for p in (BIG / sub).glob("*"):
+                p.unlink(missing_ok=True)  # FAT32 : le ._ disparaît avec son fichier
     labels = [("full_curve", "curve")]
     for p in sorted((RAW / "full_pool").glob("t*")):
         labels.append((f"full_pool/{p.name}", "pool"))

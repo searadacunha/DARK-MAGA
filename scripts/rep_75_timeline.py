@@ -14,8 +14,8 @@ from dmaga.config import DATA, RAW
 from dmaga.db import connect
 from dmaga.frfmt import fr
 
-con = connect()
-VD, VS = "5HuEsLbebeuottMsFW3hHcXTrKVsu3WUNSQnSr6aX4eL", "3p7DbnWekWjtMQkey6fp1emdwXbAAxecnYuD5eU9ZZPH"
+con = connect(mem="700MB")
+VD, VS ="5HuEsLbebeuottMsFW3hHcXTrKVsu3WUNSQnSr6aX4eL", "3p7DbnWekWjtMQkey6fp1emdwXbAAxecnYuD5eU9ZZPH"
 con.execute(f"""CREATE TEMP TABLE chain AS WITH d AS (SELECT slot, tx_index, block_time, post FROM vault WHERE vault='{VD}'),
     s AS (SELECT slot, tx_index, post FROM vault WHERE vault='{VS}')
     SELECT d.block_time t, d.slot, d.tx_index, (s.post/1e9)/(d.post/1e6) price, s.post/1e9 reserve FROM d JOIN s USING (slot, tx_index) WHERE d.post>0 ORDER BY 1""")
@@ -76,7 +76,7 @@ sig_pool = con.execute("SELECT signature FROM trades WHERE kind='lp_add' AND ven
 R = [
     T(1718123103, "Création du compte X @DarkMagaCoin", "A", "11/06/2024 16:25:03 UTC, evidence/web/profiles/fx_DarkMagaCoin.json"),
     T(1720908660, "Tentative d'assassinat de Donald Trump à Butler", "C", "13/07 22:11 UTC, connaissance générale et mission, non revérifiée dans un fichier"),
-    T(1720920743, "Le futur créateur reçoit 0,5 SOL de Coinbase 3", "A", "premier mouvement du wallet ; étiquette Dune. Rupture de traçabilité à l'échange"),
+    T(1720920743, "Le futur créateur reçoit 0,5 SOL de Coinbase 3", "A", "premier mouvement du wallet ; étiquette Dune. Premier d'une série de 13 wallets en 507 s, voir `docs/CASE_REPORT.md`, N01"),
     T(1720922222, "Création de la chaîne Telegram @DMAGACoin", "B", "« Channel created » 01:57:02 UTC, evidence/web/tg_DMAGACoin.html"),
     T(1720922725, "Création du mint par 8YLEuUtZ…, achat de 7,1 M pour 0,2 SOL", "A", f"signature `{sig_create}`, slot 277417695. Environ 3 h 54 après Butler. Le thread d'@Aristos_Revenge ne date pas le mint : il écrit que @kikisknees a lancé @DarkMagaCoin et les pfp deux jours avant Butler"),
     T(1720923331, "Migration vers Raydium, 10 min après la création", "A", f"signature `{sig_pool}`"),

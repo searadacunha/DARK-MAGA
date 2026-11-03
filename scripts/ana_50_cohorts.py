@@ -13,10 +13,11 @@ import json
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from dmaga.config import BIG, DATA
 from dmaga.db import connect
+from dmaga.paths import BIG, DATA, exige_v2
 from dmaga.venues import load as load_venues
 
+exige_v2()
 EVENTS = [
     ("creation_mint", 1720922725, "A", "signature fePxr7ER…, slot 277417695"),
     ("migration_raydium", 1720923331, "A", "signature 2zmB9nbU…, slot 277419045"),
@@ -46,7 +47,7 @@ WINDOWS = [
     ("butler_oct", 1727740800, 1729036800),
 ]
 
-con = connect()
+con = connect(mem="700MB")
 venues = set(load_venues())
 excl = venues | {"5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1", "87g44hEXP7R8ZxoAJtz941tsVftpEXC1LqAFTf2ZHtkH",
                  "39azUYFWPz3VHgKCf3VChUwbpURdCHRxjWVowf5jUJjg", "PNLCQcVCD26aC7ZWgRyr5ptfaR7bBrWdTFgRWwu2tvF"}

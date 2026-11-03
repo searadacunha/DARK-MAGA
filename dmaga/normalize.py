@@ -22,6 +22,9 @@ USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
 STABLE = {USDC, USDT}  # 6 décimales toutes les deux, comptés ensemble dans usdc_raw
 FEE_SHARE = 0.05  # mesuré : médiane 0,85 %, p90 1 %, 3 adresses sur 1 931 swaps du 14 au 21/07
 RAYDIUM_AUTH = "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"
+CPMM_AUTH = "GpMZbSM2GgvTKHJirzeGfMFoaZ8UR2X7F4v8vHTvxFbL"
+# DMAGA n'a qu'un pool CPMM, contre un jeton et pas contre WSOL : réserve appariée relue sur ses 629 transactions (work_F/f01_gpmz.py)
+CPMM_PAIR = {"CEkWPZejSNbVyWpabrKxN5zd9H1p8GuqFSqzobvBq2Wx"}
 
 
 def _keys(tx: dict) -> list[str]:
@@ -64,9 +67,9 @@ def sol_delta(tx: dict, keys: list[str], addr: str) -> int:
 
 
 def _is_venue_account(d: dict, ray_dmaga: set, ray_wsol: set, venues: set) -> bool:
-    if d["owner"] == RAYDIUM_AUTH:
-        # l'autorité Raydium possède les réserves de tous ses pools : seules celles de DMAGA comptent
-        return d["account"] in ray_dmaga or d["account"] in ray_wsol or d["mint"] == MINT
+    if d["owner"] in (RAYDIUM_AUTH, CPMM_AUTH):
+        # une autorité possède les réserves de tous ses pools : seules celles de DMAGA comptent
+        return d["account"] in ray_dmaga or d["account"] in ray_wsol or d["mint"] == MINT or d["account"] in CPMM_PAIR
     return d["owner"] in venues or d["owner"] == BONDING_CURVE
 
 

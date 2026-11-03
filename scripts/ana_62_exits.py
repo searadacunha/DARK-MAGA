@@ -7,11 +7,13 @@ n'est créée à travers elle. Lit exit_flows.parquet par requêtes filtrées, m
 import json
 from collections import defaultdict
 
-from dmaga.config import BIG, DATA
 from dmaga.db import connect
+from dmaga.hot_presume import HOT_PRESUME
 from dmaga.labels import label
+from dmaga.paths import BIG, DATA, exige_v2
 from dmaga.venues import load as load_venues
 
+exige_v2()
 USD = 170.0  # shortcut: stablecoin ramené en SOL au cours moyen de juillet 2024, pour l'ordre de grandeur seulement
 venues = set(load_venues())
 con = connect(mem="700MB", threads=2)
@@ -35,6 +37,8 @@ def classify(a):
     lab = label(a)
     if lab:
         return lab
+    if a in HOT_PRESUME:
+        return "hot présumé, famille Coinbase, non vérifié"
     return "service non nommé (vu par ≥ 15 wallets tracés)" if a in popular else None
 
 

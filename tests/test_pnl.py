@@ -1,4 +1,4 @@
-from dmaga.pnl import Wallet
+from dmaga.pnl import Wallet, residuel_corrige
 
 L = 10**9
 
@@ -56,3 +56,11 @@ def test_lp_deposit_leaves_stock_without_realized():
     w.apply("lp_add", -60, 0, 2, "s", 1, 1, "dlmm")
     assert w.qty == 40 and w.lp_token_in == 60 and w.realized == 0 and w.sold_sol == 0
     assert "liquidité" in w.completeness
+
+
+def test_residual_applies_only_hidden_transfers_after_the_last_seen_balance():
+    soldes = {"vide": 100, "revu": 70, "dest": 5}
+    vu = {"vide": 10, "revu": 50, "dest": 10}
+    # "vide" part après son dernier solde : retiré. "revu" part avant : son solde le reflète déjà. "dest" reçoit après son dernier solde : ajouté.
+    r = residuel_corrige(soldes, vu, [("vide", "dest", 100, 20), ("revu", "autre", 30, 40)])
+    assert r == {"vide": 0, "revu": 70, "dest": 105, "autre": 30}

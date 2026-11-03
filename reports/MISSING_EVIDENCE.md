@@ -15,7 +15,9 @@ Ce qui n'a pas pu être établi, et pourquoi. Une absence n'est jamais rapporté
 | Post original de @ai_9684xtpa | Trouvé, id `1815243177475121253` ; d'autres versions citées par la presse non retrouvées | Pas de recherche native | API X |
 | Source sociale du wallet `9PrmF8sfoD2YShtWUghrGEYgxwabpnzog8gT1V6LEtdq` | **Non retrouvée** | Ni WebSearch, ni Exa, ni les archives. Les transactions sont vérifiées, la citation d'août 2024 non | Benjamin peut fournir le lien s'il l'a |
 
-## Audits non réalisés
+## Audits
+Audit du 03/11 (A données, B statistiques, C attribution, D confrontation) : **NON VALIDÉ tant que les décisions de Benjamin et un nouvel audit des conclusions manquent**, voir `audits/2026-11-03/`.
+
 Trois auditeurs à l'aveugle de la méthode (fuites, statistiques, protocole) n'ont pas été lancés. `etude_final/audit/` n'existe pas. L'amendement 001 a été décidé par l'agent, pas par Benjamin : voir l'amendement 002.
 
 ## Le DM à Musk
@@ -27,7 +29,8 @@ Le DM revendiqué par @DarkMagaCoin n'est **ni prouvé ni réfuté**. Un DM n'es
 | API Wallet Helius (`identity`, `funded-by`) | HTTP 403 sur les clés disponibles | Plan ; remplacé par `getTransfersByAddress` et les étiquettes Dune |
 | Étiquettes Solscan et Solana.fm | Inaccessibles | Solana.fm répond 502, l'API publique Solscan 404 ; liste Dune Spellbook utilisée (117 adresses), archivée avec son empreinte dans `evidence/labels/` |
 | Identité des services non étiquetés | Partielle | `3LoAYHuS…`, `HFqp6ErW…`, `GP8StUXN…`, `3CgvbiM3…`, `7iWnBRRh…` sont publiés par Jupiter (`evidence/labels/`). `FERjPVNE…`, `3eGdjMdQ…` et de nombreux hubs restent non nommés : on mesure leur comportement, pas leur marque |
-| Traversée des échanges | **Impossible par construction** | Un dépôt sur un hot wallet coupe la trace. Aucune continuité n'est créée à travers lui |
+| Titulaire d'un compte d'échange | **Hors de portée sans réquisition** | Un dépôt sur un hot wallet ne dit pas qui détient le compte. Aucune continuité n'est créée à travers lui, sauf un indice ponctuel : un montant apparié à l'écart exact près (`docs/CASE_REPORT.md`, N04) |
+| Venues sans historique, programmes AMM hors liste | Non collectés, K10 | 6 adresses de `venues.json` sans dossier `full_venue`, quelques dizaines de transactions (A-11). Demande du réseau |
 | Requêtes de flux tronquées | Partielles sur les wallets très actifs | Plafonds de pages. Chaque fichier de `raw/flows` indique `truncated`, et `exit_flows.parquet` et `funding_edges.parquet` le portent ligne par ligne |
 | Transferts SPL sans référence au mint sur les wallets non tracés | Non vus | Seuls les wallets tracés (`getTransfersByAddress`) les révèlent. Leur réalisé peut donc être surévalué, signalé par la colonne de complétude |
 

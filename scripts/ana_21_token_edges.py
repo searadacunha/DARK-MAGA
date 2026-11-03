@@ -12,11 +12,13 @@ import json
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from dmaga.config import BIG, RAW
+from dmaga.config import RAW
 from dmaga.db import connect
 from dmaga.labels import label
+from dmaga.paths import BIG, exige_v2
 
-con = connect()
+exige_v2()
+con = connect(mem="700MB")
 rows = {}
 cur = con.execute("""SELECT signature, slot, block_time, owner, token_delta, venue, source FROM trades
                      WHERE kind='transfer' AND owner IS NOT NULL ORDER BY signature""")

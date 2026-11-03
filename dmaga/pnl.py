@@ -11,6 +11,18 @@ Conventions :
 from dataclasses import dataclass, field
 
 
+def residuel_corrige(soldes: dict, dernier_vu: dict, caches: list) -> dict:
+    """Dernier solde vu par propriétaire, plus les transferts (src, dst, q, t) absents du brut et postérieurs à ce solde : sans eux, un compte vidé puis jamais revu garde un solde périmé.
+    shortcut: dernier_vu est par propriétaire et pas par compte, à revoir si un wallet à plusieurs comptes de jetons compte dans une conclusion."""
+    out = dict(soldes)
+    for src, dst, q, t in caches:
+        if t > dernier_vu.get(src, 0):
+            out[src] = out.get(src, 0) - q
+        if t > dernier_vu.get(dst, 0):
+            out[dst] = out.get(dst, 0) + q
+    return {o: max(v, 0) for o, v in out.items()}
+
+
 @dataclass
 class Wallet:
     owner: str

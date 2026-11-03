@@ -4,7 +4,8 @@ import time
 
 import duckdb
 
-from .config import BIG, TMP
+from .config import TMP
+from .paths import BIG
 
 
 def connect(mem="900MB", threads=2):  # plafond bas : sur cette machine, la mémoire devient du swap, donc du disque
@@ -24,9 +25,10 @@ def connect(mem="900MB", threads=2):  # plafond bas : sur cette machine, la mém
         con.execute(f"CREATE VIEW trades AS SELECT * FROM read_parquet('{final}')")
         con.execute("CREATE VIEW vault AS SELECT DISTINCT * FROM vault_all")
         return con
-    # une transaction peut venir de plusieurs historiques : une seule version, tout le parseur voit la même chose
+    # une transaction peut venir de plusieurs historiques, y compris de la même source (deux venues, deux tranches) : une seule version
     con.execute("""CREATE VIEW trades AS WITH r AS (SELECT *, CASE source WHEN 'pool' THEN 0 WHEN 'curve' THEN 1 WHEN 'mint' THEN 2 ELSE 3 END pr FROM trades_all),
                    b AS (SELECT signature, min(pr) m FROM r GROUP BY 1)
-                   SELECT r.* EXCLUDE (pr) FROM r JOIN b ON r.signature = b.signature AND r.pr = b.m""")
+                   SELECT DISTINCT ON (r.signature, r.kind, r.owner, r.venue, r.token_delta) r.* EXCLUDE (pr)
+                   FROM r JOIN b ON r.signature = b.signature AND r.pr = b.m""")
     con.execute("CREATE VIEW vault AS SELECT DISTINCT * FROM vault_all")
     return con

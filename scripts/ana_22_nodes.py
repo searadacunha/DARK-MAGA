@@ -3,7 +3,8 @@
 
 Règle, fixée avant de regarder les clusters :
 - `venue` : réserve de pool (dmaga/venues.py) ou programme connu.
-- `cex` : étiquette Dune.
+- `cex` : échange de la liste Dune.
+- `service` : tout autre compte étiqueté (Jupiter, exécutants et escrows DCA, ponts).
 - `router` : au moins 20 contreparties distinctes ET au moins 50 % de ses mouvements DMAGA sont
   des aller-retour dans la même transaction (jetons reçus et renvoyés dans la même signature).
 - `hub` : au moins 50 contreparties distinctes sur DMAGA, sans pass-through.
@@ -15,12 +16,14 @@ from collections import defaultdict
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from dmaga.config import BIG, RAW
+from dmaga.config import RAW
 from dmaga.db import connect
-from dmaga.labels import label
+from dmaga.labels import INFRA, label, load as load_labels
+from dmaga.paths import BIG, exige_v2
 from dmaga.venues import load as load_venues
 
-con = connect()
+exige_v2()
+con = connect(mem="700MB")
 venues = load_venues()
 con.execute(f"CREATE VIEW e AS SELECT * FROM read_parquet('{BIG}/token_edges.parquet')")
 
@@ -46,7 +49,7 @@ for a in counter:
     if a in venues or a == "(multiple)":
         kind = "venue"
     elif lab:
-        kind = "cex" if lab.split()[0] not in ("Raydium", "Pump.fun", "DMAGA") else "venue"
+        kind = "cex" if load_labels()[a][1].startswith("dune") else "venue" if a in INFRA else "service"
     elif len(counter[a]) >= 20 and pt >= 0.5:
         kind = "router"
     elif len(counter[a]) >= 50:
@@ -81,7 +84,7 @@ for d in (RAW / "flows").iterdir():
                 r.update(kind="router", pass_through=round(pt, 3), n_counterparts=max(r["n_counterparts"], len(others)))
                 break
         else:
-            rows.append({"address": a, "kind": "router", "label": None, "n_counterparts": len(others), "n_tx": total,
+            rows.append({"address": a, "kind": "router", "label": label(a), "n_counterparts": len(others), "n_tx": total,
                          "pass_through": round(pt, 3), "qty_moved": 0.0})
 
 pq.write_table(pa.Table.from_pylist(rows), BIG / "nodes.parquet", compression="zstd")
