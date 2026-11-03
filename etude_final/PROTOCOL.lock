@@ -18,7 +18,9 @@
   "../dmaga/helius.py": "fd1945f85e10f8ec6bda6904f7220b18d28cb9e568f8e290cfae2280ea02d754",
   "../dmaga/config.py": "0bbcfa3ff37e4be5d3e56122ac7f49163366df621b2ebbddd5dcaa16ae78c06f",
   "../scripts/col_40_controls.py": "0c3773d0934b9c9b6a0cb8e9fe6fc1a689bf8f978151a3b0bd3f2da3ff9ae35c",
-  "controles/synth.md": "820a4e2adbfe52682aec116d74a9e40be543b607e60dcc1edd51446066d8dbf6"
+  "controles/synth.md": "820a4e2adbfe52682aec116d74a9e40be543b607e60dcc1edd51446066d8dbf6",
+  "derived/metrics.csv": "bf593dd260b67a3e192477312950c362da140cdf65946e34bfc8aac1db455212",
+  "derived/selection_counts.json": "bd9c2b334ec220edaede92b67be927313c5fe17cc2d785b703c176994646089d"
  },
  "controles_positifs": "controles/synth.md",
  "sans_controles_raison": null,
@@ -29,6 +31,21 @@
   "tag": null
  },
  "immuable": false,
- "ajouts": [],
- "regle": "These files no longer change. Any change of method = a NEW file in amendements/ (resultats_vus: oui|non). Only Benjamin unfreezes."
+ "ajouts": [
+  {
+   "t_utc": "2026-11-03 03:25:30",
+   "fichiers": [
+    "derived/metrics.csv",
+    "derived/selection_counts.json"
+   ],
+   "raison": "table calculée par le code gelé avant tout test",
+   "controles": null,
+   "sans_controles_raison": "table de mesures, code déjà couvert par controles/synth.md",
+   "lock_sha_avant": "5aed3fe5e9ed75dd2c6f4d8fc47a189b386c72e5700b20c3bcfd1d72fa753421"
+  }
+ ],
+ "regle": "These files no longer change. Any change of method = a NEW file in amendements/ (resultats_vus: oui|non). Only Benjamin unfreezes.",
+ "_historique_sha": [
+  "5aed3fe5e9ed75dd2c6f4d8fc47a189b386c72e5700b20c3bcfd1d72fa753421"
+ ]
 }

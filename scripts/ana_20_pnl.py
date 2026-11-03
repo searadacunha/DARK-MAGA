@@ -54,8 +54,20 @@ def main():
     usd_proceeds: dict[str, float] = {}
     missing_px = 0
     n = 0
+    # transferts vus seulement par getTransfersByAddress (SPL sans référence au mint) : deux lignes par arête, sans double compte
+    edges = BIG / "token_edges.parquet"
+    extra = ""
+    if edges.exists():
+        con.execute(f"""CREATE TEMP TABLE x AS SELECT e.signature, e.slot, e.block_time, e.src, e.dst, CAST(round(e.qty*1e6) AS BIGINT) q
+            FROM read_parquet('{edges}') e WHERE e.how='gtba' AND e.dst <> '(multiple)' AND NOT EXISTS
+            (SELECT 1 FROM trades t WHERE t.signature=e.signature AND (t.owner=e.src OR t.owner=e.dst))""")
+        cut = f"AND block_time < {cutoff}" if cutoff else ""
+        extra = f"""UNION ALL SELECT src, 'transfer', -q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}
+                    UNION ALL SELECT dst, 'transfer', q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}"""
+        print("transferts ajoutés depuis les flux", con.execute("SELECT count(*) FROM x").fetchone()[0])
     cur = con.execute(f"""SELECT owner, kind, token_delta, sol_lamports, block_time, signature, slot, tx_index, venue, usdc_raw
                           FROM trades WHERE kind IN ('swap','transfer','lp_add','lp_remove','fee_share','swap_other') AND owner IS NOT NULL {where}
+                          {extra}
                           ORDER BY slot, tx_index""")
     while True:
         rows = cur.fetchmany(50000)

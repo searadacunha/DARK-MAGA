@@ -1,156 +1,97 @@
 #!/usr/bin/env python3
-"""Clusters financiers à partir d'arêtes réelles, séparées par type de preuve.
+"""Clusters financiers à partir d'arêtes réelles, séparées par type de preuve. Calcul dans DuckDB, mémoire plafonnée.
 
 Types d'arêtes, du plus fort au plus faible :
-  token_direct   transfert de DMAGA entre deux wallets, hors swap, ≥ 100 000 jetons, sans contrepartie en SOL dans la tx
-  sol_direct     SOL direct ≥ 0,1 SOL entre deux wallets
+  token_direct   transfert de DMAGA entre deux wallets, hors swap, ≥ 100 000 jetons
+  sol_direct     SOL direct ≥ 0,1 SOL entre deux wallets ayant échangé DMAGA, du 13/06/2024 au 31/12/2024
+  sol_petit      SOL direct entre 0,005 et 0,1 : lien faible, listé, ne fusionne jamais deux wallets
   funder_commun  même financeur direct, non service, dans les 72 h avant le premier achat
   sink_commun    même destination de sortie, non service, à moins de 7 jours d'écart
-Un nœud `service` (échange, routeur, hub, venue, ou plus de 1 000 signatures récentes sans étiquette) n'est jamais
-un lien. Poussière de SOL écartée. Un cluster dit « ces wallets sont reliés par ces transactions », pas « une
-même personne » ; la force et les explications alternatives sont écrites avec lui.
+Un nœud de service (échange, compte Jupiter, routeur, hub, venue, adresse vue par ≥ 15 wallets tracés, ≥ 30 voisins directs) n'est
+jamais un lien. Un cluster dit « ces wallets sont reliés par ces transactions », pas « une même personne ».
 
-Sorties : data/wallet_clusters.parquet, BIG/link_edges.parquet.
+Sorties : data/wallet_clusters.parquet, BIG/link_edges.parquet. À lancer sous scripts/guard.py.
 """
-import gzip
-import json
 from collections import defaultdict
-from pathlib import Path
 
 import networkx as nx
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from dmaga.config import BIG, DATA, RAW
+from dmaga.config import BIG, DATA
 from dmaga.db import connect
-from dmaga.labels import label
+from dmaga.labels import load as load_labels
 from dmaga.venues import load as load_venues
 
-FLOWS = RAW / "flows"
-venues = load_venues()
-INFRA = {"5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1", "39azUYFWPz3VHgKCf3VChUwbpURdCHRxjWVowf5jUJjg",
-         "87g44hEXP7R8ZxoAJtz941tsVftpEXC1LqAFTf2ZHtkH", "PNLCQcVCD26aC7ZWgRyr5ptfaR7bBrWdTFgRWwu2tvF"}
-DUST = 0.1
-
-con = connect()
-con.execute(f"CREATE VIEW n AS SELECT * FROM read_parquet('{BIG}/nodes.parquet')")
-con.execute(f"CREATE VIEW e AS SELECT * FROM read_parquet('{BIG}/token_edges.parquet')")
-service = {a for (a,) in con.execute("SELECT address FROM n WHERE kind <> 'wallet'").fetchall()} | INFRA | set(venues)
-# activité : plus de 1 000 signatures sur la dernière page = comportement de service ou de bot, jamais un lien de propriété
-busy = set()
-for d in FLOWS.iterdir():
-    p = d / "age.json.gz"
-    if d.name.startswith("._") or not p.exists():
-        continue
-    j = json.load(gzip.open(p))
-    if j.get("more") and j.get("recent_page", 0) >= 1000:
-        busy.add(d.name)
-# une contrepartie jamais tracée mais vue par beaucoup de wallets tracés est traitée comme un service
-seen_by = defaultdict(set)
-for d in FLOWS.iterdir():
-    if d.name.startswith("._") or not d.is_dir():
-        continue
-    for q in ("in_before", "sol_out_after", "usdc_out_after", "usdt_out_after"):
-        p = d / f"{q}.json.gz"
-        if not p.exists():
-            continue
-        for x in json.load(gzip.open(p))["rows"]:
-            other = x["toUserAccount"] if q != "in_before" else x["fromUserAccount"]
-            if other:
-                seen_by[other].add(d.name)
-popular = {a for a, s in seen_by.items() if len(s) >= 15}
-
-
-def bad(a):
-    return a is None or a == "(multiple)" or a in service or a in popular or label(a) is not None
-
-
-edges = []
-for sig, a, b, q, t, how in con.execute(
-        "SELECT signature, src, dst, qty, block_time, how FROM e WHERE qty >= 100000 AND dst <> '(multiple)'").fetchall():
-    if bad(a) or bad(b):
-        continue
-    edges.append({"src": a, "dst": b, "type": "token_direct", "amount": q, "asset": "DMAGA", "block_time": t, "signature": sig})
-
-funded = defaultdict(list)
-sinks = defaultdict(list)
-first_buy = dict(con.execute(f"SELECT owner, first_buy_time FROM read_parquet('{BIG}/wallets.parquet')").fetchall())
-for d in FLOWS.iterdir():
-    if d.name.startswith("._") or not d.is_dir():
-        continue
-    w = d.name
-    for q in ("in_before", "first_in", "sol_out_after"):
-        p = d / f"{q}.json.gz"
-        if not p.exists():
-            continue
-        for x in json.load(gzip.open(p))["rows"]:
-            a, b = x.get("fromUserAccount"), x.get("toUserAccount")
-            amt = float(x["uiAmount"])
-            if amt < DUST:
-                continue
-            other = a if b == w else b
-            if bad(other):
-                continue
-            edges.append({"src": a, "dst": b, "type": "sol_direct", "amount": amt, "asset": "SOL", "block_time": x["blockTime"], "signature": x["signature"]})
-            if b == w and q == "in_before" and first_buy.get(w) and first_buy[w] - x["blockTime"] <= 72 * 3600:
-                funded[a].append((w, x["blockTime"], x["signature"], amt))
-            if a == w and q == "sol_out_after":
-                sinks[b].append((w, x["blockTime"], x["signature"], amt))
-
-for f, lst in funded.items():
-    ws = sorted({x[0] for x in lst})
-    for i, u in enumerate(ws):
-        for v in ws[i + 1:]:
-            edges.append({"src": u, "dst": v, "type": "funder_commun", "amount": 0.0, "asset": f, "block_time": min(x[1] for x in lst), "signature": ""})
-for s, lst in sinks.items():
-    for i, u in enumerate(lst):
-        for v in lst[i + 1:]:
-            if u[0] != v[0] and abs(u[1] - v[1]) <= 7 * 86400:
-                edges.append({"src": u[0], "dst": v[0], "type": "sink_commun", "amount": 0.0, "asset": s, "block_time": min(u[1], v[1]), "signature": u[2]})
-
-uniq = {(e["src"], e["dst"], e["type"], e["signature"], e["asset"]): e for e in edges}
-edges = list(uniq.values())
-pq.write_table(pa.Table.from_pylist(edges), BIG / "link_edges.parquet", compression="zstd")
+INFRA = ["5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1", "39azUYFWPz3VHgKCf3VChUwbpURdCHRxjWVowf5jUJjg",
+         "87g44hEXP7R8ZxoAJtz941tsVftpEXC1LqAFTf2ZHtkH", "PNLCQcVCD26aC7ZWgRyr5ptfaR7bBrWdTFgRWwu2tvF"]
+con = connect(mem="900MB", threads=2)
+con.execute("CREATE TEMP TABLE svc(a VARCHAR)")
+con.executemany("INSERT INTO svc VALUES (?)", [[a] for a in set(load_labels()) | set(load_venues()) | set(INFRA)])
+F, X = f"read_parquet('{BIG}/funding_edges.parquet')", f"read_parquet('{BIG}/exit_flows.parquet')"
+W, E, N = f"read_parquet('{BIG}/wallets.parquet')", f"read_parquet('{BIG}/token_edges.parquet')", f"read_parquet('{BIG}/nodes.parquet')"
+con.execute(f"INSERT INTO svc SELECT address FROM {N} WHERE kind <> 'wallet'")
+con.execute(f"""INSERT INTO svc SELECT a FROM (SELECT dst a, wallet FROM {X} UNION ALL SELECT src a, wallet FROM {F})
+                GROUP BY a HAVING count(DISTINCT wallet) >= 15""")
+con.execute("CREATE TEMP TABLE bad AS SELECT DISTINCT a FROM svc")
+con.execute(f"CREATE TEMP TABLE traders AS SELECT owner a, first_buy_time fb FROM {W}")
+n_bad = con.execute("SELECT count(*) FROM bad").fetchone()[0]
+T0, T1 = 1718300000, 1735689600
+con.execute(f"""CREATE TEMP TABLE sol AS
+    SELECT src, wallet dst, sol amount, block_time, signature FROM {F} WHERE wallet NOT IN (SELECT a FROM bad) AND src NOT IN (SELECT a FROM bad)
+    UNION SELECT wallet src, dst, amount, block_time, signature FROM {X} WHERE asset='SOL' AND wallet NOT IN (SELECT a FROM bad) AND dst NOT IN (SELECT a FROM bad)""")
+con.execute(f"""CREATE TEMP TABLE e AS
+    SELECT src, dst, 'token_direct' type, qty amount, 'DMAGA' asset, block_time, signature FROM {E}
+      WHERE qty >= 100000 AND dst <> '(multiple)' AND src NOT IN (SELECT a FROM bad) AND dst NOT IN (SELECT a FROM bad)
+    UNION ALL SELECT src, dst, CASE WHEN amount >= 0.1 THEN 'sol_direct' ELSE 'sol_petit' END, amount, 'SOL', block_time, signature FROM sol
+      WHERE amount >= 0.005 AND block_time BETWEEN {T0} AND {T1} AND src IN (SELECT a FROM traders) AND dst IN (SELECT a FROM traders)""")
+# au moins 30 voisins directs : comportement de service, retiré
+con.execute("""CREATE TEMP TABLE hub AS SELECT a FROM (SELECT src a, dst b FROM e WHERE type IN ('token_direct','sol_direct')
+               UNION SELECT dst a, src b FROM e WHERE type IN ('token_direct','sol_direct')) GROUP BY a HAVING count(*) >= 30""")
+con.execute("DELETE FROM e WHERE src IN (SELECT a FROM hub) OR dst IN (SELECT a FROM hub)")
+con.execute(f"""INSERT INTO e WITH f AS (SELECT DISTINCT s.src f, s.dst w, s.block_time t FROM sol s JOIN traders tr ON tr.a = s.dst
+                  WHERE s.amount >= 0.1 AND tr.fb IS NOT NULL AND s.block_time < tr.fb AND tr.fb - s.block_time <= 259200 AND s.src NOT IN (SELECT a FROM hub))
+    SELECT a.w, b.w, 'funder_commun', 0.0, a.f, min(least(a.t, b.t)), '' FROM f a JOIN f b ON a.f = b.f AND a.w < b.w GROUP BY a.w, b.w, a.f""")
+con.execute(f"""INSERT INTO e WITH o AS (SELECT DISTINCT wallet w, dst d, block_time t FROM {X} WHERE asset='SOL' AND amount >= 0.1 AND wallet NOT IN (SELECT a FROM bad)
+                  AND wallet IN (SELECT a FROM traders) AND dst NOT IN (SELECT a FROM bad) AND dst NOT IN (SELECT a FROM hub) AND block_time < {T1})
+    SELECT a.w, b.w, 'sink_commun', 0.0, a.d, min(least(a.t, b.t)), '' FROM o a JOIN o b ON a.d = b.d AND a.w < b.w AND abs(a.t - b.t) <= 604800 GROUP BY a.w, b.w, a.d""")
+tmp = BIG / "link_edges.tmp.parquet"
+con.execute(f"COPY e TO '{tmp}' (FORMAT parquet, COMPRESSION zstd)")
+tmp.replace(BIG / "link_edges.parquet")
+counts = dict(con.execute("SELECT type, count(*) FROM e GROUP BY 1").fetchall())
 
 # composantes sur les seules preuves directes : les liens faibles sont listés, ils ne fusionnent pas
 G = nx.Graph()
-for e in edges:
-    if e["type"] in ("token_direct", "sol_direct"):
-        G.add_edge(e["src"], e["dst"])
-pnl = {r[0]: r[1:] for r in con.execute(f"SELECT owner, realized_sol, net_sol_all, bought_sol, residual_qty, first_buy_time, bought_qty, transfer_in_qty, transfer_out_qty FROM read_parquet('{BIG}/wallets.parquet')").fetchall()}
-weak = defaultdict(lambda: defaultdict(int))
-for e in edges:
-    if e["type"] in ("funder_commun", "sink_commun"):
-        weak[e["src"]][e["type"]] += 1
-        weak[e["dst"]][e["type"]] += 1
+agg = defaultdict(lambda: [0, 0, 0.0])
+dirs = defaultdict(set)
+for a, b, k, q in con.execute("SELECT src, dst, type, amount FROM e WHERE type IN ('token_direct','sol_direct')").fetchall():
+    G.add_edge(a, b)
+    p = frozenset((a, b))
+    agg[p][0 if k == "token_direct" else 1] += 1
+    dirs[p].add(a)
+    if k == "token_direct":
+        agg[p][2] += q
+pnl = {r[0]: r[1:] for r in con.execute(f"SELECT owner, realized_sol, net_sol_all, bought_sol, residual_qty, first_buy_time, bought_qty FROM {W}").fetchall()}
 clusters = []
 for i, comp in enumerate(sorted(nx.connected_components(G), key=len, reverse=True)):
     if len(comp) < 2:
         continue
-    members = sorted(comp)
-    inside = [e for e in edges if e["src"] in comp and e["dst"] in comp and e["type"] in ("token_direct", "sol_direct")]
-    tok = [e for e in inside if e["type"] == "token_direct"]
-    pair_dirs = defaultdict(set)
-    for e in inside:
-        pair_dirs[frozenset((e["src"], e["dst"]))].add(e["src"])
-    two_way = sum(1 for v in pair_dirs.values() if len(v) == 2)
-    known = [pnl[m] for m in members if m in pnl]
+    pairs = [frozenset((u, v)) for u, v in G.subgraph(comp).edges()]
+    tok = sum(agg[p][0] for p in pairs)
+    sol = sum(agg[p][1] for p in pairs)
+    moved = sum(agg[p][2] for p in pairs)
+    tw = sum(1 for p in pairs if len(dirs[p]) == 2)
+    known = [pnl[m] for m in comp if m in pnl]
     fb = [k[4] for k in known if k[4]]
-    strength = ("B" if (len(tok) >= 2 and two_way >= 1) or len(tok) >= 3 else "C")
     clusters.append({
-        "cluster": i, "n_wallets": len(members), "members": ",".join(members),
-        "n_token_edges": len(tok), "n_sol_edges": len(inside) - len(tok), "n_two_way_pairs": two_way,
-        "dmaga_moved": sum(e["amount"] for e in tok), "realized_sol_sum": sum(k[0] for k in known),
-        "net_sol_sum": sum(k[1] for k in known), "bought_sol_sum": sum(k[2] for k in known),
-        "bought_qty_sum": sum(k[5] for k in known), "residual_qty_sum": sum(k[3] for k in known),
-        "first_buy": min(fb) if fb else None, "strength": strength,
-        "signatures": ",".join(sorted({e["signature"] for e in tok})[:40]),
-        "justification": (f"{len(tok)} transfert(s) direct(s) de DMAGA ≥ 100 k, {len(inside) - len(tok)} virement(s) de SOL ≥ 0,1, "
-                          f"{two_way} paire(s) dans les deux sens. Alternatives : vente de gré à gré, cadeau, partage au sein d'un "
-                          "groupe sans propriétaire unique, paiement d'un service."),
+        "cluster": i, "n_wallets": len(comp), "members": ",".join(sorted(comp)), "n_token_edges": tok, "n_sol_edges": sol, "n_two_way_pairs": tw,
+        "dmaga_moved": moved, "realized_sol_sum": sum(k[0] for k in known), "net_sol_sum": sum(k[1] for k in known), "bought_sol_sum": sum(k[2] for k in known),
+        "bought_qty_sum": sum(k[5] for k in known), "residual_qty_sum": sum(k[3] for k in known), "first_buy": min(fb) if fb else None,
+        "strength": "B" if (tok >= 2 and tw >= 1) or tok >= 3 else "C",
+        "justification": (f"{tok} transfert(s) direct(s) de DMAGA ≥ 100 k, {sol} virement(s) de SOL ≥ 0,1, {tw} paire(s) dans les deux sens. Alternatives : vente de gré à "
+                          "gré, cadeau, partage dans un groupe sans propriétaire unique, paiement d'un service. Une grande composante peut venir d'un effet de chaîne."),
     })
-schema_rows = clusters or [{"cluster": -1}]
-pq.write_table(pa.Table.from_pylist(schema_rows), DATA / "wallet_clusters.parquet", compression="zstd")
-print(f"arêtes={len(edges)} clusters={len(clusters)} services={len(service)} populaires={len(popular)} occupés={len(busy)}")
-for c in clusters[:12]:
-    print(c["cluster"], c["n_wallets"], "tok", c["n_token_edges"], "sol", c["n_sol_edges"], "2 sens", c["n_two_way_pairs"], "achetés", round(c["bought_qty_sum"]), "réalisé", round(c["realized_sol_sum"]), c["strength"])
+pq.write_table(pa.Table.from_pylist(clusters), DATA / "wallet_clusters.parquet", compression="zstd")
+print(f"arêtes={counts} clusters={len(clusters)} services={n_bad}")
+for c in sorted(clusters, key=lambda c: -c["bought_qty_sum"])[:8]:
+    print(c["cluster"], c["n_wallets"], "tok", c["n_token_edges"], "sol", c["n_sol_edges"], "2 sens", c["n_two_way_pairs"], "réalisé", round(c["realized_sol_sum"]), c["strength"], c["members"][:60])

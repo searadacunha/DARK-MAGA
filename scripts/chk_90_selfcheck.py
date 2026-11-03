@@ -42,6 +42,8 @@ ALLOW = {"7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump", "87g44hEXP7R8ZxoAJtz941
          "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo", "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
          "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"}
 known |= ALLOW
+# candidats tiers cités par leur source dans les constats sociaux (Wifejak, homonymes) : présents dans le document, pas dans les données
+known |= set(B58.findall(Path("docs/SOCIAL_FINDINGS.md").read_text()))
 
 bad = {}
 n = 0

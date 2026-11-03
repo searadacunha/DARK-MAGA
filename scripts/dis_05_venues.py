@@ -49,7 +49,7 @@ def scan(path):
 
 
 def main():
-    files = [str(p) for lab in ("full_pool", "full_mint") for d in sorted((RAW / lab).glob("t*"))
+    files = [str(p) for lab in ("full_pool", "full_mint", "full_venue") for d in sorted((RAW / lab).glob("[!.]*"))
              for p in sorted(d.glob("p*.jsonl.gz"))] + [str(p) for p in sorted((RAW / "full_curve").glob("p*.jsonl.gz"))]
     two, quotes, progs, signers = Counter(), defaultdict(Counter), defaultdict(Counter), set()
     with Pool(3, maxtasksperchild=20) as pool:

@@ -48,7 +48,19 @@ for line in Path("evidence/x_wayback/recovered.jsonl").open():
 posts = [p for p in posts if 1720900000 < p["t"] < 1722000000]
 posts.sort(key=lambda p: p["t"])
 
-edges = con.execute("SELECT src, dst, type, sum(amount), count(*), min(block_time), any_value(signature) FROM l GROUP BY 1,2,3").fetchall()
+# vue centrée : groupes reliés avant Musk et wallets signalés, en position fixe calculée ici. Le reste est dans link_edges.parquet.
+TAGGED = ("9PrmF8sfoD2YShtWUghrGEYgxwabpnzog8gT1V6LEtdq", "GXZvXsD6hxaLeFvQisWpdAwsayJxga7w9EeafhFZG2Ra", "5QhJJcFZu2ashyKyWSTGHcsyo6ZBCbpVuJqeutvQHScd",
+          "H3QsBrrivimFJmSpTXuvig2n1Bh7JuYxrriRSEszT6cc", "8YLEuUtZ4eFMJbf46oNb1CeG6dYFWGyxnQSh9hrgzBzR")
+groups = json.loads((DATA / "prevent_groups.json").read_text())
+core = {m for g in groups for m in g["members"]} | set(TAGGED)
+con.execute("CREATE TEMP TABLE core(a VARCHAR)")
+con.executemany("INSERT INTO core VALUES (?)", [[a] for a in core])
+edges = con.execute("""SELECT src, dst, type, sum(amount), count(*), min(block_time), any_value(signature) FROM l
+    WHERE type IN ('token_direct','sol_direct','sol_petit','funder_commun')
+      AND ((src IN (SELECT a FROM core) AND dst IN (SELECT a FROM core)) OR ((src IN {t} OR dst IN {t}) AND amount >= 1))
+    GROUP BY 1,2,3""".format(t=TAGGED)).fetchall()
+chk = json.loads(Path("reports/data_checks/group_edges_check.json").read_text())["gaz_vers_createur"]
+edges.append((TAGGED[2], TAGGED[4], "sol_petit", float(chk["montant"]), 1, chk["t"], chk["signature"]))
 ids = {}
 for s, d, *_ in edges:
     ids.setdefault(s, len(ids))
@@ -57,14 +69,33 @@ meta = {r[0]: r[1:] for r in con.execute("SELECT owner, realized_sol, net_sol_al
 REPORTED = {"9PrmF8sfoD2YShtWUghrGEYgxwabpnzog8gT1V6LEtdq": "signalé", "GXZvXsD6hxaLeFvQisWpdAwsayJxga7w9EeafhFZG2Ra": "@ai_9684xtpa",
             "5QhJJcFZu2ashyKyWSTGHcsyo6ZBCbpVuJqeutvQHScd": "@0xRamonos", "H3QsBrrivimFJmSpTXuvig2n1Bh7JuYxrriRSEszT6cc": "@ashrobinqt",
             "8YLEuUtZ4eFMJbf46oNb1CeG6dYFWGyxnQSh9hrgzBzR": "créateur"}
+import networkx as nx  # noqa: E402
+
+G = nx.Graph()
+G.add_nodes_from(ids)
+for x, y, k, *_ in edges:
+    if k != "funder_commun":
+        G.add_edge(x, y)
+comps = sorted(nx.connected_components(G), key=len, reverse=True)
+pos, ox, oy, rowh = {}, 20.0, 20.0, 0.0
+for c in comps:
+    w = 620.0 if len(c) >= 25 else 250.0 if len(c) >= 6 else 110.0
+    if ox + w > 1130:
+        ox, oy, rowh = 20.0, oy + rowh + 16, 0.0
+    sub = nx.spring_layout(G.subgraph(c), seed=7, k=1.6 / max(len(c) ** 0.5, 1), iterations=120) if len(c) > 1 else {next(iter(c)): (0, 0)}
+    for n, (x, y) in sub.items():
+        pos[n] = (ox + (x + 1) / 2 * (w - 20) + 10, oy + (y + 1) / 2 * (w * 0.8 - 20) + 10)
+    ox += w
+    rowh = max(rowh, w * 0.8)
+HEIGHT = int(oy + rowh + 30)
 nodes = []
 for a, i in ids.items():
     m = meta.get(a)
     nodes.append({"id": i, "a": a, "tag": REPORTED.get(a), "lab": label(a),
                   "real": round(m[0], 1) if m else None, "net": round(m[1], 1) if m else None,
-                  "buy": round(m[2], 2) if m else None, "res": round((m[3] or 0) / 1e6, 2) if m else None, "fb": m[4] if m else None})
+                  "buy": round(m[2], 2) if m else None, "res": round((m[3] or 0) / 1e6, 2) if m else None, "fb": m[4] if m else None, "x": round(pos[a][0], 1), "y": round(pos[a][1], 1)})
 links = [{"s": ids[s], "t": ids[d], "k": k, "amt": round(a or 0, 2), "n": n, "at": t, "sig": sig} for s, d, k, a, n, t, sig in edges]
-data = {"price": price, "events": events, "posts": posts, "nodes": nodes, "links": links}
+data = {"price": price, "events": events, "posts": posts, "nodes": nodes, "links": links, "h": HEIGHT}
 
 HTML = r"""<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>Dark MAGA, chronologie et graphe financier</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"><style>
@@ -78,13 +109,13 @@ h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:26px 0 6px}p{color:var
 table{border-collapse:collapse;width:100%;font-size:12.5px}td,th{border-bottom:1px solid var(--g);padding:3px 6px;text-align:left}th{color:var(--t2);font-weight:600}a{color:var(--c1)}
 </style></head><body><main>
 <h1>Dark MAGA ($DMAGA) : chronologie et graphe financier</h1>
-<p>Une arête dit qu'une transaction ou un fait existe, pas que deux adresses ont le même propriétaire. Les services (échanges, pools, routeurs) sont retirés du graphe.</p>
+<p>Une arête dit qu'une transaction existe, pas que deux adresses ont le même propriétaire. Échanges, pools et comptes Jupiter sont retirés. Vue limitée aux groupes reliés par des transferts directs avant Musk et aux wallets signalés ; le graphe complet est dans <code>data/link_edges.parquet</code>.</p>
 <h2>Capitalisation du pool Raydium en SOL, échelle log, avec les événements et les posts archivés</h2>
 <div class="row"><label><input type="range" id="zoom" min="0" max="2" value="0"> <span id="zoomL"></span></label></div>
 <svg id="c" viewBox="0 0 1140 380" role="img" aria-label="Capitalisation de DMAGA en SOL dans le temps, avec événements"></svg>
 <h2>Graphe financier : wallets et types de preuve</h2>
 <div class="row" id="filters"></div>
-<canvas id="g" width="1140" height="620" role="img" aria-label="Graphe des wallets reliés"></canvas>
+<canvas id="g" width="1140" height="700" role="img" aria-label="Graphe des wallets reliés"></canvas>
 <div id="detail">Cliquer un wallet pour voir ses chiffres.</div>
 <h2>Vue tableau des arêtes les plus fortes</h2><table id="tb"></table>
 </main><div id="tip"></div><script>
@@ -104,22 +135,18 @@ const days=b-a>4*86400?(b-a>20*86400?7:1):0;if(days){for(let t=Math.ceil(a/(8640
 s+=`<text x="${L}" y="${H-BB+32}" font-size="11" fill="var(--t2)">traits orange : événements ; points verts : posts archivés (survol pour lire)</text>`;
 c.innerHTML=s;c.querySelectorAll('.ev').forEach(n=>{n.onmousemove=e=>showTip(e,n.dataset.h);n.onmouseleave=hideTip})}
 zoom.oninput=chart;chart();
-const KIND={token_direct:['Transfert direct de DMAGA','--c2'],sol_direct:['Virement SOL direct','--c1'],funder_commun:['Financeur commun','--c3'],sink_commun:['Destination commune','--c4']};
-const on={token_direct:1,sol_direct:1,funder_commun:0,sink_commun:0};const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const KIND={token_direct:['Transfert direct de DMAGA','--c2'],sol_direct:['Virement SOL ≥ 0,1','--c1'],sol_petit:['Petit virement SOL','--c4'],funder_commun:['Financeur commun','--c3']};
+const on={token_direct:1,sol_direct:1,sol_petit:1,funder_commun:0};const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 filters.innerHTML=Object.entries(KIND).map(([k,v])=>`<label><input type="checkbox" data-k="${k}" ${on[k]?'checked':''}> <span class="sw" style="background:var(${v[1]})"></span>${v[0]}</label>`).join('');
-const N=D.nodes.map(n=>({...n,x:570+Math.random()*400-200,y:310+Math.random()*300-150,vx:0,vy:0}));const ctx=g.getContext('2d');let sel=null,alpha=1;
+g.height=D.h;const N=D.nodes;const ctx=g.getContext('2d');let sel=null;
 function active(){return D.links.filter(l=>on[l.k])}
-function degree(){const d={};active().forEach(l=>{d[l.s]=(d[l.s]||0)+1;d[l.t]=(d[l.t]||0)+1});return d}
-function step(){const A=active(),deg=degree();const vis=N.filter(n=>deg[n.id]);for(let i=0;i<vis.length;i++){const a=vis[i];for(let j=i+1;j<vis.length;j++){const b=vis[j];let dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy+30;if(d2>40000)continue;const f=420/d2*alpha;a.vx+=dx*f;a.vy+=dy*f;b.vx-=dx*f;b.vy-=dy*f}}
-A.forEach(l=>{const a=N[l.s],b=N[l.t];const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,f=(d-46)*.018*alpha;a.vx+=dx/d*f*d/40;a.vy+=dy/d*f*d/40;b.vx-=dx/d*f*d/40;b.vy-=dy/d*f*d/40});
-vis.forEach(n=>{n.vx+=(570-n.x)*.002*alpha;n.vy+=(310-n.y)*.002*alpha;n.vx*=.82;n.vy*=.82;n.x=Math.max(10,Math.min(1130,n.x+n.vx));n.y=Math.max(10,Math.min(610,n.y+n.vy))});alpha=Math.max(alpha*.995,.02)}
-function draw(){const deg=degree();ctx.clearRect(0,0,1140,620);active().forEach(l=>{const a=N[l.s],b=N[l.t];ctx.strokeStyle=css(KIND[l.k][1]);ctx.globalAlpha=(sel!==null&&l.s!==sel&&l.t!==sel)?.1:.75;ctx.lineWidth=l.k==='token_direct'?2:1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()});ctx.globalAlpha=1;
-N.forEach(n=>{if(!deg[n.id])return;const r=n.tag?7:Math.min(3+Math.sqrt(Math.max(n.net||0,0))/6,11);ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);ctx.fillStyle=n.tag?css('--c5'):css('--t2');ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=css('--s');ctx.stroke();if(n.tag||(n.net||0)>800){ctx.fillStyle=css('--t');ctx.font='11px sans-serif';ctx.fillText((n.tag?n.tag+' ':'')+n.a.slice(0,6),n.x+r+3,n.y+4)}})}
-function loop(){step();draw();requestAnimationFrame(loop)}loop();
-filters.querySelectorAll('input').forEach(i=>i.onchange=()=>{on[i.dataset.k]=+i.checked;alpha=.8;table()});
-const pick=e=>{const r=g.getBoundingClientRect(),sx=1140/r.width,x=(e.clientX-r.left)*sx,y=(e.clientY-r.top)*sx;const deg=degree();let best=null,bd=144;N.forEach(n=>{if(!deg[n.id])return;const d=(n.x-x)**2+(n.y-y)**2;if(d<bd){bd=d;best=n}});return best};
+function draw(){ctx.clearRect(0,0,1140,D.h);active().forEach(l=>{const a=N[l.s],b=N[l.t];ctx.strokeStyle=css(KIND[l.k][1]);ctx.globalAlpha=(sel!==null&&l.s!==sel&&l.t!==sel)?.12:.85;ctx.lineWidth=l.k==='token_direct'?2:1.2;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()});ctx.globalAlpha=1;
+N.forEach(n=>{const r=n.tag?8:Math.min(3.5+Math.sqrt(Math.max(n.net||0,0))/5,11);ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);ctx.fillStyle=n.tag?css('--c5'):css('--t2');ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=css('--s');ctx.stroke();if(n.tag||(n.net||0)>400){ctx.fillStyle=css('--t');ctx.font='11px sans-serif';ctx.fillText((n.tag?n.tag+' ':'')+n.a.slice(0,6),n.x+r+3,n.y+4)}})}
+draw();
+filters.querySelectorAll('input').forEach(i=>i.onchange=()=>{on[i.dataset.k]=+i.checked;draw();table()});
+const pick=e=>{const r=g.getBoundingClientRect(),sx=1140/r.width,x=(e.clientX-r.left)*sx,y=(e.clientY-r.top)*sx;let best=null,bd=144;N.forEach(n=>{const d=(n.x-x)**2+(n.y-y)**2;if(d<bd){bd=d;best=n}});return best};
 g.onmousemove=e=>{const n=pick(e);if(n)showTip(e,`<code>${n.a}</code><br>net SOL : ${n.net??'n/d'} ; acheté : ${n.buy??'n/d'} SOL`);else hideTip()};g.onmouseleave=hideTip;
-g.onclick=e=>{const n=pick(e);sel=n?n.id:null;detail.innerHTML=n?`<b>${n.tag||'wallet'}</b> <code>${n.a}</code> <a href="https://solscan.io/account/${n.a}" target="_blank" rel="noopener">Solscan</a><br>réalisé ${n.real??'n/d'} SOL ; flux net tous venues ${n.net??'n/d'} SOL ; acheté ${n.buy??'n/d'} SOL ; résiduel ${n.res??'n/d'} M ; premier achat ${n.fb?fmt(n.fb):'n/d'}`:'Cliquer un wallet pour voir ses chiffres.'};
+g.onclick=e=>{const n=pick(e);sel=n?n.id:null;draw();detail.innerHTML=n?`<b>${n.tag||'wallet'}</b> <code>${n.a}</code> <a href="https://solscan.io/account/${n.a}" target="_blank" rel="noopener">Solscan</a><br>réalisé ${n.real??'n/d'} SOL ; flux net tous venues ${n.net??'n/d'} SOL ; acheté ${n.buy??'n/d'} SOL ; résiduel ${n.res??'n/d'} M ; premier achat ${n.fb?fmt(n.fb):'n/d'}`:'Cliquer un wallet pour voir ses chiffres.'};
 function table(){const rows=active().slice().sort((a,b)=>(b.k==='token_direct')-(a.k==='token_direct')||b.amt-a.amt).slice(0,40);tb.innerHTML='<tr><th>De</th><th>Vers</th><th>Type</th><th>Montant</th><th>Tx</th><th>Première</th></tr>'+rows.map(l=>`<tr><td><code>${N[l.s].a}</code></td><td><code>${N[l.t].a}</code></td><td>${KIND[l.k][0]}</td><td>${l.amt.toLocaleString('fr-FR')}</td><td>${l.n}</td><td>${fmt(l.at)}</td></tr>`).join('')}table();
 </script></body></html>"""
 Path("viz").mkdir(exist_ok=True)

@@ -7,7 +7,7 @@ import duckdb
 from .config import BIG, TMP
 
 
-def connect(mem="2GB", threads=3):
+def connect(mem="900MB", threads=2):  # plafond bas : sur cette machine, la mémoire devient du swap, donc du disque
     # toute date affichée doit être en UTC : la session héritait de Lisbonne (UTC+1 en juillet)
     os.environ["TZ"] = "UTC"
     time.tzset()

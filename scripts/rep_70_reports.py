@@ -23,7 +23,9 @@ con.execute(f"CREATE VIEW n AS SELECT * FROM read_parquet('{BIG}/nodes.parquet')
 excl = sorted(venues | {"5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"})
 con.execute("CREATE TEMP TABLE excl(a VARCHAR)")
 con.executemany("INSERT INTO excl VALUES (?)", [[a] for a in excl])
-con.execute("""CREATE VIEW w AS SELECT * FROM w0 WHERE owner NOT IN (SELECT a FROM excl)
+con.execute("""CREATE VIEW w AS SELECT *,
+                 (sold_no_basis_qty <= 0.05*greatest(sold_qty,1) AND transfer_in_qty <= 0.05*greatest(bought_qty+transfer_in_qty,1)) AS cost_known
+               FROM w0 WHERE owner NOT IN (SELECT a FROM excl)
                AND owner NOT IN (SELECT address FROM n WHERE kind IN ('router','venue','cex'))""")
 
 
@@ -54,9 +56,12 @@ totals = con.execute("SELECT count(*), sum(bought_sol), sum(sold_sol), sum(reali
 
 # ---- TOP_TRADERS
 top = con.execute("""SELECT owner, realized_sol, net_sol_all, bought_sol, sold_sol, cost_usd, proceeds_usd, n_buys, n_sells, residual_qty,
-                     residual_value_sol_at_cutoff, first_buy_time, last_sell_time, completeness FROM w ORDER BY realized_sol DESC LIMIT 100""").fetchall()
+                     residual_value_sol_at_cutoff, first_buy_time, last_sell_time, completeness FROM w WHERE cost_known ORDER BY realized_sol DESC LIMIT 100""").fetchall()
 rows = [[i + 1, f"`{r[0]}`", f"{r[1]:,.1f}", f"{r[2]:,.1f}", f"{r[3]:,.2f}", f"{r[4]:,.1f}", f"{r[6] - r[5]:,.0f}", f"{r[7]}/{r[8]}", f"{r[9] / 1e6:,.2f}",
          cohort(r[11]), ts(r[11]), ts(r[12]), r[13]] for i, r in enumerate(top)]
+nocost = con.execute("""SELECT owner, sold_sol, sold_qty, sold_no_basis_qty, transfer_in_qty, bought_sol, n_sells, first_sell_time, last_sell_time FROM w
+                        WHERE NOT cost_known ORDER BY sold_sol DESC LIMIT 40""").fetchall()
+rows_nc = [[i + 1, f"`{r[0]}`", f"{r[1]:,.1f}", f"{r[2] / 1e6:,.1f}", f"{r[3] / 1e6:,.1f}", f"{r[4] / 1e6:,.1f}", f"{r[5]:,.1f}", r[6], ts(r[7]), ts(r[8])] for i, r in enumerate(nocost)]
 res = con.execute("""SELECT owner, residual_qty, residual_value_sol_at_cutoff, bought_sol, realized_sol, first_buy_time FROM w
                      ORDER BY residual_qty DESC LIMIT 25""").fetchall()
 rows2 = [[i + 1, f"`{r[0]}`", f"{r[1] / 1e6:,.2f}", f"{r[2]:,.1f}", f"{r[3]:,.2f}", f"{r[4]:,.1f}", cohort(r[5])] for i, r in enumerate(res)]
@@ -85,8 +90,15 @@ Population : {totals[0]:,} wallets, hors réserves de pools, routeurs et échang
 ## Résultat par cohorte de premier achat
 {table(["Cohorte", "Wallets", "SOL acheté", "SOL vendu", "Réalisé cumulé", "Réalisé médian", "Wallets gagnants"], rows4)}
 
-## 100 plus gros réalisés
+## 100 plus gros réalisés, coût connu
+Retenu si moins de 5 % des ventes sont sans quantité connue et moins de 5 % du stock vient de transferts sans coût.
+
 {table(["#", "Wallet", "Réalisé SOL", "Flux net SOL", "Acheté SOL", "Vendu SOL", "P&L USD", "Ach./Vte", "Résiduel M", "Cohorte", "1er achat UTC", "Dernière vente UTC", "Complétude"], rows)}
+
+## Plus gros vendeurs dont le coût n'est pas connu : aucun gain ne peut être affirmé
+Leur stock vient de transferts sans prix. Cas typique : `GCvHhEUYQwTJ8jyf8Lc4bv8jBXyZU4LMMsZCobwEPzvM` et `Gtf4RWqjHhkoio55QkkYM7K3vP4BAT3eSUYPwSZKk8Wi` reçoivent leur stock de `3eGdjMdQqFUNc4G64BZb7YCALDEaturLUWcixjJfKxEh`, un hub actif depuis 2023 avec plus de 200 adresses entrantes, puis vendent sur Raydium à partir d'août 2024. Comportement compatible avec un arbitrage entre un échange et le pool ; non attribué.
+
+{table(["#", "Wallet", "SOL reçu aux ventes", "Vendu M", "Vendu sans quantité M", "Reçu par transfert M", "Acheté SOL", "Ventes", "1re vente", "Dernière vente"], rows_nc)}
 
 ## 100 plus gros acheteurs (SOL engagé)
 {table(["#", "Wallet", "Acheté SOL", "Coût USD", "Achats", "Réalisé SOL", "Flux net SOL", "Cohorte"], rows3)}
