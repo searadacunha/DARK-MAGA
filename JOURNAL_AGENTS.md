@@ -27,3 +27,10 @@
 - Sources : `audits/2026-11-03/BACKUP_STATUS.md`, `SECURITY_STATUS.md`, `AUDIT_A_DATA.md`, `AUDIT_B_STATISTICS.md`, `AUDIT_C_ATTRIBUTION.md`.
 - Limites : les conclusions des auditeurs ne sont pas confrontées à ce stade ; rotation des clés non faite, elle revient à Benjamin ; rien n'est validé.
 - Suite : confrontation, correction des erreurs démontrées, puis pistes financières et X.
+
+## 2026-11-03 11:16 UTC | Claude Code (Opus 5.5) | Audit final D, test d'organisation, session coupée par la limite d'usage
+- Actions : confrontation D ; audits publiés sur la branche `audit-2026-11-03` ; plan `etude_groupe/` gelé et committé avant lecture de tout comparateur, collecte, table, tests ; agents lancés pour les corrections (`audits/2026-11-03/work_F/`), les flux (`work_G/`), l'enquête X (`work_E/`).
+- Résultats : VÉRIFIÉ par D, statut NON VALIDÉE, 16 objections majeures sur 16 confirmées en tout ou partie, 44 PASS, 5 FAIL, 2 INCONCLUSIVE sur 51 assertions. verdict du test d'organisation, k collectés = 48, NaN = 0 : INCONCLUSIF (collecte) : 48 comparateurs, il en faut 59 Mesures dans `etude_groupe/tables/tests.json`, non auditées.
+- Sources : `audits/2026-11-03/AUDIT_FINAL.md`, `CORRECTIONS.md`, `CLAIM_VERIFICATION.csv`, `etude_groupe/`.
+- Limites : limite d'usage atteinte. **Les agents F, G, E n'avaient pas rendu leur rapport au moment de cette entrée : leurs fichiers peuvent être partiels, et les modifications de F dans `scripts/`, `dmaga/`, `docs/`, `reports/` ne sont ni relues ni committées.** Rapport `docs/CASE_REPORT.md` non validé. `raw/grp/` sans manifeste. Rotation des clés non faite. Heure de l'entrée intermédiaire précédente (11:10 UTC) estimée à tort, elle est antérieure à 10:54 UTC.
+- Suite : relire `work_F/`, `work_G/`, `work_E/` ; contrôler `git diff` ; nouvel audit des conclusions ; décisions de Benjamin sur les amendements 001 et 003.

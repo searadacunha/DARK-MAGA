@@ -48,3 +48,6 @@ Pour tout recalcul : `scripts/run_derive.sh`, puis `ana_60`, `ana_61`, `ana_62`,
 - Consolidation à la création : 6t2dz4jm, 8YrEVPQq, 99Xrt5uu, AW63YBXX → AtZjv3Du (210 sigs) → NxtXcmEW (41 M) → 5QhJJc (8 M), 74qFhHyp, 35nAuv6j, Akp46Dic.
 - Autres gros précoces qui redistribuent : GFpqfj, Ei5yGz, BteHCe, 7GVCZA, 9SHtoD, 6b29tK, BNHsrnuv/2ZRM3G8 (aller-retour 30 M).
 - Sorties de H3QsBr (USDC vers FpCMFDFG, 3HSYXe, 255yZg) et 9PrmF8 (H9Xezqfd, 2 052 SOL en 48 tx), GXZvX (Co3zTr2M, 8N4AvP9j, 42MSVe).
+
+## Reprise après l'audit du 03/11 (2026-11-03 11:16 UTC)
+Lire `audits/2026-11-03/AUDIT_FINAL.md` puis `CORRECTIONS.md`. Statut : NON VALIDÉE. Branche `audit-2026-11-03`. Les travaux `work_E`, `work_F`, `work_G` n'étaient pas rendus quand la limite d'usage a coupé la session : vérifier avant d'utiliser. `git diff` montre les corrections non relues de l'agent F. Dérivé corrigé prévu dans `VERBATIM HD/.../data_v2/`, l'ancien `data/` ne doit pas changer.
