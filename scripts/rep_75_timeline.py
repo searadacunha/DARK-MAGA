@@ -42,7 +42,8 @@ posts = {}
 for src_ in (DATA / "x_posts.jsonl", Path("audits/2026-11-03/work_E/x_posts_new.jsonl")):
     for line in src_.open():
         r = json.loads(line)
-        posts.setdefault(r["id"], r)
+        if not posts.get(r["id"], {}).get("text"):  # le corpus ancien garde des lignes sans texte, la ligne récupérée les remplace
+            posts[r["id"]] = r
 rec = {}
 for line in Path("evidence/x_wayback/recovered.jsonl").open():
     r = json.loads(line)
@@ -57,7 +58,7 @@ def P(i, label, level, note=""):
     """Ligne appuyée sur un post archivé."""
     i = str(i)
     if i in posts and posts[i].get("text"):
-        txt, src = posts[i]["text"], "archivé"
+        txt, src = posts[i]["text"], "supprimé, texte Wayback" if posts[i].get("status") == "unavailable" else "archivé"
     elif i in rec:
         txt, src = rec[i].get("text") or "", "supprimé, texte Wayback"
     else:
