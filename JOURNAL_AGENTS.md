@@ -20,3 +20,10 @@
 - Sources : `docs/TIMELINE.md`.
 - Limites : aucune.
 - Suite : aucune.
+
+## 2026-11-03 11:10 UTC | Claude Code (Opus 5.5) | Reprise, intégrité, sécurité, audits A, B, C (entrée intermédiaire)
+- Actions : relecture de l'état au commit `01ae5a4` ; relecture de tous les manifestes ; recherche de clés Helius par empreintes (GitHub en miroir, 68 dépôts locaux, transcriptions, arbres de travail) ; test des 5 clés du pool ; recherche d'une seconde destination physique ; trois audits indépendants lancés à l'aveugle dans `audits/2026-11-03/work_{A,B,C}/`, quatrième relecture de confrontation en cours.
+- Résultats : VÉRIFIÉ 03/11, `RAW_MANIFEST.tsv` 33 033 fichiers sur 33 033 conformes ; VÉRIFIÉ 03/11, `ctrl_tx` (12,57 Go) n'avait aucune empreinte, manifeste créé dans `audits/2026-11-03/work_integrity/CTRL_TX_MANIFEST.tsv` ; VÉRIFIÉ 03/11, aucune seconde destination physique disponible ; VÉRIFIÉ 03/11, aucune clé sur GitHub ni dans les historiques git, clés en clair dans des transcriptions et des fichiers locaux, pool réduit à 2 clés pleinement valides. RAPPORTÉ par les auditeurs, non confronté à cette heure : A FAIL sur les tables dérivées, B INCONCLUSIVE, C PASS avec constats majeurs.
+- Sources : `audits/2026-11-03/BACKUP_STATUS.md`, `SECURITY_STATUS.md`, `AUDIT_A_DATA.md`, `AUDIT_B_STATISTICS.md`, `AUDIT_C_ATTRIBUTION.md`.
+- Limites : les conclusions des auditeurs ne sont pas confrontées à ce stade ; rotation des clés non faite, elle revient à Benjamin ; rien n'est validé.
+- Suite : confrontation, correction des erreurs démontrées, puis pistes financières et X.
