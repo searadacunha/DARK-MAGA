@@ -1,5 +1,7 @@
 # Suivi social et documentaire, Dark MAGA ($DMAGA)
 
+> **Erratum du 03/11.** Ce rapport a été relu sur le brut par un relecteur adverse : aucun constat central ne tombe, mais plusieurs chiffres et phrases sont faux ou trop forts (le résumé « contredit », `$DMAGA` coupé dans une liste). `audits/2026-11-03/work_I/REFUTATION.md` fait foi. Le rapport d'origine n'est pas réécrit.
+
 Collecte du 03/11/2026, de 10:05 à 11:16 UTC, coupure forcée par une limite d'usage, puis reprise de 13:31 à 14:00 UTC environ. Mint `7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump`. Heures en UTC.
 Personne n'est accusé. Aucune identité civile n'est recherchée. Les pseudos désignent des comptes, pas des personnes établies.
 

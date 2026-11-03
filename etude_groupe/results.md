@@ -16,7 +16,7 @@ Le plafond de 60 000 crédits a arrêté la collecte à 61 110 crédits comptés
 
 2 pairs sur 48 dépassent ou égalent DMAGA à la fois sur G1 et G2, 1 sur les trois mesures. Variantes, sans correction : V1 (5 M), G2 de DMAGA 13,5 %, 8 pairs au-dessus. V2 (sans retrait des services), G1 de DMAGA 34, 12 pairs au-dessus.
 
-**Lecture.** Sur ces 48 tokens, un réseau de transferts directs entre gros acheteurs précoces est la règle, pas l'exception : seuls 4,2 % des pairs n'en ont aucun, et la moitié ont une composante d'au moins 8 wallets. Le réseau de DMAGA est dans le haut de la distribution, sans en être le maximum. **Ce n'est pas une conclusion d'équivalence :** le test est incomplet, et les 67 comparateurs restants peuvent déplacer ces chiffres. Cela interdit seulement d'écrire que l'existence d'un tel réseau est, à elle seule, atypique. Ce test ne dit rien de la série de retraits Coinbase ni du dépôt commun, qu'il ne mesure pas.
+**Lecture, corrigée après la relecture adverse du 03/11 (`audits/2026-11-03/work_I/REFUTATION.md`, section 10).** L'existence d'un réseau n'est pas atypique : 46 pairs sur 48 en ont un. Sa taille est dans le haut de la distribution, et plus nettement à fenêtre égale : en coupant tous les tokens à 7,7 jours après la création, 3 pairs sur 48 atteignent DMAGA sur G1 et sur G3, au lieu de 6 et 8 (exploration hors plan, sans valeur de test, 2 de ces 3 pairs ont une extension plafonnée). Ces réseaux relient peu les 30 plus gros acheteurs entre eux : DMAGA n'a aucune arête directe entre les 30 de sa cohorte, ses composantes passent par l'extension. Ce n'est donc pas un réseau entre ses plus gros acheteurs, mais un réseau qui les touche. Les services n'expliquent pas les valeurs des pairs : aucune étiquette connue dans les graphes, et le rang de DMAGA ne change pas sans les comptes de programme. **Ce n'est pas une conclusion d'équivalence :** le test est incomplet, et les 67 comparateurs restants peuvent déplacer ces chiffres. Cela interdit seulement d'écrire que l'existence d'un tel réseau est, à elle seule, atypique. Ce test ne dit rien de la série de retraits Coinbase ni du dépôt commun, qu'il ne mesure pas.
 
 ## Compteurs
 - Couverture : 30 sur 30 pour DMAGA, médiane 30 chez les pairs, aucun pair sous 15, aucun NaN.
@@ -31,6 +31,12 @@ La méthode lit ici G1 = 34 et G2 = 21,70365 %, en partant de 30 wallets et sans
 1. **Gel de la table en retard.** La commande `gel.py ajouter` a échoué avant les tests par une erreur de shell : `derived/table.csv` et `derived/par_token.jsonl` n'ont été gelés qu'après le calcul de `tables/tests.json`, ce qui est écrit dans la raison de l'ajout au verrou. Heures : `par_token.jsonl` 11:15:38, `table.csv` 11:16:07, `tests.json` 11:16:09 UTC. Table non modifiée depuis.
 2. **Plafond dépassé de 1 110 crédits**, car il n'est contrôlé qu'entre deux tokens, comme le permet le code gelé.
 3. **Coût sous-estimé dans le plan.** Le plan prévoyait que 60 000 crédits suffiraient, sans le chiffrer par token, et cette estimation n'a pas été testée sur un pilote.
+
+4. **Écart entre plan et code, trouvé par la relecture.** Le plan dit « chaque receveur reçoit au moins 1 M ». Le code garde les seuls gros receveurs et ne rejette pas la transaction. Effet mesuré sur `raw/grp` : 21 arêtes sur 2 560, 3 tokens, 0 sur DMAGA, aucun rang changé.
+5. **Médianes.** `ana_grp.py` calcule `ok[len(ok) // 2]`, une valeur haute de médiane : 3,77 % et 23 ci-dessus sont la sortie gelée, la médiane exacte vaut 3,56 % et 22,5.
+6. **Égalités de composantes.** En cas d'égalité, `measures` garde la première composante trouvée. 6 tokens sont concernés, sur des composantes de 3 ou 4 wallets : sans effet sur le rang de DMAGA.
+7. **34 contre 33.** G1 = 34 parce que cette méthode garde `Habp5bnc…`, retiré du groupe de 33 du rapport à cause de sa poussière.
+8. **n effectif prudent :** les 48 pairs tombent sur 30 jours de pic distincts.
 
 ## Limites
 Toutes celles du plan. Surtout : mesures choisies après avoir vu DMAGA, population conditionnée au pic tardif, ATA seuls, SOL non lu.

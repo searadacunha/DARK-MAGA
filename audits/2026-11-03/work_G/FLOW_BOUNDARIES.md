@@ -1,5 +1,7 @@
 # Frontières des flux, enquête Dark MAGA
 
+> **Erratum du 03/11.** Ce rapport a été relu sur le brut par un relecteur adverse : aucun constat central ne tombe, mais plusieurs chiffres et phrases sont faux ou trop forts (G3, G6, G8, `9PrmF8`, ponts). `audits/2026-11-03/work_I/REFUTATION.md` fait foi. Le rapport d'origine n'est pas réécrit.
+
 Agent G, 03/11/2026. Jeton `7D7BRcBY`. Branche `audit-2026-11-03`, commit de référence des audits `01ae5a4`. Personne n'est accusé. Aucune identité civile n'est présumée. Un wallet cité n'est mis en cause en rien.
 
 Niveaux : A vérifié directement, B fortement corroboré, C indice, D non vérifié. Chaque lien sépare trois questions : une transaction, une coordination, un contrôle commun. Un compte de dépôt ou un pont arrête la trace : aucune continuité n'est supposée au-delà.
