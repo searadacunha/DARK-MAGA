@@ -25,7 +25,8 @@ def connect(mem="900MB", threads=2):  # plafond bas : sur cette machine, la mém
             SELECT * EXCLUDE (_dedup_rank) FROM (
                 SELECT *, row_number() OVER (
                     PARTITION BY signature, kind, owner, venue, token_delta
-                    ORDER BY slot, tx_index, source
+                    ORDER BY CASE source WHEN 'pool' THEN 0 WHEN 'curve' THEN 1 WHEN 'mint' THEN 2 ELSE 3 END,
+                             slot, tx_index, source
                 ) AS _dedup_rank
                 FROM read_parquet('{final}')
             ) WHERE _dedup_rank = 1""")
