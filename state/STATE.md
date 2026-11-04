@@ -51,3 +51,6 @@ Pour tout recalcul : `scripts/run_derive.sh`, puis `ana_60`, `ana_61`, `ana_62`,
 
 ## Reprise après l'audit du 03/11 (2026-11-03 11:16 UTC)
 Lire `audits/2026-11-03/AUDIT_FINAL.md` puis `CORRECTIONS.md`. Statut : NON VALIDÉE. Branche `audit-2026-11-03`. Les travaux `work_E`, `work_F`, `work_G` n'étaient pas rendus quand la limite d'usage a coupé la session : vérifier avant d'utiliser. `git diff` montre les corrections non relues de l'agent F. Dérivé corrigé prévu dans `VERBATIM HD/.../data_v2/`, l'ancien `data/` ne doit pas changer.
+
+## Revue GitHub du 04/11/2026
+Lire `docs/AUDIT_2026-11-04.md` pour le périmètre exact. Corrections du code vérifiées sur 53 tests offline ; 27 empreintes gelées conformes. README anglais et corrections ciblées de la synthèse, sans replay du brut ni validation générale. Les valeurs reprises des réaudits H/I sont distinguées du recalcul local des sommes de ponts. Aucun état d'une session Mac ni aucune disponibilité du disque externe ne sont certifiés par cette revue. Les autres remarques H/I, la synchronisation des tables et un rejeu avec les archives restent ouverts.
