@@ -60,3 +60,12 @@ def test_overlapping_trades_are_counted_once(tmp_path, monkeypatch):
         assert rows == expected
     finally:
         cached.close()
+
+    # A rebuild must use the shards even if a previous Parquet file still exists.
+    # This lets the exporter validate a staging file before replacing the old one.
+    fresh = database.connect(prefer_materialized=False)
+    try:
+        rows = fresh.execute("SELECT signature, source, owner, token_delta FROM trades ORDER BY signature, owner").fetchall()
+        assert rows == expected
+    finally:
+        fresh.close()
