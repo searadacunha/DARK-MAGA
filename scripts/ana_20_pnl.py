@@ -8,6 +8,7 @@ Plus sûr que les flux seuls, qui ratent les mouvements hors du brut des wallets
 """
 import csv
 import io
+import math
 import sys
 import zipfile
 from pathlib import Path
@@ -49,26 +50,29 @@ def sol_usd() -> dict[int, float]:
 
 def main():
     exige_v2()
+    required = ("token_edges.parquet", "accounts.parquet", "account_ruptures.parquet")
+    missing = [name for name in required if not (BIG / name).is_file()]
+    if missing:
+        raise FileNotFoundError("Entrées de comptabilité manquantes : " + ", ".join(missing)
+                                + ". Exécuter nrm_11_accounts.py et ana_21_token_edges.py avant le PnL.")
     cutoff = int(sys.argv[1]) if len(sys.argv) > 1 else None
     px = sol_usd()
     con = connect(mem="500MB")
-    where = f"AND block_time < {cutoff}" if cutoff else ""
+    where = f"AND block_time < {cutoff}" if cutoff is not None else ""
     wallets: dict[str, Wallet] = {}
     usd_cost: dict[str, float] = {}
     usd_proceeds: dict[str, float] = {}
-    missing_px = 0
     n = 0
     # transferts vus seulement par getTransfersByAddress (SPL sans référence au mint) : deux lignes par arête, sans double compte
     edges = BIG / "token_edges.parquet"
     extra = ""
-    if edges.exists():
-        con.execute(f"""CREATE TEMP TABLE x AS SELECT e.signature, e.slot, e.block_time, e.src, e.dst, CAST(round(e.qty*1e6) AS BIGINT) q
-            FROM read_parquet('{edges}') e WHERE e.how='gtba' AND e.dst <> '(multiple)' AND NOT EXISTS
-            (SELECT 1 FROM trades t WHERE t.signature=e.signature AND (t.owner=e.src OR t.owner=e.dst))""")
-        cut = f"AND block_time < {cutoff}" if cutoff else ""
-        extra = f"""UNION ALL SELECT src, 'transfer', -q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}
-                    UNION ALL SELECT dst, 'transfer', q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}"""
-        print("transferts ajoutés depuis les flux", con.execute("SELECT count(*) FROM x").fetchone()[0])
+    con.execute(f"""CREATE TEMP TABLE x AS SELECT e.signature, e.slot, e.block_time, e.src, e.dst, CAST(round(e.qty*1e6) AS BIGINT) q
+        FROM read_parquet('{edges}') e WHERE e.how='gtba' AND e.dst <> '(multiple)' AND NOT EXISTS
+        (SELECT 1 FROM trades t WHERE t.signature=e.signature AND (t.owner=e.src OR t.owner=e.dst))""")
+    cut = f"AND block_time < {cutoff}" if cutoff is not None else ""
+    extra = f"""UNION ALL SELECT src, 'transfer', -q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}
+                UNION ALL SELECT dst, 'transfer', q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}"""
+    print("transferts ajoutés depuis les flux", con.execute("SELECT count(*) FROM x").fetchone()[0])
     cur = con.execute(f"""SELECT owner, kind, token_delta, sol_lamports, block_time, signature, slot, tx_index, venue, usdc_raw
                           FROM trades WHERE kind IN ('swap','transfer','lp_add','lp_remove','fee_share','swap_other') AND owner IS NOT NULL {where}
                           {extra}
@@ -81,29 +85,26 @@ def main():
             n += 1
             if owner in EXCLUDE or owner in VENUES:
                 continue
+            p = px.get(t // 60) if t is not None else None
+            if (kind == "swap" or usdc) and (p is None or not math.isfinite(p) or p <= 0):
+                raise ValueError(f"prix SOL/USD manquant ou invalide pour {sig}, t={t} : PnL non publié")
             if usdc:  # part du swap passée par un pool USDC, convertie en SOL à la minute du trade
-                p = px.get(t // 60)
-                if p is None:
-                    missing_px += 1
-                else:
-                    sol += int(usdc / 1e6 / p * 1e9)
+                sol += int(usdc / 1e6 / p * 1e9)
             w = wallets.setdefault(owner, Wallet(owner))
             w.apply(kind, td, sol, t, sig, slot, idx, venue)
             if kind == "swap":
-                p = px.get(t // 60)
-                if p is None:
-                    missing_px += 1
-                    continue
                 if td > 0:
                     usd_cost[owner] = usd_cost.get(owner, 0) + (-sol / 1e9) * p
                 else:
                     usd_proceeds[owner] = usd_proceeds.get(owner, 0) + (sol / 1e9) * p
     last_dmaga = con.execute(f"SELECT post, block_time FROM vault WHERE vault='{VD}' {where} ORDER BY slot DESC, tx_index DESC LIMIT 1").fetchone()
     last_sol = con.execute(f"SELECT post FROM vault WHERE vault='{VS}' {where} ORDER BY slot DESC, tx_index DESC LIMIT 1").fetchone()
+    if not last_dmaga or not last_sol or last_dmaga[0] <= 0:
+        raise ValueError("réserves du pool absentes ou nulles à la coupure : valorisation non publiée")
     price_sol = (last_sol[0] / 1e9) / (last_dmaga[0] / 1e6)
     ref_t = last_dmaga[1]
     ref_usd = px.get(ref_t // 60)
-    w_ac = f"WHERE block_time < {cutoff}" if cutoff else ""
+    w_ac = f"WHERE block_time < {cutoff}" if cutoff is not None else ""
     soldes = dict(con.execute(f"""SELECT owner, sum(p) FROM (SELECT account, arg_max(owner, (slot, tx_index)) owner, arg_max(post, (slot, tx_index)) p
                                   FROM read_parquet('{BIG}/accounts.parquet') {w_ac} GROUP BY 1) GROUP BY 1""").fetchall())
     ruptures = dict(con.execute(f"SELECT coalesce(owner, prev_owner), count(*) FROM read_parquet('{BIG}/account_ruptures.parquet') {w_ac} GROUP BY 1").fetchall())
@@ -135,8 +136,10 @@ def main():
         })
     table = pa.Table.from_pylist(rows)
     BIG.mkdir(parents=True, exist_ok=True)
-    pq.write_table(table, BIG / "wallets.parquet", compression="zstd")
-    print(f"lignes={n} wallets={len(rows)} sans_prix_usd={missing_px} prix_ref={price_sol:.10f} SOL à t={ref_t} usd_sol={ref_usd}")
+    tmp = BIG / "wallets.tmp.parquet"
+    pq.write_table(table, tmp, compression="zstd")
+    tmp.replace(BIG / "wallets.parquet")
+    print(f"lignes={n} wallets={len(rows)} sans_prix_usd=0 prix_ref={price_sol:.10f} SOL à t={ref_t} usd_sol={ref_usd}")
 
 
 if __name__ == "__main__":

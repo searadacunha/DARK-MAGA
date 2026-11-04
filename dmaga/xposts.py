@@ -57,12 +57,18 @@ def _get(url: str, timeout=30) -> bytes:
 
 
 def _save(i: str, name: str, url: str):
-    """Rend (statut, json|None). 404 = tombstone légitime, toute autre erreur est gardée dans `error`."""
+    """Rend (statut, json|None). Seuls 404/410 signifient indisponible chez cette source.
+
+    Une panne, un refus d'accès ou une limite de débit doit faire échouer la collecte :
+    ce n'est pas une preuve de suppression, ni une raison de bloquer les reprises.
+    """
     X_RAW.mkdir(parents=True, exist_ok=True)
     try:
         b = _get(url)
     except urllib.error.HTTPError as e:
-        return e.code, None
+        if e.code in (404, 410):
+            return e.code, None
+        raise
     (X_RAW / f"{i}.{name}.json").write_bytes(b)
     return 200, json.loads(b)
 
@@ -70,7 +76,14 @@ def _save(i: str, name: str, url: str):
 def existing_ids() -> set[str]:
     if not POSTS.exists():
         return set()
-    return {json.loads(line)["id"] for line in POSTS.open()}
+    seen = set()
+    with POSTS.open() as f:
+        for line in f:
+            row = json.loads(line)
+            permanent = row.get("fx_http") in (404, 410) and row.get("synd_http") in (404, 410)
+            if row.get("status") == "ok" or permanent:
+                seen.add(row["id"])
+    return seen
 
 
 def fetch(i: str, user: str = "i", source: str = "", follow: bool = False, depth: int = 0) -> dict | None:
@@ -103,7 +116,7 @@ def fetch(i: str, user: str = "i", source: str = "", follow: bool = False, depth
         "retweets": t.get("retweets"), "likes": t.get("likes"), "replies": t.get("replies"), "views": t.get("views"),
         "media": media,
         "status": "ok" if (t or synd_ok) else "unavailable",
-        "fx_http": fx_code, "synd_type": (syn or {}).get("__typename"),
+        "fx_http": fx_code, "synd_http": syn_code, "synd_type": (syn or {}).get("__typename"),
         "source_note": source,
         "provenance": [f"evidence/x_raw/{i}.fx.json" if fx else None, f"evidence/x_raw/{i}.synd.json" if syn else None],
         "fetched_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

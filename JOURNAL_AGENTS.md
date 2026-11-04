@@ -34,3 +34,10 @@
 - Sources : `audits/2026-11-03/AUDIT_FINAL.md`, `CORRECTIONS.md`, `CLAIM_VERIFICATION.csv`, `etude_groupe/`.
 - Limites : limite d'usage atteinte. **Les agents F, G, E n'avaient pas rendu leur rapport au moment de cette entrée : leurs fichiers peuvent être partiels, et les modifications de F dans `scripts/`, `dmaga/`, `docs/`, `reports/` ne sont ni relues ni committées.** Rapport `docs/CASE_REPORT.md` non validé. `raw/grp/` sans manifeste. Rotation des clés non faite. Heure de l'entrée intermédiaire précédente (11:10 UTC) estimée à tort, elle est antérieure à 10:54 UTC.
 - Suite : relire `work_F/`, `work_G/`, `work_E/` ; contrôler `git diff` ; nouvel audit des conclusions ; décisions de Benjamin sur les amendements 001 et 003.
+
+## 2026-11-04 | Revue GitHub du code et de la synthèse
+- Référence : branche `audit-2026-11-03`, `1f2b4e0`. Lecture de l'état, des journaux et des réaudits H/I ; récupération des sources et pièces textuelles depuis GitHub, sans accès au disque externe.
+- Corrections : garde de chemins de dérivation, propagation des erreurs du pipeline shell, entrées/prix du PnL, publication atomique du PnL, erreurs transitoires des sources X. README réécrit en anglais ; synthèse et générateur corrigés sur les périmètres des ponts et plusieurs formulations réfutées par H/I.
+- Vérification : 22 tests existants réussis ; 25 nouvelles régressions en échec sur l'ancien code ; 53 tests réussis après corrections. 27 empreintes gelées inchangées. 393 fichiers Python du snapshot de référence analysés syntaxiquement, sans prétendre les avoir tous validés.
+- Sources : `docs/AUDIT_2026-11-04.md`, `audits/2026-11-03/work_H/REAUDIT_CONCLUSIONS.md`, `audits/2026-11-03/work_I/REFUTATION.md`.
+- Limites : aucun replay brut, aucun recalcul massif ni génération complète des rapports. L'enquête reste NON VALIDÉE et le registre H conserve ses statuts historiques. Les fichiers locaux des sessions Mac n'ont pas été inspectés.

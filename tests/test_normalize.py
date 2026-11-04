@@ -1,5 +1,7 @@
-"""Tests du parseur sur des cas synthétiques minimaux. Les vraies transactions sont testées par
-tests/test_real_txs.py, qui a besoin du réseau ou du cache brut."""
+"""Tests du parseur sur des cas synthétiques minimaux.
+
+Ils ne remplacent pas une relecture du cache brut ni une validation complète de la collecte.
+"""
 from dmaga.config import BONDING_CURVE, MINT, WSOL
 from dmaga.normalize import RAYDIUM_AUTH as AUTH, parse_tx
 
