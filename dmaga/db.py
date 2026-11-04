@@ -7,7 +7,7 @@ import duckdb
 from .config import BIG, TMP
 
 
-def connect(mem="900MB", threads=2):  # plafond bas : sur cette machine, la mémoire devient du swap, donc du disque
+def connect(mem="900MB", threads=2, prefer_materialized=True):  # low RAM; optional fresh-shards view for atomic exports
     # toute date affichée doit être en UTC : la session héritait de Lisbonne (UTC+1 en juillet)
     os.environ["TZ"] = "UTC"
     time.tzset()
@@ -20,7 +20,7 @@ def connect(mem="900MB", threads=2):  # plafond bas : sur cette machine, la mém
         files = sorted(str(p) for p in (BIG / sub).glob("*.parquet") if not p.name.startswith("._"))
         con.execute(f"CREATE VIEW {view}_all AS SELECT * FROM read_parquet({files!r})")
     final = BIG / "trades.parquet"
-    if final.exists():  # table matérialisée par scripts/ana_19_export.py, l'anti-jointure coûte plusieurs minutes
+    if final.exists() and prefer_materialized:  # an export must read fresh shards without deleting the last good file
         con.execute(f"""CREATE VIEW trades AS
             SELECT * EXCLUDE (_dedup_rank) FROM (
                 SELECT *, row_number() OVER (
