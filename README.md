@@ -58,6 +58,8 @@ The pinned test dependencies cover this offline suite, not every historical audi
 
 The 22 existing tests passed before the review. New regression cases exposed 25 failures in the previous code. After correction, **53 tests pass**, including verification of all **27 recorded file hashes** across the two frozen protocols. This does not establish completeness of the raw history or validate every research conclusion.
 
+The required report-reference and duplicate-trade check, `scripts/chk_90_selfcheck.py`, has not run here because its actual input shards and supporting archive are unavailable; the offline tests and link checks do not replace it.
+
 ## Full data reproduction
 
 The raw archive and large Parquet files are outside Git. Recorded locations and manifests are in [state/STATE.md](state/STATE.md), [evidence/RAW_MANIFEST.tsv](evidence/RAW_MANIFEST.tsv) and [evidence/DATA_V2_MANIFEST.tsv](evidence/DATA_V2_MANIFEST.tsv). A GitHub checkout alone cannot reproduce every result.
