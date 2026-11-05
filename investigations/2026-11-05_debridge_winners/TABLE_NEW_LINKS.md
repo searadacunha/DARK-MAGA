@@ -30,9 +30,11 @@ Source : [journal I22](evidence/i22_evm_rest.txt). Les hashes ne sont pas imprim
 
 | Date UTC | Source | Destination | Montant rapporté | Hash dans l'archive |
 |---|---|---|---:|---|
-| 2022-09-11 18:50:18 | `0xb29826d809aa04d2ead6f2310d8965a45b87fa67` | `0xb947bf7f409e998b28f8e218802fc9575c3c8c57` | Environ 0,002086 ETH | Non imprimé |
-| 2024-07-25 08:22:23 | `0xb29826d809aa04d2ead6f2310d8965a45b87fa67` | `0xb947bf7f409e998b28f8e218802fc9575c3c8c57` | 50 003,330779 USDC | Non imprimé |
-| 2024-07-26 05:56:11 | `0x555ce236c0220695b68341bc48c68d52210cc35b` | `0xb947bf7f409e998b28f8e218802fc9575c3c8c57` | 120 957,888072 USDC | Non imprimé ; aucun ordre source correspondant dans le corpus |
+| 2022-09-11 18:50:18 | `0xb29826d809aa04d2ead6f2310d8965a45b87fa67` | `0xb947bf7f409e998b28f8e218802fc9575c3c8c57` | 0,002085847778473724 ETH | Non imprimé dans I22 ; relu : `0xc7bd63d35a1bdf09bfe5ccb1ad859184a4903117813760a388334003957fad89` |
+| 2024-07-25 08:22:23 | `0xb29826d809aa04d2ead6f2310d8965a45b87fa67` | `0xb947bf7f409e998b28f8e218802fc9575c3c8c57` | 50 003,330779 USDC | Non imprimé dans I22 ; relu : `0xac4a12bd7eac6283bec6af0f43b3191c2964ee7c0f77dcefd8c29238566e1211` |
+| 2024-07-26 05:56:11 | `0x555ce236c0220695b68341bc48c68d52210cc35b` | `0xb947bf7f409e998b28f8e218802fc9575c3c8c57` | 120 957,888072 USDC | Non imprimé dans I22 ; relu : `0x47e8da75f698f8c40419230c2274136c57666b92a91bef55c481e63a91758e14`. Hors des 76 ordres du corpus : c'est l'ordre DLN `0xc65ba1fa1b9d14301b5b0acaf159a5fd955a18899e4256a7604fd0af1f27a225` de `GZXKYzwZPgWH8TwyY9f8dkCQ9EKK6nrPZADGcEwfAg7Y` |
+
+Les trois hashes « relu » et l'ordre de la dernière ligne viennent de [`../2026-11-05_evm-recipient-deeptrace/FINDINGS.md`](../2026-11-05_evm-recipient-deeptrace/FINDINGS.md) (§1 et §3), pas de l'archive I22.
 
 Les huit ordres Ethereum vers `0xb29826d8` ne doivent pas être confondus avec les huit ordres Base désignant la même représentation d'adresse. La répartition détaillée figure dans [la table des ordres](TABLE_DEBRIDGE_ORDERS.md).
 
