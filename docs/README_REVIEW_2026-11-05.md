@@ -35,7 +35,26 @@ The previous audit README used `work_G/g43_orders.csv` directly: 1,023,933.51 US
 
 I section 4 explicitly identifies two erroneous `usd_sortis` entries in that CSV. Its independent event decoder gives 1,018,687.18 nominal USDC across the 76 orders. The new README uses this corrected decoded total and labels the population, fee treatment and execution coverage.
 
-This editorial revision does not modify the historical CSV, rerun its decoder or regenerate `docs/CASE_REPORT.md`. The old generated bridge paragraph and its generator still require a targeted synchronization with the decoded table. They must not be mistaken for corrected numerical sources. The README links the decoded table and I's reconciliation directly.
+The editorial revision did not modify the historical CSV, rerun its decoder or regenerate `docs/CASE_REPORT.md`. At that stage, the generated bridge paragraph and its generator still used the old table. The targeted follow-up below synchronizes them with the decoded source. The README links the decoded table and I's reconciliation directly.
+
+## Targeted bridge synchronization, 5 November 2026
+
+The audit branch's `scripts/rep_90_case.py` now reads `work_I/i14_orders.csv` through `dmaga/debridge.py`. The helper sums integer `give_amount + fee_pct` units before converting to nominal USDC. Proportional fees are included; fixed SOL fees are excluded. No USD exchange-rate estimate or destination receipt is substituted for that source-side amount.
+
+| Population | Orders | Nominal source USDC, before display rounding |
+|---|---:|---:|
+| All collected populations | 76 | 1,018,687.178289 |
+| Makers belonging to the exact 33-wallet component | 68 | 974,077.946152 |
+| Other makers | 8 | 44,609.232137 |
+| Exact-component orders before mint creation | 15 | 1,610.177867 |
+
+Membership uses the decoded `maker`. Four orders were found in cache files named after other wallets; using `wallet_file` would wrongly omit 175,439.743465 USDC from the component. The historical `work_G/g43_orders.csv` and the decoded I table remain unchanged.
+
+The `C73Yv9iH…` figures also retain their separate scopes: 29 orders and 527,600.400084 USDC across all destinations; 27 orders and 496,371.589492 USDC specifically toward `0x2d86499a…` on Ethereum, spread from 21 July 2024 through 9 June 2025.
+
+Only point 9 of `docs/CASE_REPORT.md` was regenerated using the same pure helper now called by the full report generator. The 41 matched Ethereum executions and associated 942,534.32 source-side USDC remain explicitly attributed to I's archived review; no new raw decoding or destination-chain verification is claimed.
+
+Verification: 21 targeted bridge regressions and the complete local offline suite, **96 tests passed**, using Python 3.12 and the pinned `requirements-test.txt` dependencies through `scripts/guard.py`. Both protocol-lock tests passed, covering the frozen study files. The new tests cover exact micro-USDC totals, maker/cache differences, native-fee exclusion, pre-mint timing, duplicate or invalid rows and agreement between the published paragraph and its recalculation. The external raw archive was unavailable, so the full report pipeline and `scripts/chk_90_selfcheck.py` were not run. The root README, its baseline and frozen protocols are unchanged.
 
 ## D01 is preserved, not blindly merged
 
