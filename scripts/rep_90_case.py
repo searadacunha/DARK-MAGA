@@ -87,6 +87,12 @@ Mint `7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump`, Solana. Enquête du 02 au 0
 
 Échelle : **A** vérifié directement, **B** fortement corroboré, **C** indice ou hypothèse, **D** non vérifié ou contredit. Ce rapport ne présente personne comme l'auteur d'un délit. Un wallet ou un compte cité n'est accusé de rien.
 
+## Version historique et périmètre
+
+Cette synthèse conserve les calculs et formulations du 3 novembre 2026. Pour les conclusions retenues après relecture, lire le [README](../README.md), son [registre de preuves](README_REVIEW_2026-11-05.md), puis les [contrôles numériques H](https://github.com/searadacunha/Dark-MAGA/blob/6e839acc022a38427fdb1f4f3b221488db454a78/audits/2026-11-03/work_H/REAUDIT_CONCLUSIONS.md) et les [contrôles transactionnels I](https://github.com/searadacunha/Dark-MAGA/blob/6e839acc022a38427fdb1f4f3b221488db454a78/audits/2026-11-03/work_I/REFUTATION.md).
+
+**Le créateur est extérieur à la composante de 33 wallets définie par les 40 transferts de DMAGA.** Les transferts de SOL et convergences vers des dépôts décrits au point 5 portent sur un autre périmètre, qui recoupe partiellement les 33. Ils ne démontrent ni l'appartenance du créateur aux 33, ni un contrôle commun dès le lancement. Les formulations historiques « autour du créateur » et « lien au créateur » ci-dessous ne doivent pas être interprétées comme ces démonstrations.
+
 ## L'essentiel
 1. **Le token a été créé après Butler.** Mint créé le 14/07/2024 à 02:05:25 UTC, environ {int(butler_h)} h {round((butler_h % 1) * 60)} après la tentative d'assassinat (A pour la création, heure de Butler non revérifiée dans un fichier). Le thread d'@Aristos_Revenge ne date pas le mint : il écrit que @kikisknees a lancé @DarkMagaCoin et les pfp deux jours avant Butler. Le compte X existe depuis le 11/06/2024.
 2. **La hausse suit l'envoi de l'avatar de Musk.** Fenêtre documentée : 19:03:27 à 19:30:13 UTC le 21/07 (A), image envoyée à 19:23:20 UTC (B). Achats : {fen['borne_basse_a_envoi']['sol']:.2f} SOL de 19:03:27 à 19:23:20, {fen['envoi_a_borne_haute']['sol']:.2f} SOL de 19:23:20 à 19:30:13, {float(mh['buy_sol']):,.2f} SOL dans l'heure suivante (A pour les flux, B pour la cause). Entre l'annonce de Biden et la borne basse ({bm['hours']} h) : {bm['buy_sol']} SOL d'achats, {bm['sell_sol']} de ventes. Sur les 3 h avant l'envoi, en revanche, {s1['avatar']['sol_achete']:.1f} SOL contre une médiane de {s1['avatar']['mediane_sol_passe']:.1f} dans le passé du token, p = {s1['avatar']['p_sol']:.3f}, secondaire.
