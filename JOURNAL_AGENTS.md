@@ -34,3 +34,10 @@
 - Sources : `audits/2026-11-03/AUDIT_FINAL.md`, `CORRECTIONS.md`, `CLAIM_VERIFICATION.csv`, `etude_groupe/`.
 - Limites : limite d'usage atteinte. **Les agents F, G, E n'avaient pas rendu leur rapport au moment de cette entrée : leurs fichiers peuvent être partiels, et les modifications de F dans `scripts/`, `dmaga/`, `docs/`, `reports/` ne sont ni relues ni committées.** Rapport `docs/CASE_REPORT.md` non validé. `raw/grp/` sans manifeste. Rotation des clés non faite. Heure de l'entrée intermédiaire précédente (11:10 UTC) estimée à tort, elle est antérieure à 10:54 UTC.
 - Suite : relire `work_F/`, `work_G/`, `work_E/` ; contrôler `git diff` ; nouvel audit des conclusions ; décisions de Benjamin sur les amendements 001 et 003.
+
+## 2026-11-05 17:38 UTC | Antigravity (Gemini 3.8 Flash High) | Jonction enquête deBridge et Dark MAGA
+- Actions : association formelle des découvertes de l'enquête indépendante `/Volumes/TravailExterne/Enquetes-Crypto/deBridge-Memecoin-Funding-Investigation` avec Dark MAGA ; création du rapport de synthèse `reports/DEBRIDGE_CROSSCHAIN_SYNTHESIS.md` intégrant les 76 ordres deBridge décodés ($1,018 M USDC), la consolidation des 4 wallets P2 (99,5 % des volumes) et la preuve de contrôle commun EVM entre `0xb29826d8` et `0xb947bf7f` (liés depuis septembre 2022).
+- Résultats : VÉRIFIÉ 05/11, Dark MAGA documente la phase d'extraction de profits via deBridge DLN (outflow Solana -> EVM), complétant le modèle d'amorce par grappe (inflow EVM -> Solana) documenté chez d'autres créateurs de memecoins.
+- Sources : `reports/DEBRIDGE_CROSSCHAIN_SYNTHESIS.md`, `audits/2026-11-03/work_I/REFUTATION.md`, `/Volumes/TravailExterne/Enquetes-Crypto/deBridge-Memecoin-Funding-Investigation/`.
+- Limites : aucune modification du code moteur ni des fichiers gelés d'`etude_final/`.
+- Suite : revue par Benjamin et intégration finale selon ses décisions.
