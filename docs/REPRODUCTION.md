@@ -34,7 +34,20 @@ Raw responses and large Parquet files are outside Git. Their recorded paths and 
 
 On the audit branch, `DMAGA_EXT` selects the external archive. `DMAGA_BIG` must select a separate derived-output directory, such as `data_v3`, without overlapping archived data or frozen studies. Check the actual mounted disk and the paths in `scripts/py.sh`; that historical launcher expects the original macOS interpreter and external dependencies.
 
-Run substantial computations through `scripts/guard.py`. The required report-reference and duplicate-trade check, `scripts/chk_90_selfcheck.py`, needs its actual inputs. Offline tests are not a substitute for that check or for a raw-data replay.
+Run substantial computations through `scripts/guard.py`. The historical `main` version of `scripts/chk_90_selfcheck.py` checks base58 references in top-level `docs/*.md` and `reports/*.md`; the audit version also checks duplicate trades. These checks need their actual inputs. Finding an identifier in an archive does not verify the amount, date, direction or interpretation of the surrounding claim. Neither version validates the deBridge investigation directory. Offline tests are not a substitute for a raw-data replay.
+
+The `main` [case report](CASE_REPORT.md) explicitly retains its historical synthesis. Its opening scope note and the later H/I reviews govern interpretation of the creator and exact-33 wallet populations.
+
+## deBridge evidence checks
+
+The corrected deBridge package has a separate offline validator using only the Python standard library:
+
+```bash
+python3 investigations/2026-11-05_debridge_winners/validate.py
+python3 -m unittest discover -s investigations/2026-11-05_debridge_winners -p 'test_*.py' -v
+```
+
+These checks reconcile the table with pinned archival evidence, preserve the decoded maker's cohort, and distinguish source amounts, requested destination amounts and reported destination execution. They do not perform new RPC queries or independently confirm that every destination executed. The dedicated deBridge workflow runs them separately from the publication guard.
 
 ## Evidence and handover
 

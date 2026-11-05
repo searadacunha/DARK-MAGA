@@ -1,36 +1,59 @@
-# Fichier de reprise : Enquête Dark MAGA ($DMAGA)
+# Reprise : révision deBridge et jonctions financières ($DMAGA)
 
-**Date d'état :** 05/11/2026 17:10 UTC  
-**Statut de la passe :** ANALYSE DEBRIDGE & CROISEMENTS GAGNANTS TERMINÉE
+**Date :** 5 novembre 2026.  
+**État :** cohérence des archives contrôlée hors ligne ; validations blockchain complémentaires encore ouvertes.  
+**Dépôt :** [searadacunha/Dark-MAGA](https://github.com/searadacunha/Dark-MAGA).  
+**PR de travail :** [#13](https://github.com/searadacunha/Dark-MAGA/pull/13), `feat/debridge-crosschain-convergence` → `main`.
 
----
+## Résultats conservés et périmètre
 
-## 1. Ce qui a été accompli lors de cette session
+| Mesure | Valeur exacte ou compte |
+|---|---:|
+| Ordres décodés dans I14 | 76 |
+| USDC source, frais proportionnels inclus | 1 018 687,178289 |
+| Ordres émis par les membres exacts des 33 | 68 |
+| USDC source de ces 68 ordres | 974 077,946152 |
+| Rapprochements Ethereum rapportés dans I21/I22 | 41 |
+| Rapprochements avec hash de transaction complet | 31 |
+| Rapprochements sans hash imprimé | 10 |
+| Arrivées non vérifiées | 35 |
 
-1. **Vérification du périmètre strict des 33 wallets vs Hors-Périmètre :**
-   * Table complète des **76 ordres deBridge décodés (1 018 687,18 USD)**.
-   * Séparation stricte et documentée : **68 ordres (974 077,95 USD)** pour le groupe des 33 exacts, contre 8 ordres (44 609,23 USD) pour les autres périmètres (P1, aval H3QsBr, wallets neufs post-Musk).
-   * Couverture d'exécution wei-exact sur Ethereum : **41 ordres vérifiés sur 44 (942 534,32 USD, soit 92,5 % du volume total)**.
-2. **Reconvergence cross-chain vers Ethereum (Nouveau résultat B) :**
-   * Reconstitution de la salve synchronisée de 9 min 36 s du 22/07/2024 de 3 membres des 33 (`Gcyg2jeL`, `HGBiExZR`, `Ei5yGz8d`) vers `0xb947bf7f409e998b28f8e218802fc9575c3c8c57` (263 573 USD).
-   * Preuve de la liaison on-chain historique sur Ethereum entre `0xb947bf7f` et `0xb29826d8` (financement gaz dès septembre 2022 et 50k USDC direct le 25/07/2024). Contrôle unifié de plus de **436 000 USD** de flux deBridge.
-3. **Première sortie deBridge identifiée pour l'aval de `H3QsBrri` :**
-   * Traçage de `8YSi5yNR` (récipiendaire de 2 840 SOL de `H3QsBrri`) vers BSC (`0xfb2ec4e5...`) pour 9 912,83 USD le 20/03/2025.
-4. **Mise au jour du pivot inter-périmètres `7Gw3gL8m` :**
-   * Triangulation temporelle à la seconde (29 s et 72 s) entre `EGtyQEgM` (Groupe des 33), `7Gw3gL8m` et `9cfRU5RK` (Top Trader n° 11, +729 SOL) avec absorption de 400 SOL.
-5. **Production des livrables dédiés :**
-   * [`TABLE_DEBRIDGE_ORDERS.csv`](TABLE_DEBRIDGE_ORDERS.csv) : Table brute normalisée des 76 ordres deBridge.
-   * [`TABLE_DEBRIDGE_ORDERS.md`](TABLE_DEBRIDGE_ORDERS.md) : Synthèse analytique et décomposition par chaîne / portefeuille.
-   * [`TABLE_NEW_LINKS.md`](TABLE_NEW_LINKS.md) : Inventaire exhaustif des adresses complètes, signatures, hashes et montants.
-   * [`GRAPH_CONNECTIONS.md`](GRAPH_CONNECTIONS.md) : Modélisation Mermaid des 3 graphes financiers majeurs.
-   * [`RAPPORT_RESULTATS_NOUVEAUX.md`](RAPPORT_RESULTATS_NOUVEAUX.md) : Rapport synthétique des 3 découvertes probantes.
+Les archives G et I contenaient déjà la convergence de quatre ordres vers `0xb947bf7f`, les ordres BSC de `8YSi5yNR` et la jonction `7Gw3gL8m`. Ce dossier est une synthèse contrôlée de ces résultats. Aucune nouvelle collecte n'est revendiquée.
 
----
+Le maker décodé détermine le périmètre. `EGtyQEgM` est dans une population étendue et ne fait pas partie des 33 exacts. Les huit ordres Base vers `0xb29826d8` restent distincts des huit ordres Ethereum. Le rapport ne transforme ni une destination commune en propriété commune, ni un montant demandé en paiement reçu, ni un transfert sortant en bénéfice attribué.
 
-## 2. Prochaine action exacte à exécuter
+## Fichiers de travail
 
-Dès le déblocage des commandes terminal (`run_command`) par la modification de `settings.json` ou la relance avec `--dangerously-skip-permissions` :
-1. **Création d'une branche dédiée** : `git checkout -b feat/debridge-crosschain-convergence`.
-2. **Exécution de la suite de self-check** : `python3 scripts/chk_90_selfcheck.py` pour valider l'intégrité des références.
-3. **Publication de la branche et ouverture de la PR GitHub** (avec `gh pr create`) pointant vers le dépôt `searadacunha/Dark-MAGA-Investigation`.
-4. **Conservation intacte du README public** et des travaux en cours sur `audit-2026-11-03`.
+| Fichier | Usage |
+|---|---|
+| [RAPPORT_RESULTATS_NOUVEAUX.md](RAPPORT_RESULTATS_NOUVEAUX.md) | Synthèse révisée ; nom de fichier conservé pour la stabilité des liens. |
+| [TABLE_DEBRIDGE_ORDERS.csv](TABLE_DEBRIDGE_ORDERS.csv) | 76 lignes normalisées, montants entiers et décimaux, états d'exécution distincts. |
+| [TABLE_DEBRIDGE_ORDERS.md](TABLE_DEBRIDGE_ORDERS.md) | Sommes, dénominateurs, schéma des colonnes et commandes de reproduction. |
+| [TABLE_NEW_LINKS.md](TABLE_NEW_LINKS.md) | Signatures et hashes effectivement présents dans les sources ; lacunes nommées. |
+| [GRAPH_CONNECTIONS.md](GRAPH_CONNECTIONS.md) | Graphes avec chaînes et périmètres séparés. |
+| [validate.py](validate.py) et [test_validate.py](test_validate.py) | Vérification hors ligne et tests de régression. |
+| [evidence/source_manifest.json](evidence/source_manifest.json) | Provenance des quatre copies inchangées, commit source, SHA256 et blobs Git. |
+
+Les copies sources sont fixées au commit `933ebe8afc0558a2406b189a272311df060aef7a` de la branche de recherche. Les fichiers bruts Solana et les réponses Blockscout originales restent dans l'archive externe décrite par les audits, absente de ce dossier.
+
+## Vérification avant toute publication
+
+Depuis la racine du dépôt :
+
+```bash
+python3 investigations/2026-11-05_debridge_winners/validate.py
+python3 -m unittest discover -s investigations/2026-11-05_debridge_winners -p 'test_*.py'
+```
+
+Ce contrôle est autonome, sans réseau, sans clé et sans dépendance externe. Il vérifie la table CSV et ses sources archivées ; les textes et graphes doivent également être relus. Il n'est pas remplacé par `scripts/chk_90_selfcheck.py`, qui ne couvre pas à lui seul ce dossier et ses références EVM.
+
+Pour l'intégration Git, suivre `AGENTS.md` : état propre ou travail isolé, lecture du HEAD distant courant, conservation des modifications d'autres sessions, garde `scripts/check_publication.py --target main`, diff relu, push normal ou PR. Le README racine et les études gelées ne sont pas modifiés par ce dossier. Le statut de la PR et ses contrôles doivent être relus sur le commit effectivement publié.
+
+## Prochaines vérifications utiles, par priorité
+
+1. **Reconstituer la preuve de chaque arrivée.** Retrouver les dix hashes absents de I22 dans les réponses Blockscout archivées ; extraire les reçus et événements, puis relier les identifiants d'ordre source et destination. Les 31 hashes complets doivent également être vérifiés sur leurs reçus, au-delà de leur présence dans un log.
+2. **Compléter les chaînes non vérifiées.** Vérifier les 35 arrivées restantes, en conservant séparément Ethereum, Base, BSC, Polygon et Arbitrum. En cas de refus API ou d'historique incomplet, conserver l'état non vérifié.
+3. **Tester la continuité de l'aval H3QsBr.** Rejouer les transferts vers `8YSi5yNR` et ses soldes jusqu'aux ordres BSC de mars 2025. Les montants de juillet 2024 ne suffisent pas à attribuer ces ordres à DMAGA.
+4. **Qualifier le rôle de 7Gw3 et des destinataires EVM.** Compléter les historiques, mesurer le nombre et la nature des contreparties, vérifier les explications de paiement ou de service avant toute hypothèse de contrôle commun.
+
+Pour l'hypothèse distincte du financement de créateurs de memecoins par des sorties deBridge, il faut identifier les ordres et leurs makers économiques. Les contrats de paiement et la liquidité des takers ne sont pas, à eux seuls, une attribution de financement à l'entreprise deBridge.
