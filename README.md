@@ -1,7 +1,5 @@
 # Dark MAGA: Did Musk Know?
 
-## One early buyer. $1,087 spent. $990,744 in reconstructed trading PnL.
-
 On **July 21, 2024**, Elon Musk changed his X profile picture to a Dark MAGA image.
 
 A Solana memecoin using the same imagery, **$DMAGA**, had launched a week earlier.
@@ -15,8 +13,6 @@ That raised the question behind this investigation:
 > **Did anyone trade on advance knowledge of Elon Musk's profile-picture change?**
 
 I reconstructed the trading, traced the funding, mapped financial connections and followed the money across blockchains.
-
-The question is about possible advance knowledge of Musk's action, not an assumption that Musk knowingly enabled a scheme.
 
 Here is what the evidence shows.
 
@@ -45,7 +41,7 @@ The USD accounting uses prices at the time of the trades.
 
 This is reconstructed trading PnL, not a peak portfolio valuation or a verified withdrawal to a bank account. It is not presented as an all-cost, after-tax return.
 
-An early profitable trade does not establish access to private information. It gives the investigation a concrete starting point: **who bought, when they bought, and what happened to the money.**
+The investigation starts with the transactions: **who bought, when they bought, and what happened to the money.**
 
 [Trade history and accounting definitions][traders] · [Cross-checked figures][review-h]
 
@@ -94,7 +90,7 @@ Across the reviewed histories, the two deposits shared **27 qualifying sending w
 
 The addresses are strongly corroborated as Coinbase deposit accounts. Their account holders and ultimate beneficiaries are not identified.
 
-The funding-and-deposit pattern also appears outside the token's launch period. It supports a recurring financial relationship, not a launch-specific insider-trading conclusion.
+The funding-and-deposit pattern also appears outside the token's launch period.
 
 [Funding sequence, deposit overlap and transaction checks][review-i]
 
@@ -133,23 +129,7 @@ This connects the source orders to a shared destination. It does not identify th
 
 ---
 
-# 5. What Does This Establish About Musk?
-
-The investigation reconstructs early positions, substantial trading gains, direct wallet connections, deposit convergence and cross-chain routes around a token associated with Musk's profile change.
-
-**It does not establish insider trading, a private tip from Musk, or his participation in a trading scheme.**
-
-The image was circulating publicly before Musk adopted it. Knowing about the image is not the same as knowing that Musk would use it.
-
-The frozen statistical study compared $DMAGA with **211 tokens** and did not detect an exceptional pre-event signal under its predefined rule. The later sensitivity analysis found that the test had little ability to resolve relevant advance-knowledge scenarios, so that result does not settle the question either way.
-
-**The money trail is documented. Advance knowledge remains unproven.**
-
-[Public chronology][social] · [Frozen study][study] · [Interpretation and sensitivity][case]
-
----
-
-# 6. Follow the Evidence
+# 5. Follow the Evidence
 
 This repository combines **Solana transaction reconstruction, wallet-network analysis, exchange-deposit tracing, cross-chain order matching, public-source chronology and statistical testing**.
 
