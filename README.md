@@ -1,4 +1,4 @@
-# Dark MAGA: Who Knew Before Musk?
+# Dark MAGA: Did Musk Know?
 
 ## One early buyer. $1,087 spent. $990,744 in reconstructed trading PnL.
 
