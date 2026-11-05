@@ -2,9 +2,11 @@
   "version": 1,
   "targets": {
     "main": {
-      "baseline_commit": "24cfd01639d5f2158e33298b655b3070c23ee1f2",
-      "readme_blob": "7452daee9accf42d00550b8388d97bbb03b1f795",
-      "protocol_locks": ["etude_final/PROTOCOL.lock"]
+      "baseline_commit": "31732ba4b137f6f86251d05d4cdf95a509267116",
+      "readme_blob": "832852f52d82dca80164d3cce43ba464871c1c4c",
+      "protocol_locks": [
+        "etude_final/PROTOCOL.lock"
+      ]
     },
     "audit-2026-11-03": {
       "baseline_commit": "16c2396ddb8b80ea109c4f59a03822c1e7a6864e",
