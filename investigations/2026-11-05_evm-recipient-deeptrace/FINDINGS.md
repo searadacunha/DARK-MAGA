@@ -95,7 +95,7 @@ b947 a aussi rendu de l'ETH à b298 deux fois : `0x5f71dbe266a66528cb95184a568ef
 
 Les retraits de KuCoin et de MEXC vers b947, l'appoint et le gaz venus de b298, puis le dépôt de la somme exacte tombent dans les mêmes minutes. C'est compatible avec un seul opérateur qui pilote les comptes d'exchange et b298 ; ce n'en est pas la preuve.
 
-**c. Juillet-octobre 2024 : stock DMAGA gardé 71 jours, puis vidé en entier vers b298.**
+**c. Juillet-octobre 2024 : USDC issus de ventes de DMAGA conservés environ 71 jours, puis transférés vers b298.**
 - b947 reçoit 263 320,105094 USDC le 22/07 (4 ordres, 263 573,151396 USDC donnés côté Solana, frais compris), 50 003,330779 de b298 le 25/07 (tx `0xac4a12bd7eac6283bec6af0f43b3191c2964ee7c0f77dcefd8c29238566e1211`) et 120 957,888072 le 26/07 (§1). Soit 434 281,323945 USDC.
 - Ces 50 003,33 USDC suivent de 4 min un retrait de 49 999,0 USDC du hot wallet Coinbase 10 vers b298 (2024-07-25 08:18:11, tx `0x2b3c8d6b557e9a700b20163ea548852fee49746d01871467d059049b051dbd2c`).
 - **Aucune sortie** dans les 5 min, 1 h, 24 h ou 7 j qui suivent chaque arrivée (`b947_post_dmaga_flows.csv`).
@@ -148,15 +148,17 @@ Inférence : gaz venu d'un hot wallet étiqueté de l'exchange, puis vidage vers
 
 Contreparties non-service partagées : `evm_shared_counterparties.csv` (hubs de service retirés : CEX, routeurs, ponts, contrats de jetons, distributeurs d'airdrops).
 
-## 6. Après les 263 573 USDC : où va l'argent. VERIFIED (trajet) ; bornes sans FIFO
+## 6. Après les 263 573 USDC : où va l'argent. VERIFIED (trajet) ; bornes conditionnelles sous H
+
+**Rectification du 06/11/2026 :** les montants publiés par `s51_bounds.py` et `evidence/s51_b298_usdc_bounds.csv` supposent que les USDC reçus du relais `0x4978cd7e…` proviennent entièrement de `b947` (**hypothèse H, non démontrée**). Le relais avait aussi reçu 100 000 USDC de `b298` le 06/10/2024. Par conséquent, les bornes du tableau ci-dessous **ne sont pas des bornes inconditionnelles**. Sans H, le recalcul donne 46,814553 USDC pour l'ordre Base du 12/11 (o1) et 0 pour l'ordre BSC du même jour (o2), mais une borne **conjointe** de 100 028,638296 USDC pour o1 et o2 est rapportée et testée séparément. Voir l'[audit correctif de la PR #16](https://github.com/searadacunha/Dark-MAGA/pull/16) et son `FINDINGS.md` §3. La provenance des fonds doit toujours être distinguée du simple montant transféré.
 
 1. **b947** garde tout 71 jours, puis vide son stock vers b298, directement (100 000) ou par le relais (334 291,32 → b298). Comptabilité de stock : le solde tombe à 0,012, aucune hypothèse FIFO n'est nécessaire.
-2. **b298** mélange ces fonds avec d'autres. `evidence/s51_b298_usdc_bounds.csv` encadre chaque sortie USDC entre une borne basse et une borne haute.
+2. **b298** mélange ces fonds avec d'autres. `evidence/s51_b298_usdc_bounds.csv` calcule pour chaque sortie USDC des bornes **sous H uniquement** ; l'audit de la PR #16 fournit le modèle et les corrections sans H.
    - Borne basse : la sortie moins le maximum d'argent propre disponible.
    - Borne haute : le minimum entre la sortie et le maximum d'argent venu de b947 disponible.
    - Calcul en entiers bruts, autocontrôle borne basse ≤ borne haute.
 
-| Destination des USDC venus de b947 et du relais (à partir du 01/10/2024) | Au moins | Au plus |
+| Destination des USDC attribués à b947 sous hypothèse H (à partir du 01/10/2024) | Au moins sous H | Au plus sous H |
 |---|---|---|
 | deBridge → **b298 lui-même sur Base** (3 ordres : 06/11, 12/11, 15/11) | 124 233,75 | 124 261,38 |
 | deBridge → **b298 lui-même sur BSC** (12/11, 157,37 BNB reçus) | 99 981,82 | 99 989,83 |
@@ -218,7 +220,7 @@ Historique complet relu : 41 648 lignes, 20 384 tx signées, 15 425 transferts d
 
 | Hypothèse | Statut | Pourquoi |
 |---|---|---|
-| H1 même opérateur | **SUPPORTED (fort)** | Cinq signaux indépendants : 100 % du gaz de b947 vient de b298, juste à temps ; ETH rendu à b298 ; vidage total du stock DMAGA vers b298, en direct et par un relais gazé par b298 seul ; séances de 2023 où l'appoint de b298 et les retraits CEX vers b947 tombent dans les mêmes minutes ; trois adresses de dépôt par utilisateur communes (MEXC, Stake, KuCoin). Pas VERIFIED : aucune preuve de clé commune. |
+| H1 même opérateur | **SUPPORTED (fort)** | Cinq signaux indépendants : 100 % du gaz de b947 vient de b298, juste à temps ; ETH rendu à b298 ; vidage total du stock d'USDC vers b298, en direct et par un relais gazé par b298 seul ; séances de 2023 où l'appoint de b298 et les retraits CEX vers b947 tombent dans les mêmes minutes ; trois adresses de dépôt par utilisateur communes (MEXC, Stake, KuCoin). Pas VERIFIED : aucune preuve de clé commune. |
 | H2 client / prestataire | EXPLORATORY (faible) | Un prestataire qui garde les fonds d'un client ne les rapatrie pas tous chez lui. b298 a un usage personnel : mèmes, création de jetons via 20lab, Stake.com, Coinbase. Un prestataire OTC servant `Ei5yGz8d` reste théoriquement possible, mais b298 n'a qu'un seul maker DLN tiers : `Ei5yGz8d`. |
 | H3 wallet principal + secondaire | **SUPPORTED (fort)** | Forme précise de H1 : b298 est le principal (2 355 jours, 270 contreparties, 134 jetons, 5 chaînes). b947 n'a signé que 16 tx, toutes payées avec de l'ETH venu de b298 ; 10 contreparties en tout. |
 | H4 simple contrepartie historique | **REFUTED** | Le gaz, les vidages totaux et les dépôts communs dépassent de loin une contrepartie. |
