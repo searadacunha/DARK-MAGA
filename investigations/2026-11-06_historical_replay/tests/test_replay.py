@@ -135,6 +135,28 @@ class H3QsAndCircuit(unittest.TestCase):
             self.assertTrue(any(m["kind"] == "token" and m["src"] == src and m["dst"] == dst for m in movements(t)))
 
 
+class Pass3(unittest.TestCase):
+    def test_9sxm_1_8m_sale_is_17_875_sol_gross(self):
+        t = receipt("2PHU4HTSGRJ6xKncBiVm")
+        self.assertEqual(token_delta(t, W9SXM, DMAGA), -1_800_000_000_000)
+        gross = sum(m["amount"] for m in movements(t) if m["kind"] == "token" and m["src"] == "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1")
+        self.assertEqual(gross, 17_874_608_396)
+        self.assertEqual(round(gross / 1e9, 3), 17.875)
+
+    def test_barron_creation_and_no_shared_movement(self):
+        ev = pump_create_event(receipt("veJgufrqRRfWvo6fXNeG"))
+        self.assertEqual((ev["symbol"], ev["mint"], ev["user"]),
+                         ("Barron", "HmAgiwjjP9CXqK5wQNsHKtjAt2CH3Kv8Q7xH5kGL2nqZ", "3DLBntwLgbHx1HsLqJGKqhNtyHbuuoLWet2xhhcTvRuC"))
+        shared = movements(receipt("3wFx6C1HXs1PuKcMQVsj"))
+        creators = {"3DLBntwLgbHx1HsLqJGKqhNtyHbuuoLWet2xhhcTvRuC", "8YLEuUtZ4eFMJbf46oNb1CeG6dYFWGyxnQSh9hrgzBzR"}
+        self.assertEqual([m for m in shared if {m["src"], m["dst"]} & creators], [])
+
+    def test_6qfd_display_by_truncation(self):
+        r = json.loads((DATA / "pass3_tests.json").read_text())["L01_6QFD"]
+        self.assertEqual(r["ata_txs_21_07_to_noah"], 0)
+        self.assertTrue(r["display_15_3M_1_53pct_by_truncation"])
+
+
 class NoInventedAddress(unittest.TestCase):
     def test_every_address_in_findings_exists_in_evidence(self):
         import re

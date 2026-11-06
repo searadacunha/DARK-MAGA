@@ -12,7 +12,9 @@ Question : que valent, transaction par transaction, les pistes du mémo historiq
 | `data/noah_*.csv` | Avoirs à l'heure du post (contrôlés par ATA), arêtes, contreparties communes et leur revue |
 | `data/windows_sensitivity.csv`, `data/trades_1927_1930.csv` | Effet des bornes corrigées sur les fenêtres d'achat |
 | `data/ata_*.csv`, `data/rotation_*.csv`, `data/contracts_verified.json` | KLLARY et RETIREDIO : tests par ATA, relectures, contrats |
-| `data/h3qs_*.csv`, `data/atzj_gxzvx.json`, `data/counterparty_*.csv` | H3Qs, AtZj, GXZvX, fournisseur `HBsgbpsM…` |
+| `data/h3qs_*.csv`, `data/atzj_gxzvx.json`, `data/counterparty_*.csv` | H3Qs, AtZj, GXZvX, service `HBsgbpsM…` |
+| `data/pass3_tests.json` | Trois tests de la passe 3 (9Sxm 1,8 M, 6QFD 15,3 M, BARRON) |
+| `audit/` | Audit indépendant des reçus : script et résultats d'un second auditeur |
 | `evidence/receipts/` | 76 transactions citées, figées ; `INDEX.json` dit pourquoi |
 | `evidence/x_hist/` | Réponses brutes fxtwitter et syndication des posts du mémo |
 | `scripts/`, `tests/` | Collecte, calcul ; 16 tests hors ligne |

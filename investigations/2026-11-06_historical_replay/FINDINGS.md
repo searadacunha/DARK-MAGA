@@ -20,12 +20,12 @@ Un virement confirmé ne prouve ni l'identité civile, ni la détention des clé
 | 4 | Achat de 41,2 M, virement de 20 M à 9Sxm, financements de 5, 60 et 16 SOL vers trois satellites, qui achètent dans la minute ou les 2 min 29 s suivantes. Les trois abréviations se résolvent sans ambiguïté. | CONFIRMÉ (le « 2 minutes » est faux : 11 min 26 s) |
 | 5 | Circuit 7GVC ↔ 9Sxm ↔ AeiMit ↔ satellites : virements directs dans les deux sens (SOL, USDC, DMAGA), activation de comptes, balayage commun le 06/11/2024. Aucune co-signature. | CONFIRMÉ pour les virements ; contrôle commun : HYPOTHÈSE forte, non démontrée |
 | 6 | Les quatre groupes de Noah se reproduisent : 141 arêtes directes, toutes internes à un groupe, aucune entre groupes. Le plafond « 6,73 % par entité » se retrouve à 6,751 % (groupe 2). Les 50 contreparties communes entre groupes sont des services, de la poussière ou des candidates écartées. | CONFIRMÉ (arêtes et soldes) ; séparation des groupes : CORROBORÉE |
-| 7 | `HBsgbpsM…`, payé par les groupes 2 et 4, est un fournisseur au forfait de 700 $ (au moins 5 payeurs, dont un retrait Coinbase de 700 USDC). Il reverse à `9W9b3zg…`, le collecteur déjà décrit. | CONFIRMÉ (paiements) ; lien entre groupes : REJETÉ |
+| 7 | `HBsgbpsM…` reçoit de 14 payeurs distincts, dont cinq paiements identiques de 700 $ (un retrait Coinbase de 700 USDC compris), 10 SOL de 7GVC et 30 SOL de 9Sxm. Il reverse à `9W9b3zg…`, le collecteur déjà décrit : les 10 SOL de 7GVC y arrivent en deux sauts. | CONFIRMÉ (paiements, chemin) ; service probable ; lien entre groupes ou avec le créateur : NON ÉTABLI |
 | 8 | AtZj : « IN 20 USD / OUT 60K USD » exact pour son seul achat (19,94 $) et ses 8 ventes (60 107 $), mais les jetons vendus venaient de quatre wallets du lancement, par virement. | CONFIRMÉ ; le rendement du tracker est REQUALIFIÉ |
 | 9 | GXZvX : les trois ventes de la capture (88 791 $) sont ses trois dernières, le 23/07 à 11:47-11:48. Elles suivent de 1 h 05 la dernière capture de l'ancien avatar : antériorité au retrait non établie. | CONFIRMÉ (ventes) ; anticipation : REJETÉE comme conclusion |
 | 10 | KLLARY authentifié. 7GVC et 9Sxm l'ont échangé du 27/06 au 03/07/2024, deux semaines avant DMAGA. Même geste « achat puis virement » qu'avec DMAGA. | CONFIRMÉ (activité) ; même opérateur sur deux jetons : CORROBORÉ pour 7GVC/9Sxm seulement |
 | 11 | Rotation RETIREDIO → DMAGA après l'annonce de Biden : 11 des 35 acheteurs de la fenêtre vendent du RETIREDIO dans l'heure qui précède, contre 4 sur 149 dans la fenêtre témoin. | CORROBORÉ (exploratoire) ; volume faible : 7,27 SOL |
-| 12 | `trades.parquet` omet les virements SPL `Transfer` simples, dont le compte du mint est absent : 22 152 arêtes sur 57 828 relevées par l'API de transferts. Les soldes tirés de cette table seule sont faux pour les wallets concernés. | CONFIRMÉ (défaut du pipeline, non corrigé ici) |
+| 12 | `trades.parquet` omet les virements SPL `Transfer` simples, dont le compte du mint est absent. Le PnL publié les réinjecte déjà depuis `token_edges`. Restent faux les soldes sommés depuis `trades` seul et les corrections partielles de `ana_61` et `ana_64` (§8, issue #27). | CONFIRMÉ (portée précisée) |
 
 ## 1. Provenance des posts X (A1)
 
@@ -128,7 +128,7 @@ Post `1815291249102119198`, 22/07/2024 07:42:14 ; texte long intégral dans `dat
 | Satellite | Financement par 7GVC | 1er achat DMAGA | DMAGA achetés | Prix moyen | Jeffro |
 |---|---|---|---|---|---|
 | `A1UDMqcUC8RkZ8YENAktdueSQ6jxUUBickBK2y61vQ8J` | 5 SOL, 14/07 18:26:42 (`Wy4wZ6Uv…`) | 33 s après | 12 081 680,84 | 0,0000540 $ | 0,000054 |
-| `6QFDe4yu9mVhv3cbbaMtkTnakz4bGJLAjLjhwrMn5jqD` | 30 + 30 SOL, 15/07 21:51:14 et 16/07 02:21:36 | 149 s après | 15 392 092,62 | 0,0005622 $ | 0,000562 |
+| `6QFDe4yu9mVhv3cbbaMtkTnakz4bGJLAjLjhwrMn5jqD` | 30 + 30 SOL, 15/07 21:51:14 et 16/07 02:21:36 | 149 s après (exécution Jupiter DCA ; l'ordre est passé plus tôt, reçu non figé) | 15 392 092,62 | 0,0005622 $ | 0,000562 |
 | `H4mQu98TuxYTn3VSJone6jCTiDfXpuKcZbNZGHKUJU5y` | 16 SOL, 17/07 02:02:14 (`3vWWLUvX…`) | 51 s après | 3 768 814,50 | 0,0006669 $ | 0,000666 |
 
 ## 4. Circuit 7GVC, 9Sxm, AeiMit et satellites
@@ -190,6 +190,7 @@ Post `1815372294426124565`, 22/07/2024 13:04:17. Scripts `h32_noah.py`, `h34_ver
 
 **Arêtes** (`data/noah_edges.csv`)
 - 141 arêtes directes, DMAGA, SOL et USDC, toutes internes à un groupe ; **aucune entre deux groupes**.
+- La requête prend toutes les arêtes dont les deux bouts sont parmi les 15 adresses, quel que soit leur groupe : une arête entre deux groupes y figurerait. La colonne `same_group` n'est pas un filtre.
 - Exemples :
   - groupe 1 : BteH → Eaoxy, 26 354 876 DMAGA (14/07 02:55) puis 0,1 SOL ;
   - groupe 3 : 9SHto ↔ APfA, SOL dans les deux sens depuis avril 2024, puis 18 879 206 DMAGA ;
@@ -198,40 +199,47 @@ Post `1815372294426124565`, 22/07/2024 13:04:17. Scripts `h32_noah.py`, `h34_ver
 
 **Contreparties partagées entre groupes** (`data/noah_cross_group.csv`, `data/noah_candidates_review.csv`)
 - 50 au total : 34 services, 12 envois de poussière, 4 candidates. Services : plus de 25 wallets DMAGA, ou étiquette d'exchange, de routeur, de pool ou de Jupiter. Poussière : moins de 0,01 SOL par virement.
+- La règle « service » s'applique avant la règle « poussière » : 11 services n'envoient que moins de 0,01 SOL.
 - Les 4 candidates, toutes relues :
-  - `HBsgbpsM…` (61 transactions) : fournisseur au forfait, §5.1. **REJETÉ** comme lien ;
+  - `HBsgbpsM…` (61 signatures, 59 avec mouvement) : service probable à 14 payeurs, §5.1. Lien **NON ÉTABLI** ;
   - `F8rHedrg…` : plus de 1 000 transactions, reçoit de petits montants de 10 wallets DMAGA en mars 2025. Service probable, **REJETÉ** ;
   - `FJ9LmErk…` : plus de 1 000 transactions, envoie de 0,002 à 0,2 SOL à de gros détenteurs (Eaoxy, 5QhJJc, GXZvX) le 22/07. Sollicitation de masse, **REJETÉ** ;
   - `Cr8oGfjw…` : 375 transactions depuis le 13/11/2024, reçoit des USDC en montants ronds (200 à 2 310) de 10 wallets DMAGA, dont 7mdCA (groupe 2) et 7GVC (groupe 4). **NON RÉSOLU** : non classé sans lecture complète.
 - Conclusion : rien ne fusionne deux groupes. La séparation de Noah est **CORROBORÉE**, sous les limites de couverture de §9.
 
-### 5.1 Un fournisseur à 700 $ qui reverse au collecteur 9W9b3zg
+### 5.1 `HBsgbpsM…` : service probable qui reverse au collecteur 9W9b3zg
 
-`data/counterparty_HBsgbpsM1j1YsNYqtCXcFU4mCRofwcor2qFwifNqddmH.csv` : toute l'activité de cette adresse, 61 transactions.
+`data/counterparty_HBsgbpsM1j1YsNYqtCXcFU4mCRofwcor2qFwifNqddmH.csv` : toute l'activité de cette adresse, 61 signatures dont 59 avec mouvement. Relu aussi par l'audit indépendant (§12).
 
-**Paiements à prix fixe** (le 1er payeur est dans le groupe 2, le 2e dans le groupe 33)
+**Paiements identiques de 700 $** (cinq payeurs distincts)
 
 | Payeur | Date (UTC) | Montant | Valeur |
 |---|---|---|---|
-| 7mdCA | 26/07 17:50:59 | 3,8443 SOL | 700 $ |
-| EEdq9C | 26/07 18:25:57 | 3,85 SOL | 701 $ |
+| 7mdCA (groupe 2) | 26/07 17:50:59 | 3,8443 SOL | 700 $ |
+| EEdq9C (groupe des 33) | 26/07 18:25:57 | 3,85 SOL | 701 $ |
 | 6GYsKt | 27/07 01:45:32 | 3,85 SOL | 700 $ |
 | Coinbase 2 | 27/07 04:22:34 | 700 USDC | 700 $ |
 | 4JrabS | 28/07 20:17:19 | 3,8 SOL | 702 $ |
 
-**Autres entrées**
-- 7GVC : 10 SOL (1 819 $) ;
-- 9Sxm : 30 SOL ;
-- d'autres payeurs.
+**Autres entrées** : 14 payeurs distincts hors poussière, dont :
+- 7GVC : 10 SOL (1 819 $) le 26/07 à 18:43:31 ;
+- 9Sxm : 30 SOL le 23/08 ;
+- d'autres montants (3, 1,47 et 0,55 SOL, puis d'octobre à décembre).
 
 **Sorties**
-- 26 + 4,35 + 0,322 SOL vers `9W9b3zgHH9…` ;
+- 26 SOL vers `9W9b3zgHH9…` le 27/07 à 22:28:14, soit presque exactement les 26,018 SOL reçus avant cette heure, les 10 SOL de 7GVC compris ;
+- 4,35 et 0,322 SOL ensuite vers la même adresse ;
 - des USDC vers deux autres adresses.
 
 **Lecture**
-- Le même prix payé par cinq payeurs distincts, dont un retrait d'exchange, décrit un fournisseur, pas un propriétaire commun.
-- `9W9b3zg…` est le collecteur décrit dans `docs/CASE_REPORT.md` (48 expéditeurs, 94,5 % vers Coinbase). Il reçoit donc aussi le produit d'un vendeur à prix fixe.
-- Les envois du créateur et de 5QhJJc vers 9W9b3zg peuvent donc, eux aussi, être des achats d'un service. Cette piste n'est pas tranchée ici (§10).
+- Cinq payeurs distincts au même prix, dont un retrait d'exchange, et 14 payeurs au total : ce profil est celui d'un service. Ce n'est pas celui d'un wallet personnel partagé par les groupes 2 et 4.
+- Les paiements de 7GVC et 9Sxm ne sont pas au tarif de 700 $. Le service n'est pas identifié.
+- Le lien entre groupes reste donc **NON ÉTABLI**.
+- Les 10 SOL de 7GVC rejoignent `9W9b3zg…` en deux sauts. C'est le collecteur décrit dans `docs/CASE_REPORT.md` (48 expéditeurs, dont le créateur et 5QhJJc, 94,5 % vers Coinbase).
+- Deux lectures restent ouvertes, sans test qui les sépare ici :
+  1. `9W9b3zg…` est la trésorerie d'un fournisseur dont le créateur, le groupe 2 et le groupe 4 sont clients ;
+  2. c'est un collecteur commun.
+- Seule une lecture complète des entrées de `9W9b3zg…`, en dollars, peut trancher (§10).
 
 ## 6. Autres affirmations (A5, A6, A7, A11, B2, B4)
 
@@ -342,24 +350,27 @@ Sources : `h53_h3qs.py`, `data/h3qs_by_mint.csv` et `data/h3qs_rotations.csv`. L
 - Le premier repérage vient de l'agent de recherche.
 - Les chiffres ci-dessus sont recalculés ici sur les transactions relues, et la rotation est testée sur ses reçus.
 
-## 8. Défaut du pipeline : virements `Transfer` absents de `trades.parquet`
+## 8. Virements `Transfer` absents de `trades.parquet` : portée réelle
 
 **Constat**
 - Un virement SPL `Transfer` (non `TransferChecked`) ne cite pas le compte du mint. Il est donc absent de l'historique de signatures du mint, d'où sort `trades.parquet`.
 - Relu sur 5 transactions : les 3 `Transfer` ont 0 ligne dans `trades.parquet`, les 2 `TransferChecked` y figurent.
 
-**Ampleur**
-- 22 152 des 57 828 arêtes « gtba » (API de transferts, sans étiquette, une contrepartie) n'ont pas leur transaction dans `trades.parquet`.
-- Elles déplacent 2 126 M de jetons au total, chaînes comprises.
+**Ce qui est déjà compensé** (relu le 06/11 au soir, après la première version de ce paragraphe)
+- `ana_21_token_edges.py` verse ces virements dans `token_edges.parquet`, à partir de l'API de transferts de chaque wallet suivi.
+- `ana_20_pnl.py` les réinjecte dans le PnL, les deux jambes, quand aucune des deux n'est dans `trades`.
+- Contrôle : dans `wallets.parquet`, 6t2dz4jm a un résidu de 0 et 26 653 925 jetons sortis par virement ; AtZj a un résidu de 0.
+- Le PnL publié n'est donc pas touché par ce trou pour les wallets suivis.
 
-**Effet**
-- Tout solde calculé depuis `trades.parquet` seul est faux pour un wallet concerné.
-- Exemple : 6t2dz4jm y garde 26,65 M au 22/07, alors qu'il les a tous envoyés à AtZj le 14/07.
-- `token_edges.parquet` contient ces virements pour les wallets suivis. Les 15 soldes du §5 sont contrôlés par ATA et ne sont pas touchés.
+**Ce qui reste faux**
+- Tout solde calculé en sommant `trades` seul : 6t2dz4jm y garde 26,65 M, AtZj y descend à −84,5 M.
+- Les corrections de position de `ana_61` et `ana_64` ne réinjectent que les arêtes d'au moins 1 M de jetons entre membres d'un groupe.
+- Les virements entre deux wallets non suivis restent invisibles partout.
+- Mesure exhaustive, correctif et recalcul : issue #27, PR dédiée.
 
-**Suite**
-- Les rapports qui somment des soldes depuis `trades` sont à relire avant toute correction : le chiffre « 217 M avant Musk » du groupe des 33 est le premier à revoir.
-- Ce dossier ne modifie ni le pipeline ni ces chiffres.
+**Première version de ce paragraphe**
+- Elle parlait de « 22 152 arêtes manquantes » et de « soldes faux » sans distinguer ces cas.
+- Elle surestimait l'effet sur les chiffres publiés.
 
 ## 9. Couverture et limites
 
@@ -393,3 +404,73 @@ Sources : `h53_h3qs.py`, `data/h3qs_by_mint.csv` et `data/h3qs_rotations.csv`. L
 - **`7rSZBE2S…`** : destinataire de 23 M KLLARY de 7GVC.
 - **Pipeline** : correction du trou `Transfer` (§8) et recalcul des soldes publiés.
 - **Rapports en aval** : `rep_70`, `rep_72`, `rep_80`, `rep_90` et `ana_64` lisent `events.json`. Ils n'ont pas été régénérés ici, car le swap de la machine bloquait les calculs gardés. `docs/CASE_REPORT.md`, `reports/EARLY_BUYERS.md` et `reports/TOP_TRADERS.md` citent encore la borne 19:30:13.
+
+## 11. Sources de la passe 3 (issue #27) : trois tests
+
+Script `h60_pass3.py`, sortie `data/pass3_tests.json`.
+
+**L02, 9Sxm « 1.8M DMAGA → 17.875 SOL », 15 Jul 2024 09:59, fuseau inconnu : CONFIRMÉ**
+- Un seul swap de vente entre 1,5 et 2,1 M dans la plage possible (14/07 19:59 → 15/07 21:59 UTC) correspond exactement.
+- Signature `2PHU4HTSGRJ6xKncBiVmeqibrmwyA2DqVC2rP6pXcyX2nnWxRpiVN1gDDLkeDcyjSD2WQepVFmHa7JJMFJySNDUV`, slot 277721456, 15/07/2024 16:59:20 UTC.
+- 1 800 000 DMAGA vendus ; le pool Raydium verse **17,874608396 SOL**.
+- L'heure affichée correspond à 09:59 en UTC−7, heure du Pacifique, le fuseau de l'outil de capture.
+- 9Sxm ne garde net que 17,652820967 SOL : 0,211782429 SOL (1,18 %) partent en commission vers `ZG98FUCjb8mJ824Gbs6RsgVmr1FhXb2oNiJHa2dwmPd`, un compte de frais de bot qui touche aussi 9Sxm en poussière, et 0,010005 SOL en frais.
+- Le swap suivant, 24 s plus tard (1 620 000 DMAGA pour 19,58 SOL brut), ne correspond pas.
+
+**L01, 6QFD « 15.3M / 1.53% / $947.9K », capture postée le 22/07 à 12:56:22 UTC : CONFIRMÉ pour le solde, heure non déterminée**
+- L'ATA de 6QFD n'a aucune transaction entre le 16/07 02:29:41 et le post de Noah.
+- Le solde de 15 392 092,618766 s'affiche « 15.3M » et « 1.53% » par troncature.
+- La valeur de 947,9 k$ est atteinte aux minutes 03:11, 03:36, 07:43, 08:24, 12:24 et 12:58 UTC du 22/07, au cours du pool et de SOLUSDT. C'est compatible avec une capture vers 12:55 UTC (horloge en UTC+2), sans la prouver.
+
+**L03, BARRON `HmAgiwjjP9CXqK5wQNsHKtjAt2CH3Kv8Q7xH5kGL2nqZ` contre DMAGA : « même équipe » NON DÉMONTRÉ**
+- Création :
+  - mint Pump.fun « Time Traveler » / Barron, le 17/04/2024 à 08:31:23 UTC ;
+  - signature `veJgufrqRRfWvo6fXNeGL5AnHNMBSU4ZZ5J5FrnTHoa7eVAndjTPS7RgnFznFgrQ1U5S1BKwYFUEHhHyJQ8dXPf` ;
+  - créateur `3DLBntwLgbHx1HsLqJGKqhNtyHbuuoLWet2xhhcTvRuC`, qui achète 34,6 M pour 1 SOL dans la même transaction ;
+  - autorités de mint et de gel nulles.
+- Premier financement du créateur : 16,07 SOL de `DbBnB1dwvHn2R8gbuBUWw72MVjwBvoYVSHhjtLwBLgiS` le 12/04/2024. Cette adresse est non étiquetée, avec 1 000 transactions en 8 jours ; un service probable.
+- Le créateur et ce financeur sont absents de toutes les tables DMAGA : trades, financements, sorties, virements.
+- Ni ATA DMAGA chez le créateur de BARRON, ni ATA BARRON chez le créateur de DMAGA.
+- Une seule transaction figure dans les deux historiques (2 999 et 972 signatures) : `3wFx6C1HXs1PuKcMQVsjzLX97kVbj45BhjWVuDaxzzF23puFSZBksFLtmTjtGuzWnqpBdx9xPYk94KuMpM3FXcDT`, un swap PumpSwap d'un tiers le 11/08/2026, sans mouvement pour l'un ou l'autre.
+- Limites : aucun parcours à deux sauts. Le CTO de BARRON du 02/05/2024 n'est pas daté par rapport au contrat.
+
+## 12. Audit indépendant des reçus (demandé dans la PR #25)
+
+**Conditions**
+- Un second auditeur a relu les reçus et les tables sans ouvrir ce rapport, la méthode, ni les scripts de décodage du dossier.
+- Il a écrit son propre décodeur, hors ligne, avec des montants entiers.
+- Script : `audit/second_auditor_receipts.py`. Sortie : `audit/second_auditor_results.json`. Relancé ici à l'identique.
+
+**Verdicts**
+
+| Affirmation | Verdict |
+|---|---|
+| Clôture Perps de 7GVC (§3) | **PASS** |
+| Deux achats Pump.fun, 41 197 138 380 017 unités (§3) | **PASS** |
+| 20 M vers 9Sxm, 11 min 26 s après le second achat (§3) | **PASS** |
+| Financements des trois satellites par 7GVC (§3) | **PASS** |
+| 15 virements DMAGA internes aux groupes de Noah ; aucune arête entre groupes sur 141 (§5) | **PASS** |
+| Règle de classement des contreparties : 0 écart sur 51 lignes (§5) | **PASS** |
+| `HBsgbpsM…` (§5.1) | **PASS sur les faits ; inférence non tranchable** |
+
+Détail des PASS :
+- **Clôture Perps** :
+  - 189 656 068 999 lamports ;
+  - le keeper seul signe ;
+  - les demandes de clôture sont signées par 7GVC ;
+  - aucun tiers n'envoie de SOL : la source est la position de 7GVC, payée par la réserve SOL de Perpetuals, plus le remboursement de ses propres loyers.
+- **Achats Pump.fun** : `Buy` signés par 7GVC.
+- **20 M vers 9Sxm** : `transferChecked` direct, aucun programme AMM.
+- **Satellites** : virements System directs signés par 7GVC, aucun service intermédiaire.
+
+**Réserves reprises dans ce rapport**
+- Le premier « achat » de 6QFD est une exécution Jupiter DCA.
+- 6QFD n'est pas un wallet neuf : sa première transaction, en mai 2024, est signée par 9Sxm.
+- `HBsgbpsM…` : 7GVC et 9Sxm n'ont pas payé le tarif de 700 $ ; 14 payeurs ; 59 transactions avec mouvement.
+- Un programme non identifié, `DeJBGdMFa1uy…`, apparaît dans sept virements. Il ne déplace rien, ne fait aucun appel et consomme 578 unités de calcul.
+- Chaque achat Pump.fun de 7GVC verse 0,003 SOL à `HWEoBx…`, sans doute une commission de bot.
+
+**Non vérifiable hors ligne**
+- Taille de la position Perps.
+- Étiquette Coinbase, reprise des tables du dépôt.
+- Ordre exact des achats des satellites au-delà du premier reçu.

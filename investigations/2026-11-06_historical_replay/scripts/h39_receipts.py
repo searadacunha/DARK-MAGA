@@ -26,6 +26,10 @@ EXTRA = {
     "4pcw28aApDZVvvJR": "AeiMit : première transaction, payée par 7GVC",
     "ur6ajcoGpH": "H4mQ renvoie 76,68 SOL à 9Sxm",
     "RM8AZbLuWLkc": "6QFD renvoie 4,62 SOL à 7GVC",
+    "2PHU4HTSGRJ6xKncBiVm": "Passe 3 L02 : 9Sxm vend 1,8 M DMAGA, 17,874608396 SOL brut",
+    "veJgufrqRRfWvo6fXNeG": "Passe 3 L03 : création de BARRON",
+    "2a9YNG2S1sud1aCe1KsB": "Passe 3 L03 : premier financement du créateur de BARRON",
+    "3wFx6C1HXs1PuKcMQVsj": "Passe 3 L03 : seule transaction commune aux deux créateurs (swap d'un tiers)",
 }
 
 

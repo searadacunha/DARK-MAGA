@@ -39,7 +39,8 @@
 | Candidate | le reste, relu à la main (`data/noah_candidates_review.csv`) |
 
 - Une destination commune n'est jamais un lien sans lecture de ses autres contreparties.
-- `HBsgbpsM…` le montre : des paiements identiques de 700 $ décrivent un fournisseur.
+- `HBsgbpsM…` le montre : 14 payeurs, dont cinq paiements identiques de 700 $, décrivent un service probable, pas un lien entre payeurs.
+- La règle « service » s'applique avant la règle « poussière ».
 
 **Tests par ATA** (`h51`, `h52`)
 - Ensembles et fenêtres écrits dans le code avant le premier appel ; mêmes requêtes pour testés et témoins.
@@ -74,7 +75,9 @@ cd investigations/2026-11-06_historical_replay/scripts
 ../../../scripts/py.sh h35_atzj_gxzvx.py && ../../../scripts/py.sh h40_windows.py && ../../../scripts/py.sh h50_contracts.py
 ../../../scripts/py.sh h51_ata_test.py kllary && ../../../scripts/py.sh h51_ata_test.py retiredio
 ../../../scripts/py.sh h52_rotation.py retiredio && ../../../scripts/py.sh h52_rotation.py kllary
-../../../scripts/py.sh h53_h3qs.py && ../../../scripts/py.sh h39_receipts.py
+../../../scripts/py.sh h53_h3qs.py && ../../../scripts/py.sh h60_pass3.py && ../../../scripts/py.sh h39_receipts.py
+# audit indépendant (hors ligne)
+python3 -I ../audit/second_auditor_receipts.py
 # chronologie et cohortes corrigées (racine du dépôt)
 scripts/py.sh scripts/guard.py -- scripts/py.sh scripts/ana_50_cohorts.py
 scripts/py.sh scripts/guard.py -- scripts/py.sh scripts/rep_75_timeline.py
