@@ -28,11 +28,11 @@ python3 scripts/check_publication.py --target audit-2026-11-03
 
 Use `--target main` only for a candidate based on `main`. The guard reads local Git refs; it does not fetch them. Passing it is not server-side branch protection.
 
-## Forensic pipeline integrity (proposed 6 November fixes)
+## Forensic pipeline integrity (merged 6 November 2026, PR #19)
 
 The pipeline must rebuild `token_edges.parquet` **before** running `ana_20_pnl.py`, because cost basis consumes transfers that are missing from the standard trade normalization. Stale transfer files must not be reused in a fresh PnL calculation.
 
-The proposed `dmaga/db.py` deduplicates overlapping source slices using transaction, event type, owner, venue and token delta, while retaining the preferred raw-history source. `ana_19_export.py` reads the fresh shards, validates a staging Parquet and only then replaces the previously validated export. The normalizer retains the last materialized export if shard rebuilding fails. Failed batch commands now stop the driver.
+The merged `dmaga/db.py` deduplicates overlapping source slices using transaction, event type, owner, venue and token delta, while retaining the preferred raw-history source. `ana_19_export.py` reads the fresh shards, validates a staging Parquet and only then replaces the previously validated export. The normalizer retains the last materialized export if shard rebuilding fails. Failed batch commands now stop the driver.
 
 The `Forensic pipeline regression checks` workflow runs offline parser, PnL and deduplication tests on `main` pull requests. These tests do **not** independently validate the historical July 2024 PnL, full token-transfer coverage, source-provider labels or the conclusions in the root README.
 
@@ -44,7 +44,7 @@ Raw responses and large Parquet files are outside Git. Their recorded paths and 
 
 On the audit branch, `DMAGA_EXT` selects the external archive. `DMAGA_BIG` must select a separate derived-output directory, such as `data_v3`, without overlapping archived data or frozen studies. Check the actual mounted disk and the paths in `scripts/py.sh`; that historical launcher expects the original macOS interpreter and external dependencies.
 
-Run substantial computations through `scripts/guard.py`. The historical `main` version of `scripts/chk_90_selfcheck.py` checks base58 references in top-level `docs/*.md` and `reports/*.md`; the audit version also checks duplicate trades. These checks need their actual inputs. Finding an identifier in an archive does not verify the amount, date, direction or interpretation of the surrounding claim. Neither version validates the deBridge investigation directory. Offline tests are not a substitute for a raw-data replay.
+Run substantial computations through `scripts/guard.py`. The current `main` `scripts/chk_90_selfcheck.py` checks base58 references in top-level `docs/*.md` and `reports/*.md`, and detects duplicate keys in the physical exported `trades.parquet`. These checks do not validate historical cost basis without the complete raw corpus. These checks need their actual inputs. Finding an identifier in an archive does not verify the amount, date, direction or interpretation of the surrounding claim. Neither version validates the deBridge investigation directory. Offline tests are not a substitute for a raw-data replay.
 
 The `main` [case report](CASE_REPORT.md) explicitly retains its historical synthesis. Its opening scope note and the later H/I reviews govern interpretation of the creator and exact-33 wallet populations.
 
@@ -58,6 +58,15 @@ python3 -m unittest discover -s investigations/2026-11-05_debridge_winners -p 't
 ```
 
 These checks reconcile the table with pinned archival evidence, preserve the decoded maker's cohort, and distinguish source amounts, requested destination amounts and reported destination execution. They do not perform new RPC queries or independently confirm that every destination executed. The dedicated deBridge workflow runs them separately from the publication guard.
+
+## Follow-up investigations merged on 6 November 2026
+
+- [PR #17](https://github.com/searadacunha/Dark-MAGA/pull/17) repairs the relay-aware provenance bounds and decodes DLN FulfilledOrder v2. Its standalone self-check and Base/BSC/Solana checks ran successfully in CI after merge.
+- [PR #20](https://github.com/searadacunha/Dark-MAGA/pull/20) requires the full ABI event topic0 for both FulfilledOrder variants and CreatedOrder before interpreting an order. Synthetic regression tests check nonmatching topics.
+- [PR #18](https://github.com/searadacunha/Dark-MAGA/pull/18) adds the separate DMAGA–Kekius investigation, with 15 offline assertions. Its `k37` operator-counterparty list is a balance-delta *screen*, not proof of direct transfers: the direct edges still require instruction-level validation.
+- The original draft [PR #1](https://github.com/searadacunha/Dark-MAGA/pull/1) is closed, superseded by PR #19; do not import its previous README into `main`.
+
+Run the relevant workflow suites on each new branch, then rerun the publication guard. Those tests validate stored fixtures, bookkeeping invariants and decoder behavior, not the entire raw-data archive or the possibility of privileged information.
 
 ## Evidence and handover
 
