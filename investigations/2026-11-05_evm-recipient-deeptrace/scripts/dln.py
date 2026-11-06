@@ -1,4 +1,6 @@
-"""Décodeur minimal de l'événement FulfilledOrder de DlnDestination (0xe7351fd7...), sans dépendance.
+"""Décodeur minimal de l'ANCIEN événement FulfilledOrder de DlnDestination (0xe7351fd7...), sans dépendance.
+Périmètre vérifié dans cette enquête : 2024. La seconde version d'événement (topic0 0xc164aca3..., utilisée notamment en 2026) n'est PAS décodée ici : ne pas inférer l'exhaustivité des fills récents.
+Pour les formats et le périmètre élargi, consulter l'audit et les décodeurs de investigations/2026-11-06_debridge_base_bsc_solana/ (PR #16).
 FulfilledOrder(Order order, bytes32 orderId, address sender, address unlockAuthority), Order = 14 champs (doc deBridge DLN)."""
 DLN_DST = "0xe7351fd770a37282b91d153ee690b63579d6dd7f"
 FULFILLED = "0xd281ee92bab14460"  # préfixe du topic0 observé ; validé par le contrôle positif ci-dessous
