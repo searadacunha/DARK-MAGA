@@ -38,7 +38,7 @@ Ces observations établissent une relation financière historique rapportée ent
 
 Le cumul **436 151,413886 USDC source** additionne les quatre ordres vers `0xb947bf7f` et les seize vers `0xb29826d8`. Il couvre **deux chaînes**, inclut huit arrivées non vérifiées sur Base et ne représente pas un « volume contrôlé » ni un montant reçu sur Ethereum.
 
-Le versement additionnel de **120 957,888072 USDC** signalé dans I22 le 26 juillet 2024 n'est relié à aucun des 76 ordres du corpus. Sa chaîne et son donneur d'ordre d'origine restent inconnus ; il est exclu des totaux.
+Le versement additionnel de **120 957,888072 USDC** signalé dans I22 le 26 juillet 2024 n'est relié à aucun des 76 ordres du corpus, et il reste exclu des totaux de cette table. Son origine est désormais retrouvée hors corpus : c'est l'ordre DLN `0xc65ba1fa1b9d14301b5b0acaf159a5fd955a18899e4256a7604fd0af1f27a225`, créé sur Solana par `GZXKYzwZPgWH8TwyY9f8dkCQ9EKK6nrPZADGcEwfAg7Y` après la vente de 29,1 M DMAGA consolidés depuis neuf wallets. Voir [`../2026-11-05_evm-recipient-deeptrace/FINDINGS.md`](../2026-11-05_evm-recipient-deeptrace/FINDINGS.md), §1 et §2.
 
 ## 3. Dans l'aval de H3QsBr, deux ordres vers BSC à vérifier
 
