@@ -1,10 +1,14 @@
-"""Bornes prudentes de la part « venue de b947 » dans chaque sortie USDC de b298, sans FIFO.
+"""Bornes CONDITIONNELLES sous hypothèse H (le relais 0x4978... transporte exclusivement les USDC de b947), sans FIFO.
+ATTENTION : H est non démontrée. Les minima de ce script ne sont pas des bornes garanties sans H.
+Voir la correction s15_relay_bounds.py dans investigations/2026-11-06_debridge_base_bsc_solana/ et la PR #16.
 Deux réservoirs : T (USDC arrivé de b947 ou du relais 0x4978cd7e à partir du 01/10/2024) et C (tout le reste). L'USDC est fongible :
 toute répartition est possible. Pour chaque sortie x, avant elle :
 - T_max = T restant si toutes les sorties passées avaient puisé d'abord dans C ; C_max = C restant si elles avaient puisé d'abord dans T ;
 - borne basse = max(0, x - C_max) (même au mieux, il n'y avait pas assez d'argent propre) ; borne haute = min(x, T_max).
 Les sommes de bornes basses par destination sont des minima valables (prudents). Sortie : ../evidence/s51_b298_usdc_bounds.csv"""
 import csv
+import sys
+print("AVERTISSEMENT : sortie s51 conditionnelle a H ; voir audit PR #16 pour bornes sans H.", file=sys.stderr)
 B947, RELAY = "0xb947bf7f409e998b28f8e218802fc9575c3c8c57", "0x4978cd7e5a3565cafcc88a105940b0ea01adc04d"
 # entrées de vrai USDC venues d'un sosie (poussière d'empoisonnement) : vraie valeur, gardées pour le solde
 R = [r for r in csv.DictReader(open("../evidence/b298_full_history.csv")) if r["asset"] == "USDC"
