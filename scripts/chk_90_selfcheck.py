@@ -18,6 +18,19 @@ from dmaga.labels import load as load_labels
 
 B58 = re.compile(r"(?<![1-9A-HJ-NP-Za-km-z])[1-9A-HJ-NP-Za-km-z]{32,88}(?![1-9A-HJ-NP-Za-km-z…])")
 con = connect()
+# Inspect the physical Parquet table, not the deduplicated view. A stale export
+# must fail validation rather than silently producing misleading PnL reports.
+materialized = BIG / "trades.parquet"
+if materialized.is_file():
+    duplicates = con.execute(f"""
+        SELECT count(*) FROM (
+            SELECT 1 FROM read_parquet('{materialized}')
+            GROUP BY signature, kind, owner, venue, token_delta
+            HAVING count(*) > 1
+        )""").fetchone()[0]
+    if duplicates:
+        print(f"ERROR: {duplicates} duplicate trade keys in {materialized}; rebuild derived data")
+        sys.exit(1)
 known: set[str] = set(load_labels())
 for sql in ("SELECT DISTINCT signature FROM trades", "SELECT DISTINCT owner FROM trades", "SELECT DISTINCT fee_payer FROM trades"):
     known |= {r[0] for r in con.execute(sql).fetchall() if r[0]}
