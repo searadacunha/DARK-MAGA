@@ -9,6 +9,14 @@ from scripts.audit_x_post_provenance import (
 )
 
 
+class ReturnedObjectTests(unittest.TestCase):
+    def test_repost_ids_resolve_to_their_original(self):
+        from dmaga.xposts import returned_ids
+        self.assertEqual(returned_ids("1814779160377602331"), {"1814763940410499481"})
+        self.assertEqual(returned_ids("1813220461867573395"), {"1813086353741230327"})
+        self.assertEqual(returned_ids("1815054750775173447"), {"1815054750775173447"})
+
+
 class HistoricalXProvenanceTests(unittest.TestCase):
     def test_snowflake_is_original_post_timestamp(self):
         self.assertEqual(snowflake_dt("1814763940410499481").strftime("%Y-%m-%dT%H:%M:%S"), "2024-07-20T20:46:54")

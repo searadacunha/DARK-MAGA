@@ -13,9 +13,9 @@
  },
  {
   "name": "pmarca_image_rouge",
-  "t": 1721512043,
+  "t": 1721508414,
   "fiabilite": "A",
-  "source": "post 1814779160377602331, 20/07 21:47:23 UTC"
+  "source": "post 1814763940410499481 (original), 20/07 20:46:54 UTC ; 1814779160377602331 en est un repost"
  },
  {
   "name": "kikisknees_elon_mooning",
@@ -39,7 +39,7 @@
   "name": "annonce_biden",
   "t": 1721583960,
   "fiabilite": "C",
-  "source": "21/07 17:46 UTC, donnée de la mission, non revérifiée ici"
+  "source": "21/07 17:46 UTC, donnée de la mission ; au plus tard 17:59:47 UTC, post 1815084272098697611 de @DegenerateNews"
  },
  {
   "name": "musk_borne_basse",
@@ -55,9 +55,15 @@
  },
  {
   "name": "musk_borne_haute",
+  "t": 1721590044,
+  "fiabilite": "A",
+  "source": "post 1815106321810919673 de @AutismCapital, 19:27:24 UTC, capture du profil avec le nouvel avatar"
+ },
+ {
+  "name": "musk_borne_haute_bailey",
   "t": 1721590213,
   "fiabilite": "A",
-  "source": "post 1815107030606385507, 19:30:13 UTC, nouvel avatar visible"
+  "source": "post 1815107030606385507, 19:30:13 UTC, ancienne borne haute, gardée pour la sensibilité"
  },
  {
   "name": "darkmagacoin_dm",

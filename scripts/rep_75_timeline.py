@@ -13,6 +13,7 @@ from pathlib import Path
 from dmaga.config import DATA, RAW
 from dmaga.db import connect
 from dmaga.frfmt import fr
+from dmaga.xposts import returned_ids
 
 con = connect()
 VD, VS = "5HuEsLbebeuottMsFW3hHcXTrKVsu3WUNSQnSr6aX4eL", "3p7DbnWekWjtMQkey6fp1emdwXbAAxecnYuD5eU9ZZPH"
@@ -38,10 +39,18 @@ def fdv(t):
     return f"{v / 1e6:,.2f} M$" if v >= 1e6 else f"{v / 1e3:,.0f} k$"
 
 
-posts = {}
+posts, reposts, n_obs = {}, {}, 0
 for line in (DATA / "x_posts.jsonl").open():
     r = json.loads(line)
-    posts.setdefault(r["id"], r)
+    n_obs += 1
+    back = returned_ids(r["id"])
+    if back and r["id"] not in back:
+        # l'API a rendu l'original : la ligne porte l'auteur, la date et le texte de l'original sous l'ID du repost
+        orig = back.pop()
+        reposts[r["id"]] = orig
+        posts.setdefault(orig, dict(r, id=orig, via_repost=r["id"]))
+        continue
+    posts[r["id"]] = r
 rec = {}
 for line in Path("evidence/x_wayback/recovered.jsonl").open():
     r = json.loads(line)
@@ -55,8 +64,11 @@ def snow(i):
 def P(i, label, level, note=""):
     """Ligne appuyée sur un post archivé."""
     i = str(i)
+    if i in reposts:
+        raise SystemExit(f"post {i} est un repost de {reposts[i]} : citer l'original, sa date est la sienne")
     if i in posts and posts[i].get("text"):
-        txt, src = posts[i]["text"], "archivé"
+        txt = posts[i]["text"]
+        src = f"archivé via le repost {posts[i]['via_repost']}" if posts[i].get("via_repost") else "archivé"
     elif i in rec:
         txt, src = rec[i].get("text") or "", "supprimé, texte Wayback"
     else:
@@ -83,10 +95,11 @@ R = [
     P(1812321235688157500, "Premier post archivé de @DarkMagaCoin", "A"),
     T(1720927892, "dmaga.xyz en ligne, mint affiché", "A", "capture Wayback 03:31:32 UTC, evidence/web/wb_dmaga_xyz_*"),
     P(1812521301682069933, "@kikisknees promeut le token", "B"),
-    P(1813004360592552354, "@kanpai annonce des avatars rouges aux yeux bleus", "A"),
+    P(1812984492157771825, "@kanpai pousse le token : « sending this much higher »", "A", "Original ; 1813004360592552354 (16/07 00:14:58) en est un repost."),
+    P(1813086353741230327, "@kanpai annonce des avatars rouges aux yeux bleus", "A", "Original ; 1813220461867573395 (16/07 14:33:40) en est un repost."),
     P(1813681762188345683, "@DarkMagaCoin présente @ChrisWinig comme créateur de l'équipe", "A"),
-    P(1814779160377602331, "@pmarca publie une image rouge aux yeux laser", "A", "Pas le visuel de Musk."),
-    P(1815004677160776126, "@pmarca, nouvelle image", "A"),
+    P(1814763940410499481, "@pmarca publie une image rouge aux yeux laser", "A", "Pas le visuel de Musk. Original ; 1814779160377602331 (20/07 21:47:23) en est un repost, URL d'archive au nom de @DarkMagaCoin."),
+    P(1814920352134537332, "@pmarca, nouvelle image", "A", "Original ; 1815004677160776126 (21/07 12:43:30) en est un repost, URL d'archive au nom de @DarkMagaCoin."),
     P(1815006501896872388, "@kikisknees sollicite publiquement @pmarca sur Elon", "B"),
     P(1815018442589663572, "@kikisknees cite la capitalisation", "B", "À comparer à la colonne capitalisation."),
     P(1815053805077086351, "Musk écrit « Whoa » sur un article du NY Post", "A"),
@@ -97,9 +110,10 @@ R = [
     T(1721583960, "Annonce du retrait de Joe Biden", "C", "17:46 UTC, donnée de la mission, non revérifiée dans un fichier"),
     T(1721588607, "Borne basse : Musk a encore son ancien avatar", "A", "capture Wayback 19:03:27 UTC, evidence/web/wb_elonmusk/"),
     T(1721589800, "Envoi probable du nouvel avatar", "B", "snowflake de profile_images/1815105297410666496 : 19:23:20,585 UTC. L'id date le téléversement ; lecture à confirmer"),
-    P(1815107030606385507, "Borne haute : premier post qui montre le nouvel avatar", "A"),
+    P(1815106321810919673, "Borne haute : premier post qui montre le nouvel avatar (@AutismCapital)", "A", "Capture du profil de Musk ; l'heure est celle du post, pas du clic ni de la capture. Avatar recadré à pHash 4/64 du visuel (médiane 30 sur 703 médias), evidence/x_media."),
+    P(1815107030606385507, "@DavidFBailey montre aussi le nouvel avatar (ancienne borne haute)", "A"),
     P(1815107751745601643, "@DarkMagaCoin réagit", "A"),
-    P(1815107774113587625, "@ChrisWinig réagit", "A"),
+    P(1815107549903135205, "@ChrisWinig réagit", "A", "Original ; 1815107774113587625 (19:33:11) en est un repost, URL d'archive au nom de @DarkMagaCoin."),
     P(1815116229117690314, "@kikisknees revendique le pfp", "B"),
     P(1815125720785391758, "@kikisknees : surprise et visuel « fait pour lui »", "B"),
     T(1721595380, "@Aristos_Revenge promeut l'outil de pfp et le token", "B", "id 1815128699831796065, supprimé ; texte connu par le seul Daily Dot"),
@@ -117,7 +131,9 @@ head = """# Chronologie Dark MAGA
 
 Généré par `scripts/rep_75_timeline.py`. Heures UTC. Attention, cette échelle note la **source** de chaque ligne, elle diffère de celle des conclusions du rapport. Fiabilité : A, fait directement contrôlable (transaction, post archivé, capture datée) ; B, une seule source
 indirecte ou une lecture à confirmer ; C, non revérifié dans un fichier du projet. Une date de post vient de son identifiant ; dans tous les cas lus, elle
-égale la métadonnée d'origine. Capitalisation : prix du pool juste avant l'instant × 10^9 × SOLUSDT à la minute.
+égale la métadonnée d'origine, sauf pour un repost :
+fxtwitter et le point d'intégration rendent alors l'original, dont la date diffère de celle de l'ID demandé ({n_rep} reposts ainsi résolus sur {n_obs} observations ;
+réconciliation complète, Wayback comprise : `investigations/2026-11-06_historical_replay/data/x_observations_reconciled.csv`). Un repost n'est jamais cité : le générateur s'arrête. Capitalisation : prix du pool juste avant l'instant × 10^9 × SOLUSDT à la minute.
 
 | UTC | Fait | Fiabilité | Capitalisation | Source |
 |---|---|---|---|---|
@@ -126,5 +142,5 @@ body = ""
 for t, lab, lvl, src in R:
     d = datetime.fromtimestamp(t, timezone.utc).strftime("%d/%m/%Y %H:%M:%S")
     body += f"| {d} | {lab} | {lvl} | {fdv(t)} | {src.replace('|', '/')} |\n"
-Path("docs/TIMELINE.md").write_text(fr(head + body))
+Path("docs/TIMELINE.md").write_text(fr(head.format(n_rep=len(reposts), n_obs=n_obs) + body))
 print("lignes", len(R), "sommet", datetime.fromtimestamp(ath[0], timezone.utc).strftime("%d/%m %H:%M"), round(ath[1]))
