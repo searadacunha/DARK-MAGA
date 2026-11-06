@@ -1,3 +1,5 @@
+> **UPDATE — 2026-11-06 PASS 2:** The more recent, complete execution prompt is [pass2/PROMPT_CLAUDE_PASS2.md](pass2/PROMPT_CLAUDE_PASS2.md). It supersedes the unresolved wallet abbreviations, the older avatar upper bound, the erroneous A7 reply interpretation, and unspecified comparator contracts in the original prompt below. Read pass 2 before running any investigations.
+
 # Claude Code — DMAGA | Historical intelligence integration and falsifiable on-chain reconstruction
 
 **Run once. Work in an isolated branch/worktree. Do not run recurring collectors.**
