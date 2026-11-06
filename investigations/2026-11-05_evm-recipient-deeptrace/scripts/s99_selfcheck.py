@@ -80,7 +80,7 @@ check("F8 b298 -> Ei5yGz8d : 22 ordres, 299 800,36 USDC et 34,1399 ETH cédés, 
 e2b = [r for r in D if r["wallet"] == "b298" and r["direction"] == "IN" and r["maker"] == E5]
 check("F8 Ei5yGz8d -> b298 sur Ethereum : 8 ordres, 151 300,22 USDC", len(e2b) == 8 and round(sum(int(r["give_amount_raw"]) for r in e2b) / 1e6, 2) == 151300.22)
 lo = lambda pred: round(sum(float(r["from_b947_min"]) for r in Bd if pred(r)), 2)
-check("F8 bornes basses Base 124 233,75 / BSC 99 981,82 / ventes ETH 247 663,99",
+check("F8 bornes conditionnelles H (non garanties sans H) : Base 124 233,75 / BSC 99 981,82 / ventes ETH 247 663,99",
       lo(lambda r: r["dln_dest"].startswith("base:" + B298)) == 124233.75 and lo(lambda r: r["dln_dest"].startswith("bsc:" + B298)) == 99981.82
       and lo(lambda r: r["counterparty"] in ("0x43ee35d5542f5b826fa92832bd97caff153675a8", "0xbcc66fc7402daa98f5764057f95ac66b9391cd6b", "0x225a38bc71102999dd13478bfabd7c4d53f2dc17")) == 247663.99)
 CEr = [r for r in csv.DictReader(open("../evidence/2d86_full_history.csv")) if r["counterparty"] == CE and r["kind"] == "native_tx" and not r["flags"]]
