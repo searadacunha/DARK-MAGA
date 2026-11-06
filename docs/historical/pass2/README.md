@@ -7,7 +7,7 @@ This directory preserves the **five user-supplied Grok research deliverables** f
 - `DMAGA_GROK_TO_CLAUDE_HANDOFF.md`: prioritized, falsifiable forensic checks. **Instructions are proposals; no chain replay occurred in this import.**
 - `DMAGA_WALLET_TWEET_LEADS.csv`: 24 source-linked leads, five named Jeffro wallets and four *socially documented candidate* comparator mints. The field `evidence_status` is `SOCIAL_CLAIM_NOT_CHAIN_VERIFIED`.
 - `DMAGA_X_SEARCH_COVERAGE.md`: 89 retrospective X calls, search coverage, limits and references to unavailable local raw responses/media.
-- `../../data/historical_x_pass2/DMAGA_X_ARCHIVE.part-001.jsonl` through `part-005.jsonl`: the single uploaded `DMAGA_X_ARCHIVE.jsonl` was split in original record order into **five consecutive parts** for repository review. Each JSONL record's content was preserved logically; the original file's byte-level identity is **not** asserted.
+- `../../../data/historical_x_pass2/DMAGA_X_ARCHIVE.part-001.jsonl` through `part-005.jsonl`: the single uploaded `DMAGA_X_ARCHIVE.jsonl` was split in original record order into **five consecutive parts** for repository review. Each JSONL record's content was preserved logically; the original file's byte-level identity is **not** asserted.
 
 The 1,001 JSON records have unique IDs, timestamps and author IDs; 374 unique author IDs and 35 records marked present in the older corpus. That is an internal consistency check, not proof that the X API, media or claimed transfers are authentic. All posts were collected retrospectively; counts are not independent witnesses. Check `DMAGA_X_SEARCH_COVERAGE.md` for incomplete source responses and query limits.
 
