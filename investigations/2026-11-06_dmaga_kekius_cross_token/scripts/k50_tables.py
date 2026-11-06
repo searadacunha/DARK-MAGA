@@ -49,6 +49,19 @@ ov.append(["XC", "solana", "DQmMnakiKr1YNE2gcpggLCzBrauBwFbQkAaao2FTbjgp", "FJkb
            "SOL 1.474847595 (+ 1 SOL le 10/07, 3kXEwKY5…)", "transfert système signé par DQmMnaki", "CONFIRMÉ",
            "même opérateur de bot de sniping de migration (CORROBORÉ) ; non discriminant pour la question Musk",
            "evidence/receipts ; FINDINGS §6"])
+OPS_DEST = {  # destinations de 3oqARBND présentes dans les tables DMAGA, classées le 06/11 (FINDINGS §4.7)
+    "21wG4F3ZR8gwGC47CkpD6ySBUgH9AABtYMBWFiYdTTgv": ("REJETÉ", "service : paiements USDC à montant fixe (295,2625) depuis au moins 9 wallets DMAGA, plus de 1 000 tx en 5 jours (nov. 2026)"),
+    "AJENSD55ZJBwipZnEf7UzW2pjxex1cV2jSKPz7aMwJo5": ("REJETÉ", "hub : finance 7 wallets DMAGA pour 2 507,96 SOL, reçoit de 6, plus de 1 000 tx en 20 jours (oct.-nov. 2026)"),
+    "32kY2biKCinjAaKj4oqGDVH1VFTJzsidjgXn7LJyz6M2": ("HYPOTHÈSE", "adresse active (1 000 tx de déc. 2025 à nov. 2026), montants faibles : 0,6 SOL d'un wallet DMAGA (07/12/2024), 3,2 SOL de 3oqARBND (12/01/2025) ; non discriminant"),
+}
+od = DATA / "xc_operator_outflows.csv"
+for r in (csv.DictReader(open(od)) if od.exists() else []):
+    if r["in_dmaga_tables"]:
+        st, why = OPS_DEST.get(r["destination"], ("HYPOTHÈSE", "non classé"))
+        ov.append(["XC", "solana", "3oqARBNDr56L2oWQ9aR2QzS7FeTMEubd8J2v29wP5N58", r["destination"], "A",
+                   f"destination de l'opérateur XC78 ({r['n_transfers']} tx, {r['sol']} SOL) présente dans les tables DMAGA ({r['in_dmaga_tables']})",
+                   r["example_signature"], r["first_utc"], f"SOL {r['sol']}", "sorties de 3oqARBND (k37) jointes aux tables DMAGA", st, why,
+                   "data/xc_operator_outflows.csv"])
 for r in (csv.DictReader(open(DATA / "ata_overlap.csv")) if (DATA / "ata_overlap.csv").exists() else []):
     ov.append([r[k] for k in OV])
 with open(INV / "WALLET_OVERLAP.csv", "w", newline="") as f:

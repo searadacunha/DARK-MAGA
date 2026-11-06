@@ -86,6 +86,9 @@ Slot de création 310594124 (16:33:45), puis slot 310594130 (16:33:48). Reçus f
      - frais versés à `C6UEzXJc…` et `8Q7G3PuW…` : 51,12 SOL ;
      - résultat net pour `3oqARBND…` : **+618,65 SOL**, frais déduits puisqu'ils ne lui reviennent pas.
    - Correction interne : une première version de `k36` additionnait la variation de la contrepartie ligne à ligne. Elle donnait « 1 129,01 SOL en 16 virements » et « 2 045,67 SOL en 38 virements », des chiffres gonflés : une même transaction était comptée une fois par wallet. Ces chiffres ont été **publiés à tort dans le commit `edfe2f9`** et sont corrigés ici.
+   - **Sorties de `3oqARBND…`** : ses 4 386 tx sont toutes relues (`data/xc_operator_outflows.csv`). Il envoie **16 668,98 SOL vers 1 510 destinations** d'au moins 1 SOL, du 25/12/2024 au 02/03/2025 ; la plus grosse, `MfJ9N5ao…`, reçoit 4 600 SOL en 4 tx.
+     - Trois de ces destinations figurent dans les tables DMAGA, et aucune n'est discriminante : `21wG4F3Z…` est un service, qui encaisse des paiements USDC à montant fixe de 295,2625 depuis au moins 9 wallets DMAGA ; `AJENSD55…` est un hub, qui finance 7 wallets DMAGA pour 2 507,96 SOL ; `32kY2biK…` est une adresse active, avec de faibles montants.
+     - **Aucun destinataire final commun non mutualisé** entre l'opérateur XC78 et DMAGA.
    - `3oqARBND…`, `5S1wWxWZ…`, `2sGCJ7Z3…`, `C6UEzXJc…`, `FBwXQAEb…` et le payeur `43TVSaqF…` n'apparaissent dans **aucune** table DMAGA (wallets, financements, sorties, nœuds) : **aucun lien DMAGA trouvé** pour cet opérateur.
 8. Ce montage (achat bloquant au slot de création, puis redistribution vers des wallets qui rachètent) est un schéma de lancement groupé. Il ne dit rien d'une connaissance du changement de profil de Musk, qui intervient 37 heures plus tard.
 

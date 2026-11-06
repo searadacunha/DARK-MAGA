@@ -10,11 +10,10 @@ README racine, ni aux études gelées, ni aux PR #15, #16 et #17. Le travail par
 - 15 tests hors ligne.
 
 ## En cours
-- `scripts/k37_operator_outflows.py` : sorties SOL de `3oqARBND…`. Reprenable, cache RPC public ; 1 940 tx sur 4 386 lues au premier passage.
-  - Une fois terminé : relancer `k50_tables.py`, compléter U4 dans `UNRESOLVED.md`, puis lancer les tests.
+- Rien. `k37` (sorties de `3oqARBND…`) est terminé : 4 386 tx lues.
 
 ## Reprendre
-1. `cd investigations/2026-11-06_dmaga_kekius_cross_token/scripts && ../../../scripts/py.sh k37_operator_outflows.py`
+1. Scripts reprenables : `cd investigations/2026-11-06_dmaga_kekius_cross_token/scripts && ../../../scripts/py.sh <script>`.
    - `scripts/py.sh` exige le disque de l'enquête d'origine ; sinon, utiliser `python3` avec `DMAGA_BIG` défini.
 2. Pistes suivantes : `UNRESOLVED.md` U2, U5, U6, U9, U13 à U15.
 3. Les reçus se régénèrent depuis `evidence/receipts_args.txt` : `tr '\n' '\0' < ../evidence/receipts_args.txt | xargs -0 ../../../scripts/py.sh k40_receipts.py`.
