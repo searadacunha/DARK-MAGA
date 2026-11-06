@@ -4,8 +4,9 @@
 Topics = keccak256 de ces signatures (recalculés). La v2 ajoute un uint256 avant sender ; sur les 78 événements v2 du cache, il égale le
 takeAmount de l'ordre. Correction du 06/11/2026 : la version initiale ne reconnaissait que la v1, et 74 exécutions vers 2d86 manquaient."""
 DLN_DST = "0xe7351fd770a37282b91d153ee690b63579d6dd7f"
-FULFILLED = "0xd281ee92bab14460"     # v1 (préfixe du topic0) ; contrôle positif dans s99
-FULFILLED_V2 = "0xc164aca37b9805a1"  # v2
+FULFILLED = "0xd281ee92bab1446041582480d2c0a9dc91f855386bb27ea295faac1e992f7fe4"  # v1
+FULFILLED_V2 = "0xc164aca37b9805a1c9027b6f32260a069723a82926f6e9ece4926e4dd3ea8ecf"  # v2
+CREATED_ORDER = "0xfc8703fd57380f9dd234a89dce51333782d49c5902f307b02f03e014d18fe471"  # DlnSource
 VERSIONS = {FULFILLED: 1, FULFILLED_V2: 2}
 CHAINS = {7565164: "solana", 1: "ethereum", 56: "bsc", 137: "polygon", 42161: "arbitrum", 8453: "base", 10: "optimism", 43114: "avalanche", 59144: "linea", 100000001: "neon", 100000002: "gnosis", 100000004: "metis", 100000005: "bitrock", 100000014: "sonic", 100000022: "hyperevm"}
 B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
@@ -53,7 +54,7 @@ def fulfilled_version(log) -> int:
     """1 ou 2 pour un FulfilledOrder de DlnDestination, 0 sinon."""
     if log["address"].lower() != DLN_DST or not log["topics"]:
         return 0
-    return next((v for p, v in VERSIONS.items() if log["topics"][0].startswith(p)), 0)
+    return VERSIONS.get(log["topics"][0].lower(), 0)  # full 32-byte topic, never a prefix
 
 def fills_in_receipt(rcpt) -> list:
     return [dict(decode_fulfilled(l["data"], v), tx=rcpt["transactionHash"], logIndex=int(l["logIndex"], 16))
@@ -66,7 +67,8 @@ def created_in_receipt(rcpt) -> list:
     même tête (offset de l'ordre, orderId) que FulfilledOrder, les champs sender/unlockAuthority décodés là n'ont pas de sens et sont retirés."""
     out = []
     for l in rcpt["logs"]:
-        if l["address"].lower() != DLN_SRC_EVM or len(l["data"]) < 2 + 64 * 20:
+        if (l["address"].lower() != DLN_SRC_EVM or not l.get("topics")
+                or l["topics"][0].lower() != CREATED_ORDER or len(l["data"]) < 2 + 64 * 20):
             continue
         try:
             o = decode_fulfilled(l["data"])
