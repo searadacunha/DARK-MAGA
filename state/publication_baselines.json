@@ -2,7 +2,7 @@
   "version": 1,
   "targets": {
     "main": {
-      "baseline_commit": "be422cf2f1602758432c8f9dbd04ac84c4c8c2ea",
+      "baseline_commit": "3372f54afaff168af6ff074f34f4f88e41ead2a3",
       "readme_blob": "afefa5f448733faa9a4b1617f0bc7a94e04304ce",
       "protocol_locks": [
         "etude_final/PROTOCOL.lock"
