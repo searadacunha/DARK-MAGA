@@ -2,6 +2,8 @@
 
 Chaque point dit ce qui manque, pourquoi, et ce qui le fermerait. Rien ici n'est une conclusion.
 
+> **Mise à jour du 06/11/2026 :** ce document est le relevé historique de l'enquête EVM, avant l'analyse complémentaire Base/BSC/Solana de la [PR #16](https://github.com/searadacunha/Dark-MAGA/pull/16). Les 124 233,75 USDC vers Base et 99 981,82 USDC vers BSC indiqués ci-dessous étaient des bornes **conditionnelles** supposant que le relais ne contenait que des fonds de b947 (H, non démontrée). Les bornes individuelles corrigées sans H sont de 46,814553 USDC pour l'ordre Base du 12/11 (o1), 0 pour l'ordre BSC du 12/11 (o2). Ne pas traiter les anciens chiffres comme des minima inconditionnels.
+
 ## 1. Identité derrière b298, b947, `Ei5yGz8d`
 - **Manque :** toute identité civile. Aucune étiquette publique sur b298, b947, le relais `0x4978cd7e…`, ni sur les quatre adresses de dépôt inférées.
 - **Ce qui la fermerait :** une réquisition auprès de MEXC, Coinbase, KuCoin ou Stake.com sur les adresses de dépôt listées dans `FINDINGS.md` §5. Hors de portée d'un travail on-chain.
@@ -14,7 +16,7 @@ Chaque point dit ce qui manque, pourquoi, et ce qui le fermerait. Rien ici n'est
 
 ## 3. Chaînes autres qu'Ethereum
 - **Base et BSC de b298 non lus.** b298 a 897 tx sur Base, 95 sur BSC, 36 sur Arbitrum et 63 sur Polygon (nonces dans `evidence/s60_crosschain.json`). Blockscout Base, Arbitrum et Polygon répondent 403 (contrôle anti-robot, non contourné). BSC n'a pas d'historique gratuit.
-  - Conséquence : on ne sait pas ce que b298 fait des 124 233,75 USDC (au moins) qu'il s'envoie sur Base, ni des 157,37 BNB qu'il s'envoie sur BSC le 12/11/2024. On voit seulement qu'une partie revient sur Ethereum vers l'adresse de dépôt MEXC (6 ordres de b298 sur Base, 35 781,16 USDT livrés).
+  - Conséquence : l'analyse initiale n'avait pas suivi les sorties de Base ; la valeur de 124 233,75 USDC n'était une borne basse que sous l'hypothèse H, désormais non établie, ni des 157,37 BNB qu'il s'envoie sur BSC le 12/11/2024. On voit seulement qu'une partie revient sur Ethereum vers l'adresse de dépôt MEXC (6 ordres de b298 sur Base, 35 781,16 USDT livrés).
   - **Ce qui le fermerait :** SQD Portal (`base-mainnet`, `binance-mainnet`), filtré sur les journaux Transfer dont topic1 ou topic2 vaut b298, par fenêtres.
 - **Ordre de `Ei5yGz8d` vers `0x2ac17414e34c9a1f70f6eadb6230fa503301e878` sur Base** (2 ordres, 5 238,78 USD, corpus i14) : receveur non lu.
 
