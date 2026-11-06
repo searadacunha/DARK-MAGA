@@ -1,6 +1,6 @@
 # État de la recherche : destinataires EVM des sorties Dark MAGA
 
-> **Addendum du 06/11/2026 :** le modèle de bornes `s51_bounds.py` repose sur l'hypothèse H d'un relais contenant uniquement des USDC venus de b947. Cette hypothèse n'est pas démontrée et les minima ne doivent pas être présentés comme inconditionnels. Les nouveaux calculs et les traces Base/BSC/Solana sont dans la [PR #16](https://github.com/searadacunha/Dark-MAGA/pull/16).
+> **Addendum du 06/11/2026 :** la première version de `s51_bounds.py` supposait que le relais ne transportait que de l'USDC de b947 (hypothèse H, non démontrée), et `dln.py` ne lisait que la v1 de `FulfilledOrder`. Les deux sont corrigés (points 7 et 8 ci-dessous, `FINDINGS.md` §10). Base, BSC et le retour Solana sont tracés dans `investigations/2026-11-06_debridge_base_bsc_solana/`.
 
 
 **Date :** 05/11/2026. **Statut :** passe principale terminée. 2d86 est décrit mais pas tracé en aval ; l'activité de b298 sur Base et BSC n'est pas lue (`UNRESOLVED.md` §3).
@@ -37,15 +37,18 @@ Le dossier a été construit hors du dépôt local, puis publié depuis un clone
 3. **Comptes de jetons Solana.** L'arrivée de 48 960,81 USDC chez `Ei5yGz8d` manque dans ses signatures. Elle a été retrouvée sur son compte USDC, et le script cherche désormais aussi les comptes de jetons.
 4. **Dédoublonnage des ordres.** Le corpus Solana donne le montant avec frais, les fills Ethereum le donnent sans frais : certains ordres étaient comptés deux fois. Corrigé en comparant le `giveAmount` brut exact.
 5. **Bornes USDC réécrites.** Elles sont calculées sortie par sortie, en entiers, avec assertion. Une borne intermédiaire publiée dans une conversation (« au moins 27 498 USDC du dépôt Coinbase ») était fausse : la borne basse est 0.
-6. **Arrondi.** La somme des bornes basses des ventes USDC → ETH vaut 247 663,99, et non 247 664,00. Erreur repérée par l'autocontrôle avant publication.
+6. **Arrondi.** Une somme de bornes basses arrondie trop tôt a été repérée par l'autocontrôle avant publication. Les sommes sont arrondies une seule fois, à la fin.
+7. **Relais compté comme conduit pur** (trouvé le 06/11 par l'audit du dossier `2026-11-06_debridge_base_bsc_solana`). `s51` comptait tout l'USDC du relais comme venu de b947, alors que b298 lui avait renvoyé 100 000 USDC. Relais tracé, bornes basses sommées ramenées de 472 143,22 à 137 938,74 USDC (`FINDINGS.md` §10).
+8. **Seconde version de `FulfilledOrder`** (même audit). `dln.py` ne lisait que la v1 ; 74 exécutions de 2026 vers 2d86 manquaient. Corrigé, CSV régénéré hors ligne (`FINDINGS.md` §10).
 
 ## Tests
 Depuis `scripts/` :
 ```
-python3 -I s99_selfcheck.py      # 31 assertions, réseau coupé, sur evidence/ et evidence/selfcheck_cache/
+python3 -I s99_selfcheck.py      # 37 assertions, réseau coupé, sur evidence/ et evidence/selfcheck_cache/
+../../../scripts/py.sh s52_lp_check.py   # optionnel, scipy : bornes de s51 recoupées par un programme linéaire exact
 python3 -I s98_verify_refs.py    # réseau requis : relit sur la chaîne chaque hash et signature de FINDINGS.md
 ```
-Les deux passent dans un clone neuf de cette branche, sous Python 3.12 et 3.14. `s98` a besoin d'un accès Helius pour les 9 signatures Solana.
+Les deux passaient dans un clone neuf de cette branche le 05/11, sous Python 3.12 et 3.14. `s98` a besoin d'un accès Helius pour les 9 signatures Solana. Le 06/11, après les corrections : `s99` (37 contrôles) passe dans un clone neuf sous Python 3.12 et 3.14 ; `s98` relit 50 références Ethereum et 9 signatures Solana, 0 échec, depuis le cache (un seul reçu lu sur le RPC public) ; `s52_lp_check.py` passe avec scipy 1.18.
 
 ## Reproduire la collecte (réseau)
 Depuis `scripts/`, avec un cache local par défaut dans `../raw/`, ignoré par git :

@@ -7,7 +7,7 @@ Pour chaque point : ce qui manque, pourquoi, et ce qui le fermerait. Rien ici n'
   - Contre H : b298 reçoit 100 088,75 USDC de Rizzolver 3 min avant, produit d'une vente.
   - Pour H : 12 min plus tôt, le relais lui avait envoyé 100 000 USDC.
 - **Ce qui le fermerait** : une règle d'allocation documentée et assumée (FIFO, prorata), présentée comme telle et jamais comme une borne. Ou la provenance de l'ETH vendu à Rizzolver : si cet ETH vient lui-même de b947, sa part marquée remonte.
-- **Correction à porter dans la PR #15** : ses bornes s51 (`evidence/s51_b298_usdc_bounds.csv`, assertion « F8 bornes basses ») supposent H. Les valeurs avec le relais tracé sont dans `evidence/s15_s51_corrected.csv`. Elle n'est pas modifiée ici.
+- **Corrigé le 06/11 dans le dossier précédent** : `s51` trace désormais le relais, et ses bornes publiées égalent celles de `s15`. Les valeurs sous H sont dans `evidence/s15_s51_corrected.csv` (`from_b947_min_under_H`).
 
 ## 2. Titulaires des comptes d'exchange
 - **Dépôts identifiés** :
@@ -25,7 +25,7 @@ Pour chaque point : ce qui manque, pourquoi, et ce qui le fermerait. Rien ici n'
 
 ## 4. Part b947 de l'ETH sur Ethereum
 - **Le modèle par actif (`s60_positions.py`) ne tourne que sur Base.** L'historique Ethereum de b298 publié par la PR #15 n'a pas les frais de gaz. Sans eux, la borne basse pourrait être surestimée.
-- **Conséquence** : les ordres Ethereum de b298 payés en ETH n'ont pas de part b947 bornée, notamment `0xdf0b6cf7…` du 17/11, qui finance le DCA de 482 SOL (N12).
+- **Conséquence** : hors l'ordre `0x2fa91216…` du 12/11, borné sous H seulement par `s16` (lectures d'état archive, aucun autre mouvement d'ETH entre l'arrivée et l'ordre), les ordres Ethereum de b298 payés en ETH n'ont pas de part b947 bornée, notamment `0xdf0b6cf7…` du 17/11, qui finance le DCA de 482 SOL (N12).
 - **Ce qui le fermerait** : les reçus (gasUsed × effectiveGasPrice) des tx signées par b298 sur Ethereum, puis `s60` sur ce grand livre.
 
 ## 5. Positions de mèmes

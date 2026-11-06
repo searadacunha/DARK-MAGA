@@ -1,4 +1,4 @@
-utc,tx_hash,amount,dln_dest,label,from_b947_min_s51,from_b947_min_relay_traced
+utc,tx_hash,amount,dln_dest,label,from_b947_min_under_H,from_b947_min_relay_traced
 2024-10-01 19:20:23,0x95d6f5b7760aaea5936875fd3dca288229cb3ec4299185221948f4732bc1756d,200.0,,"|MEV Bot: 0x6f1…168,CexDexQuotes Mev,MEV",179.01616,179.01616
 2024-10-01 19:20:59,0xfbfe5810358bac99adde05ae7d0577625121ea5ea9230cb1c2aad713c1121e2a,50000.0,,"|Rizzolver: Uniswap X,DeFi,MM,Rizzolver",49979.01616,49979.01616
 2024-10-01 23:54:47,0xdc5f4bb78d6a2964666f5030f30c5668fd23ff34e24a533072b63e3fb89a78c4,502.847687,solana:Ei5yGz8dPndr1aCeHZsfqJBcS3VBbz75VHEhxxJKLy3V,TransparentUpgradeableProxy|deBridge: Dl,0.0,0.0

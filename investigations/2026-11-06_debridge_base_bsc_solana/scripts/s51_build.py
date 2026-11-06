@@ -19,10 +19,12 @@ DEX = {"0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad": "Uniswap UniversalRouter", 
 def rd(p): return list(csv.DictReader(open(p)))
 DLN_BASE = {r["tx"]: r for r in rd(R / "evidence/s12_dln_base.csv")}
 S51 = {r["tx_hash"].lower(): r for r in rd(N.OLD_INV / "evidence/s51_b298_usdc_bounds.csv")}
+for _r in rd(R / "evidence/s15_s51_corrected.csv"):  # bornes basses sous H (relais = b947), recalculées par s15 : s51 trace le relais depuis le 06/11
+    S51[_r["tx_hash"].lower()]["from_b947_min"] = _r["from_b947_min_under_H"]
 ETH_ORD = {r["orderId"].lower(): r for r in rd(N.OLD_INV / "evidence/dln_orders_evm.csv") if r["direction"] in ("created", "out", "OUT", "maker") or True}
 
 def taint_share_of_fill(fill_tx):
-    """Part (min, max) venue de b947 de l'USDC donné par l'ordre Ethereum que paie ce fill Base (bornes s51 du dossier précédent)."""
+    """Part (min, max) venue de b947 de l'USDC donné par l'ordre Ethereum que paie ce fill Base, sous H (relais = b947)."""
     d = DLN_BASE.get(fill_tx)
     if not d or d["event"] != "FulfilledOrder" or d["giveChain"] != "ethereum": return None
     eo = ETH_ORD.get(d["orderId"].lower())
@@ -109,7 +111,7 @@ def taint_ei5(tx, cat, d):
 
 if __name__ == "__main__":
     rows = base_flows(B298, "2024-10-01", "2025-01-31", taint_b947)
-    for r in rows: r["marker"] = "USDC venu de b947 (bornes s51)"
+    for r in rows: r["marker"] = "USDC venu de b947, sous H (relais = b947)"
     rz = base_flows(ZX, "2024-10-01", "2025-03-31", taint_ei5)
     for r in rz: r["marker"] = "ETH des ordres d'Ei5yGz8d"
     cb = [r for r in rd(R / "data/base_0x3417_ledger.csv")]

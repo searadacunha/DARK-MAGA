@@ -52,3 +52,20 @@
   - pas de témoins pour le schéma des wallets neufs ;
   - pas d'audit des conclusions après correction.
 - **Suite** : `REPRISE.md`.
+
+## 2026-11-06 | Claude Code (Opus 5.5) | Corrections après la fusion des PR #15 et #16
+- **Actions** :
+  - constat : PR #15 et #16 fusionnées dans `main` à 07:43 et 07:47 UTC, après six commits de documentation qui qualifiaient les bornes de s51 « sous H » sans corriger le code ;
+  - dossier précédent : `s51_bounds.py` trace le relais et démontre la borne commune (`joint_min`) ; `dln.py` décode la v2 de `FulfilledOrder` ; `dln_orders_evm.csv` régénéré hors ligne ; recoupement par programme linéaire exact (`s52_lp_check.py`) ; autocontrôle F8 et F9, chacun vérifié en échec sur l'ancienne version ;
+  - ce dossier : valeurs sous H recalculées par `s15` au lieu d'être lues dans s51 ; `s60`, `s51_build.py` et `s17` adaptés ; `s12` passe par le décodeur commun ; formulations corrigées ;
+  - revue indépendante par un agent tiers (Solana §5 à §7, 88 liens), depuis les historiques bruts, sans réseau.
+- **Résultats** :
+  - VÉRIFIÉ : o1 ≥ 46,814553 et o2 ≥ 0 seuls ; o1 + o2 ≥ 100 028,638296 USDC venus de b947 ; ≥ 50 015,307517 si l'on ne marque que les exécutions deBridge reçues par b947. Mêmes chiffres par la démonstration de s51, par s15 et par le programme linéaire ;
+  - VÉRIFIÉ : 74 exécutions v2 de 2026 vers 2d86 ajoutées, aucune ligne existante changée (rejeu d'abord identique à l'octet près avec l'ancien décodeur) ;
+  - VÉRIFIÉ : frontière et seuils de nullité de `s17` identiques avec les autres exécutions Base sous H ou sans hypothèse ;
+  - VÉRIFIÉ par la revue : DCA de 482 SOL → `2aeEoq5n` → vente de 393,812873522 SOL nets ; 88 liens, 88 orderId distincts, tous exécutés ;
+  - corrigé : vente nette (brut 397,189388322) ; 0,51238 SOL vers `25mYnjJ2` = commissions, pas un retour ; périmètre des 88 liens ; `UNRESOLVED.md` §4 contredisait le §2 (ordre `0x2fa91216` borné sous H).
+- **Sources** : `AUDIT.md` §7, `FINDINGS.md` §0 et §3, `../2026-11-05_evm-recipient-deeptrace/FINDINGS.md` §6 et §10.
+- **Limites** : le programme linéaire demande scipy et ne tourne pas en CI ; seules les sections §5 à §7 et les 88 liens ont été relues par un tiers ; 148 horodatages et un reçu lus sur le RPC public pendant le rejeu.
+- **Suite** : PR de correction vers `main`, sans fusion automatique. Décision de Benjamin.
+

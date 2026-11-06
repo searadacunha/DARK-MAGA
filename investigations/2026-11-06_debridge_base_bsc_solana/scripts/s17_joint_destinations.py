@@ -2,6 +2,8 @@
 (via o2). Le relais détient au pire 100 000,011 USDC non marqués (s15) ; on les place en fraction f dans son envoi de 17:40:23
 (qui paie o2) et 1 - f dans celui de 01:42:47 (qui paie o1). Pour chaque f, scénario S* de s15 (o1 et o2 puisent d'abord dans
 le non-marqué), puis bornes en aval : s60 (Base, 24 ETH) et s16 (chaîne MEXC, prorata et strict). Aucun appel réseau.
+Les autres exécutions Base sont prises à leur borne basse sans hypothèse (relais tracé) : la frontière ne dépend pas de H.
+(Jusqu'au 06/11 elles étaient prises sous H ; frontière et seuils identiques dans les deux cas.)
 Sortie : evidence/s17_joint_destinations.csv"""
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
@@ -18,7 +20,7 @@ def frontier(steps=(0, 25, 50, 75, 100)):
     C = sum(int(r["amount_raw"]) - rel_taint(r) for r in RR if r["direction"] == "IN")
     k1 = next(r["tx_hash"].lower() for r in RR if r["tx_hash"].startswith("0x6a7e85b547"))
     k2 = next(r["tx_hash"].lower() for r in RR if r["tx_hash"].startswith("0xd6162abed8"))
-    ledger = P.rd(N.ROOT / "data/base_0xb298_ledger.csv"); txs = P.per_tx(ledger, N.B298); taint = P.fill_taint()
+    ledger = P.rd(N.ROOT / "data/base_0xb298_ledger.csv"); txs = P.per_tx(ledger, N.B298); taint = P.fill_taint(relay_traced=True)
     t_first = min(t["ts"] for t in txs if t["tx"] in taint)
     rows = []
     for pct in steps:
@@ -36,7 +38,7 @@ def frontier(steps=(0, 25, 50, 75, 100)):
 def zero_thresholds():
     """Plus grand marquage de o1 (resp. o2), en unités brutes, qui laisse nulle la borne Coinbase (resp. MEXC), par dichotomie.
     Si leur somme est inférieure à la borne commune de s15, les deux bornes ne peuvent pas être nulles ensemble."""
-    ledger = P.rd(N.ROOT / "data/base_0xb298_ledger.csv"); txs = P.per_tx(ledger, N.B298); taint = P.fill_taint()
+    ledger = P.rd(N.ROOT / "data/base_0xb298_ledger.csv"); txs = P.per_tx(ledger, N.B298); taint = P.fill_taint(relay_traced=True)
     t_first = min(t["ts"] for t in txs if t["tx"] in taint); mn, mx, den, etx = taint[FILL1]
     def cb(m1):
         t1 = dict(taint); t1[FILL1] = (m1, mx, den, etx); res, _ = P.run(txs, t1, t_first)

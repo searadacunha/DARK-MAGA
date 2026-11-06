@@ -13,13 +13,10 @@ RPCS = {"base": lambda tx: S.rpc("eth_getTransactionReceipt", [tx]),
         "ethereum": lambda tx: N.E.rpc("eth_getTransactionReceipt", [tx])}
 CHAIN_ID = {"base": 8453, "bsc": 56, "ethereum": 1}
 REAL_TOKENS = {"base": {"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "0x4200000000000000000000000000000000000006"}}  # USDC, WETH
-# dln.py (dossier précédent) ne reconnaît que l'ancien FulfilledOrder (0xd281ee92) ; la seconde version (0xc164aca3, 2025-2026)
-# a la même structure d'Order (orderId recalculé à l'identique par s13_orderid_check.py) : on accepte les deux.
-FULFILLED = ("0xd281ee92", "0xc164aca3")
-
+# dln.py (dossier précédent) lit les deux versions de FulfilledOrder depuis le 06/11 : v1 (0xd281ee92) et v2 (0xc164aca3, 2026), dont la
+# tête a un mot de plus avant sender. Même Order dans les deux (orderId recalculé à l'identique par s13_orderid_check.py).
 def fills(rcpt):
-    return [dict(D.decode_fulfilled(l["data"]), tx=rcpt["transactionHash"], logIndex=int(l["logIndex"], 16))
-            for l in rcpt["logs"] if l["address"].lower() == N.DLN_DST and l["topics"][0][:10] in FULFILLED]
+    return D.fills_in_receipt(rcpt)
 
 def created(rcpt, chain_id):
     out = []

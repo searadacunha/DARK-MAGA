@@ -8,7 +8,7 @@
   - ce dossier : `tests/` (12 tests), `scripts/s99_selfcheck.py` (31 assertions) ;
   - dossier précédent : `../2026-11-05_evm-recipient-deeptrace/scripts/s99_selfcheck.py` (31 contrôles).
 - Dépendance : ce dossier importe `ev_lib`, `sol_lib` et `dln` du dossier précédent (PR #15). La PR qui l'ajoute est empilée sur la branche de la PR #15.
-- Correction à porter dans la PR #15, sans la modifier d'ici : bornes s51 et relais (`UNRESOLVED.md` §1), `dln.py` et la seconde version de `FulfilledOrder` (`AUDIT.md` §2).
+- PR #15 et #16 fusionnées le 06/11. Les corrections de `s51` (relais tracé) et de `dln.py` (v2 de `FulfilledOrder`) sont faites dans le dossier précédent (`AUDIT.md` §7).
 
 ## Caches
 - **Publiés** : `evidence/fixtures/`, `MANIFEST.json`. Lus en premier par `nt_lib.py`.
@@ -42,11 +42,11 @@ python3 -I s99_selfcheck.py                     # autocontrôle, réseau coupé
 - Toute nouvelle réponse va dans `raw/` de ce dossier, ignoré par git.
 
 ## Prochaines recherches, par valeur attendue
-1. **Frais de gaz de b298 sur Ethereum** (reçus de ses tx signées), puis `s60` sur Ethereum. On saurait alors borner la part b947 de l'ETH qui paie le DCA de 482 SOL (N12) et les ordres ETH vers `Ei5yGz8d`.
+1. **Frais de gaz de b298 sur Ethereum** (reçus de ses tx signées), puis `s60` sur Ethereum. On saurait alors borner la part b947 de l'ETH qui paie le DCA de 482 SOL (N12) et les autres ordres ETH vers `Ei5yGz8d`.
 2. **Provenance de l'ETH vendu à Rizzolver le 06/10/2024.** Si cet ETH vient de b947, l'hypothèse H devient en partie démontrable (`UNRESOLVED.md` §1).
 3. **Témoins** : taux de base du schéma « wallet neuf, position entière reçue puis vendue », mesuré sur des wallets comparables avant d'en tirer quoi que ce soit.
 4. **Adresses de dépôt partagées** : appliquer la règle de N11 à tous les destinataires des wallets du groupe des 33, avec les étiquettes Dune du dépôt.
-5. **Corriger la PR #15** dans sa propre branche, ou par une PR de suivi décidée par Benjamin.
+5. ~~Corriger la PR #15~~ : fait le 06/11 (`AUDIT.md` §7).
 
 ## Pièges rencontrés
 - Le grand livre Ethereum publié n'a pas les frais de gaz : n'y appliquer aucune borne par actif.

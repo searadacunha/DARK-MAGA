@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 def _no_net(*a, **k): raise RuntimeError("réseau interdit pendant l'autocontrôle")
 urllib.request.urlopen = _no_net
 import os
-os.environ.setdefault("EV_RAW", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "evidence", "selfcheck_cache"))  # 9 reçus suffisent
+os.environ.setdefault("EV_RAW", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "evidence", "selfcheck_cache"))  # 11 reçus suffisent
 import ev_lib as E, dln
 B947, B298, RELAY = "0xb947bf7f409e998b28f8e218802fc9575c3c8c57", "0xb29826d809aa04d2ead6f2310d8965a45b87fa67", "0x4978cd7e5a3565cafcc88a105940b0ea01adc04d"
 ok = []
@@ -14,7 +14,8 @@ def check(name, cond):
 # 1. 120 957,888072 USDC : ordre DLN de GZXKYzwZ ; contrôle positif sur l'ordre test de Gcyg2jeL
 f = dln.fills_in_receipt(E.rpc("eth_getTransactionReceipt", ["0x47e8da75f698f8c40419230c2274136c57666b92a91bef55c481e63a91758e14"]))[0]
 check("F1 maker du 120957", f["makerSrc"] == "GZXKYzwZPgWH8TwyY9f8dkCQ9EKK6nrPZADGcEwfAg7Y" and f["takeAmount"] == 120957888072 and f["receiverDst"] == B947
-      and f["giveChain"] == "solana" and f["giveAmount"] == 121013214273 and f["orderId"] == "0xc65ba1fa1b9d14301b5b0acaf159a5fd955a18899e4256a7604fd0af1f27a225")
+      and f["giveChain"] == "solana" and f["giveAmount"] == 121013214273 and f["orderId"] == "0xc65ba1fa1b9d14301b5b0acaf159a5fd955a18899e4256a7604fd0af1f27a225"
+      and f["eventVersion"] == 1 and f["sender"] == "0x555ce236c0220695b68341bc48c68d52210cc35b")
 c = dln.fills_in_receipt(E.rpc("eth_getTransactionReceipt", ["0xdb07ade91b6ed02470a9283a346f7062ba45dbb65ea5030763dd1150b78d8b3d"]))[0]
 check("F1 contrôle positif Gcyg2jeL", c["makerSrc"] == "Gcyg2jeLfSY9gxxHf5za5QU74ijtxBb1dB2mdGSPZH3m" and c["takeAmount"] == 9992001)
 # 2. côté Solana : l'ordre est créé par GZXKYzwZ (programme DLN source, -121 061,638928 USDC)
@@ -80,9 +81,33 @@ check("F8 b298 -> Ei5yGz8d : 22 ordres, 299 800,36 USDC et 34,1399 ETH cédés, 
 e2b = [r for r in D if r["wallet"] == "b298" and r["direction"] == "IN" and r["maker"] == E5]
 check("F8 Ei5yGz8d -> b298 sur Ethereum : 8 ordres, 151 300,22 USDC", len(e2b) == 8 and round(sum(int(r["give_amount_raw"]) for r in e2b) / 1e6, 2) == 151300.22)
 lo = lambda pred: round(sum(float(r["from_b947_min"]) for r in Bd if pred(r)), 2)
-check("F8 bornes conditionnelles H (non garanties sans H) : Base 124 233,75 / BSC 99 981,82 / ventes ETH 247 663,99",
-      lo(lambda r: r["dln_dest"].startswith("base:" + B298)) == 124233.75 and lo(lambda r: r["dln_dest"].startswith("bsc:" + B298)) == 99981.82
-      and lo(lambda r: r["counterparty"] in ("0x43ee35d5542f5b826fa92832bd97caff153675a8", "0xbcc66fc7402daa98f5764057f95ac66b9391cd6b", "0x225a38bc71102999dd13478bfabd7c4d53f2dc17")) == 247663.99)
+check("F8 bornes basses, relais tracé : Base 46,81 / BSC 0 / ventes ETH 137 712,91 (124 233,75 / 99 981,82 / 247 663,99 avec le relais compté 100 % b947)",
+      lo(lambda r: r["dln_dest"].startswith("base:" + B298)) == 46.81 and lo(lambda r: r["dln_dest"].startswith("bsc:" + B298)) == 0
+      and lo(lambda r: r["counterparty"] in ("0x43ee35d5542f5b826fa92832bd97caff153675a8", "0xbcc66fc7402daa98f5764057f95ac66b9391cd6b", "0x225a38bc71102999dd13478bfabd7c4d53f2dc17")) == 137712.91)
+# 11. le relais n'est pas un conduit pur : b298 lui renvoie 100 000 USDC (0x6407f6bc) ; bornes recalculées depuis les historiques
+import s51_bounds as B
+R2, RL, W = B.load()
+bt, _ = B.bounds(R2, RL); bt = {k[0]: v for k, v in bt.items()}
+check("F8 bornes publiées = recalcul relais tracé (31 sorties, basse et haute)", len(Bd) == 31 and all(
+      B.U(bt[r["tx_hash"].lower()][0]) == float(r["from_b947_min"]) and B.U(bt[r["tx_hash"].lower()][1]) == float(r["from_b947_max"]) for r in Bd))
+ob = {r["tx_hash"].lower(): r for r in Bd}
+check("F8 seuls : o1 >= 46,814553, o2 >= 0, renvoi au relais >= 0 (relais compté 100 % b947 : 100 046,825553 et 99 981,823743)",
+      float(ob[B.O1]["from_b947_min"]) == 46.814553 and float(ob[B.O2]["from_b947_min"]) == 0 and float(ob[B.RET]["from_b947_min"]) == 0)
+J = B.joint_bounds(R2, RL, W, {r["tx"].lower() for r in D if r["wallet"] == "b947" and r["direction"] == "IN"})
+check("F8 ensemble : o1 + o2 >= 100 028,638296 USDC venus de b947, >= 50 015,307517 des exécutions deBridge reçues par b947",
+      J["joint"] == 100028638296 and J["u_relay"] == 100000011000 and J["joint_makers"] == 50015307517 and J["u_b947"] == 50013330779
+      and J["at"] == J["at_makers"] == "2024-11-06 08:31:47")
+# 12. FulfilledOrder v2 (2026) : tête de 5 mots, décodée ; 74 exécutions vers 2d86 ajoutées le 06/11/2026
+v = dln.fills_in_receipt(E.rpc("eth_getTransactionReceipt", ["0x744f4b154daa80f39ba6820ad33e3d5ee416d69658c545db0312b56a8d81e33b"]))
+check("F9 FulfilledOrder v2 : USDC vers 2d86, montant et sender au bon mot", len(v) == 1 and v[0]["eventVersion"] == 2
+      and v[0]["receiverDst"] == "0x2d86499a410a9ac2139833ba8d6942b8a8700a7b" and v[0]["takeAmount"] == v[0]["v2Amount"] == 645988283
+      and v[0]["sender"] == v[0]["unlockAuthority"] == "0x555ce236c0220695b68341bc48c68d52210cc35b")
+v = dln.fills_in_receipt(E.rpc("eth_getTransactionReceipt", ["0x4ff04af8b30267da120d3428f79a0570b8dfbc436c6ea93f86d978ea5da9905d"]))
+check("F9 FulfilledOrder v2 : deux exécutions dans un reçu, une seule vers 2d86", len(v) == 2 and all(x["eventVersion"] == 2 and x["takeAmount"] == x["v2Amount"] for x in v)
+      and sum(x["receiverDst"] == "0x2d86499a410a9ac2139833ba8d6942b8a8700a7b" for x in v) == 1 and v[0]["sender"] == "0x663dc15d3c1ac63ff12e45ab68fea3f0a883c251")
+I2 = [r for r in D if r["wallet"] == "2d86" and r["direction"] == "IN"]
+check("F9 2d86 : 186 exécutions reçues, dont 74 après le 24/01/2026, sans doublon", len(I2) == 186 and sum(r["utc"] > "2026-01-24 02:16:59" for r in I2) == 74
+      and len({(r["tx"], r["orderId"]) for r in I2}) == 186 and all(int(r["take_amount_raw"]) > 0 for r in I2))
 CEr = [r for r in csv.DictReader(open("../evidence/2d86_full_history.csv")) if r["counterparty"] == CE and r["kind"] == "native_tx" and not r["flags"]]
 check("F8 2d86 <-> coin-etf.eth : 425 envois 1 338,64 ETH, 287 retours 1 298,53 ETH",
       sum(r["direction"] == "OUT" for r in CEr) == 425 and round(sum(float(r["amount"]) for r in CEr if r["direction"] == "OUT"), 2) == 1338.64

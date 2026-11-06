@@ -1,9 +1,12 @@
-"""Décodeur minimal de l'ANCIEN événement FulfilledOrder de DlnDestination (0xe7351fd7...), sans dépendance.
-Périmètre vérifié dans cette enquête : 2024. La seconde version d'événement (topic0 0xc164aca3..., utilisée notamment en 2026) n'est PAS décodée ici : ne pas inférer l'exhaustivité des fills récents.
-Pour les formats et le périmètre élargi, consulter l'audit et les décodeurs de investigations/2026-11-06_debridge_base_bsc_solana/ (PR #16).
-FulfilledOrder(Order order, bytes32 orderId, address sender, address unlockAuthority), Order = 14 champs (doc deBridge DLN)."""
+"""Décodeur minimal de l'événement FulfilledOrder de DlnDestination (0xe7351fd7...), sans dépendance. Deux versions, Order = 14 champs :
+- v1 : FulfilledOrder(Order order, bytes32 orderId, address sender, address unlockAuthority) ;
+- v2 (exécutions de 2026 dans ce dossier) : FulfilledOrder(Order order, bytes32 orderId, uint256, address sender, address unlockAuthority).
+Topics = keccak256 de ces signatures (recalculés). La v2 ajoute un uint256 avant sender ; sur les 78 événements v2 du cache, il égale le
+takeAmount de l'ordre. Correction du 06/11/2026 : la version initiale ne reconnaissait que la v1, et 74 exécutions vers 2d86 manquaient."""
 DLN_DST = "0xe7351fd770a37282b91d153ee690b63579d6dd7f"
-FULFILLED = "0xd281ee92bab14460"  # préfixe du topic0 observé ; validé par le contrôle positif ci-dessous
+FULFILLED = "0xd281ee92bab14460"     # v1 (préfixe du topic0) ; contrôle positif dans s99
+FULFILLED_V2 = "0xc164aca37b9805a1"  # v2
+VERSIONS = {FULFILLED: 1, FULFILLED_V2: 2}
 CHAINS = {7565164: "solana", 1: "ethereum", 56: "bsc", 137: "polygon", 42161: "arbitrum", 8453: "base", 10: "optimism", 43114: "avalanche", 59144: "linea", 100000001: "neon", 100000002: "gnosis", 100000004: "metis", 100000005: "bitrock", 100000014: "sonic", 100000022: "hyperevm"}
 B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
@@ -24,10 +27,13 @@ def addr_str(chain, b: bytes):
     if not b: return ""
     return b58(b) if chain == 7565164 else "0x" + b.hex()
 
-def decode_fulfilled(data_hex: str) -> dict:
+def decode_fulfilled(data_hex: str, version: int = 1) -> dict:
     d = bytes.fromhex(data_hex[2:])
-    t = word(d, 0)
-    out = {"orderId": "0x" + d[32:64].hex(), "sender": "0x" + d[64 + 12:96].hex(), "unlockAuthority": "0x" + d[96 + 12:128].hex()}
+    t = word(d, 0); s = 32 * (version - 1)  # v2 : un mot de plus avant sender
+    out = {"orderId": "0x" + d[32:64].hex(), "sender": "0x" + d[64 + s + 12:96 + s].hex(), "unlockAuthority": "0x" + d[96 + s + 12:128 + s].hex(),
+           "eventVersion": version}
+    if version == 2:
+        out["v2Amount"] = word(d, 64)
     for k, f in enumerate(FIELDS):
         v = word(d, t + 32 * k)
         if f in DYN:
@@ -43,9 +49,15 @@ def decode_fulfilled(data_hex: str) -> dict:
     out["giveChain"] = CHAINS.get(g, str(g)); out["takeChain"] = CHAINS.get(tk, str(tk))
     return out
 
+def fulfilled_version(log) -> int:
+    """1 ou 2 pour un FulfilledOrder de DlnDestination, 0 sinon."""
+    if log["address"].lower() != DLN_DST or not log["topics"]:
+        return 0
+    return next((v for p, v in VERSIONS.items() if log["topics"][0].startswith(p)), 0)
+
 def fills_in_receipt(rcpt) -> list:
-    return [dict(decode_fulfilled(l["data"]), tx=rcpt["transactionHash"], logIndex=int(l["logIndex"], 16))
-            for l in rcpt["logs"] if l["address"].lower() == DLN_DST and l["topics"][0].startswith(FULFILLED)]
+    return [dict(decode_fulfilled(l["data"], v), tx=rcpt["transactionHash"], logIndex=int(l["logIndex"], 16))
+            for l in rcpt["logs"] if (v := fulfilled_version(l))]
 
 DLN_SRC_EVM = "0xef4fb24ad0916217251f553c0596f8edc630eb66"
 
@@ -63,7 +75,7 @@ def created_in_receipt(rcpt) -> list:
         if o["giveChainId"] != 1:
             continue
         d = bytes.fromhex(l["data"][2:])
-        o.pop("sender"); o.pop("unlockAuthority")
+        o.pop("sender"); o.pop("unlockAuthority"); o.pop("eventVersion")
         o["percentFee"] = word(d, 128); o["nativeFixFee"] = word(d, 96)
         out.append(dict(o, tx=rcpt["transactionHash"], logIndex=int(l["logIndex"], 16), topic0=l["topics"][0]))
     return out
