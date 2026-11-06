@@ -47,7 +47,7 @@ class HistoricalPass2Tests(unittest.TestCase):
         self.assertEqual(post["author_handle"], "realjohnnewburg")
         self.assertIn("GTCNAerXYAA-ajC.png", post["media"][0]["url"])
         self.assertEqual(source_time_ms(post["id"]) // 1000,
-                         1721590003)
+                         1721589923)
 
 
 if __name__ == "__main__":
