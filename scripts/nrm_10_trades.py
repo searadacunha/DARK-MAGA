@@ -43,8 +43,18 @@ def process_slice(args):
     out = BIG / "trades_shards" / f"{name}.parquet"
     out_v = BIG / "vault_shards" / f"{name}.parquet"
     stats_path = BIG / "trades_shards" / f"{name}.stats.json"
-    if stats_path.exists():
-        return json.loads(stats_path.read_text())
+    # A cache marker is usable only when both shard files exist and can be read.
+    # A crash during Parquet writing must not silently hide an incomplete slice.
+    if stats_path.is_file() and out.is_file() and out_v.is_file():
+        try:
+            saved = json.loads(stats_path.read_text())
+            expected = sum(v for k, v in saved.items() if k.startswith("kind_"))
+            if pq.read_metadata(out).num_rows == expected:
+                pq.read_metadata(out_v)
+                return saved
+            print(f"{label}: shard count differs from cached stats; rebuilding", file=sys.stderr)
+        except Exception as exc:
+            print(f"{label}: cached shard unreadable ({exc}); rebuilding", file=sys.stderr)
     st = json.loads((d / "cursor.json").read_text())
     if not st["complete"]:
         raise RuntimeError(f"{label}: tranche incomplète")
@@ -83,7 +93,7 @@ def process_slice(args):
 
 
 def main():
-    (BIG / "trades.parquet").unlink(missing_ok=True)  # la table finale est périmée dès qu'on renormalise
+    # Garder le dernier export valide. ana_19_export construit une version neuve depuis les shards, valide puis remplace.
     if "--force" in sys.argv:
         for p in list((BIG / "trades_shards").glob("*")) + list((BIG / "vault_shards").glob("*")):
             p.unlink(missing_ok=True)  # FAT32 : le ._ disparaît avec son fichier
