@@ -8,8 +8,7 @@ Statuts : **CONFIRMÉ** (transfert ou relation transactionnelle relue), **CORROB
 une identité commune, ni une information privilégiée. Les reçus des transactions citées sont figés dans
 `evidence/receipts/` et relus par `tests/test_selfcheck.py` (hors ligne).
 
-**État de cette version : unité 1.** Tokens, chronologie, Ethereum complet, structure des lancements Solana et 100 premiers
-acheteurs. Le test de l'univers DMAGA (7 152 adresses × 2 mints Solana) est **en cours** et n'est pas encore interprété ici (§7).
+**État de cette version : unité 2.** Le test de l'univers DMAGA (7 152 adresses × 2 mints Solana) est complet (§7). La réponse figure au §8.
 
 ## 1. Les tokens retenus
 
@@ -64,7 +63,7 @@ Slot de création 310594124 (16:33:45), puis slot 310594130 (16:33:48). Reçus f
    - Au slot 310594130, la vente-redistribution de Go5 et les 4 rachats co-signés forment **un seul bundle**, `6317153c…` (5 transactions), pourboire de 0,1 SOL payé par Go5.
    - Un bundle est envoyé d'un bloc par un seul expéditeur, qui détenait donc déjà les transactions signées du créateur, de Go5 et des 16 wallets. **Le créateur et l'opérateur agissent de concert : CORROBORÉ** (index hors chaîne, plus transferts et co-signatures sur la chaîne). Le créateur `9dtGg97Q…` n'échange en revanche aucun SOL avec Go5 ni avec `3oqARBND…` (point 6) : pas de flux de fonds entre eux.
    - Pour comparer : la création de KM est seule dans son bundle `b722456c…`, pourboire de 0,008 SOL payé par son créateur. L'achat DMAGA de `FJkb8WnW…` (14/07/2024) est lui aussi seul dans son bundle `b18117c9…`, pourboire de 0,01 SOL payé par FJkb8WnW : un geste de bot de sniping.
-5. **CORROBORÉ, contrôle commun** de Go5 et de ces 16 wallets : Go5 paie 10 d'entre eux dans sa propre transaction. Signer à quatre une même transaction suppose que les clés étaient réunies au moment de la construire. Six des 16 acheteurs n'ont pas reçu de SOL de Go5 dans cette transaction : les 4 du groupe payé par `BmeKXuaj…`, plus `A7ZxBfBx…` et `7qnbEYhM…` du groupe payé par `8C9utWVQ…`. Leur financement est **NON VÉRIFIÉ**.
+5. **CORROBORÉ, contrôle commun** de Go5 et de ces 16 wallets : Go5 paie 10 d'entre eux dans sa propre transaction. Signer à quatre une même transaction suppose que les clés étaient réunies au moment de la construire. Six des 16 acheteurs n'ont pas reçu de SOL de Go5 dans cette transaction : les 4 du groupe payé par `BmeKXuaj…`, plus `A7ZxBfBx…` et `7qnbEYhM…`. Comme les 10 autres, ils ont été **financés par `3oqARBND…`** (point 7).
 6. **Créateur `9dtGg97Q…` : lanceur en série** (1 839 tx depuis mars 2024).
    - Il crée encore deux tokens Pump.fun sur des thèmes Musk : « Elon's Alterego Adrian Dittmann » `LYHrmUwemzqSKirX4LRX9tXVkx2HnraTgze8Zbepump` le 30/12 à 17:39:55 (sig `33Pw67cN…`), et « Trumpus Maximus » `WAJmwPfRFnuonu2SHy5YpZTAfwENGVAnECahSZPpump` le 31/12 à 12:10:25 (sig `3NkgZoab…`), après le changement de profil. Chacun migre en moins de 2 minutes, et le créateur touche chaque fois la prime de migration de 0,5 SOL, comme pour XC78.
    - Aucune de ses 52 transactions du 23/12 au 01/01 ne touche Go5, `3oqARBND…`, `5S1wWxWZ…`, `2sGCJ7Z3…` ou `C6UEzXJc…`.
@@ -74,13 +73,19 @@ Slot de création 310594124 (16:33:45), puis slot 310594130 (16:33:48). Reçus f
    - Le 30/12, les fonds reviennent à `3oqARBND…` : 11,916 SOL dans une tx co-signée par Go5, `5S1wWxWZ…` et `2sGCJ7Z3…`, puis 1,976 SOL de Go5.
    - Chaque retour verse des frais à `C6UEzXJcTqqJHpAGUts2tA4s6E7MS5KoPzzfsrT6qCpL`, à un taux presque constant (6,957 % et 6,961 %) : service probable.
    - `3oqARBND…` naît le 23/12/2024 avec 86,08 SOL de `FBwXQAEb…`. Cette adresse n'a pas d'étiquette mais fait plus de 2 000 transactions en 12 jours : service probable, **traçabilité rompue**. `3oqARBND…` redistribue ensuite ses fonds à de nombreux wallets (16 virements le 25/12) et compte 4 386 tx jusqu'en 2026 : profil d'opérateur de lancements en série.
-   - Historiques complets des 16 wallets (24 à 63 tx chacun, `data/xc_bundle_counterparties.csv`). Ils n'ont que 5 contreparties d'au moins 0,5 SOL :
-     - le pool et la courbe de XC78 ;
-     - `3oqARBND…` : il leur verse 1 129,01 SOL en 16 virements, et ils lui renvoient 2 045,67 SOL en 38 virements ;
-     - `C6UEzXJc…` : 82,66 SOL de frais en 17 virements ;
-     - `8Q7G3PuW…` : 18,98 SOL en 11 virements.
-
-     Ces totaux couvrent toute leur histoire, du 2024-12-29 au 2024-12-31, d'autres lancements compris. Le bénéfice de l'opération se concentre chez `3oqARBND…`.
+   - **CONFIRMÉ** : une seule transaction de `3oqARBND…` finance les 16 wallets des achats co-signés, **70,472 SOL** au total (de 1,346 à 14,379 SOL chacun), le 29/12 à **16:31:41** (`3UrcoNZA…`). C'est 1 s avant Go5, et 2 min 04 s avant la création.
+   - Historiques complets des 16 wallets : 24 à 63 tx chacun, actifs du 29/12 16:31:41 au 31/12 09:33:11 (`data/xc_bundle_counterparties.csv`). Ils n'ont que 5 contreparties d'au moins 0,5 SOL :
+     - le pool XC78 : 78 tx de vente, 816,64 SOL sortis du coffre WSOL ; 14 tx d'achat, 89,0 SOL ;
+     - la courbe XC78 ;
+     - `3oqARBND…` : 14 tx de retour, 745,29 SOL crédités ;
+     - `C6UEzXJc…` : 7 tx, 40,41 SOL ;
+     - `8Q7G3PuW…` : 5 tx, 9,54 SOL.
+   - **Bilan de l'opérateur sur XC78** :
+     - mise : 140,53 SOL engagés à 16:31:41-42 (70,472 vers les 16 wallets, 70,06 vers Go5) ;
+     - retours vers `3oqARBND…` : 759,18 SOL (745,29 des 16 wallets, 13,89 de Go5) ;
+     - frais versés à `C6UEzXJc…` et `8Q7G3PuW…` : 51,12 SOL ;
+     - résultat net pour `3oqARBND…` : **+618,65 SOL**, frais déduits puisqu'ils ne lui reviennent pas.
+   - Correction interne : une première version de `k36` additionnait la variation de la contrepartie ligne à ligne. Elle donnait « 1 129,01 SOL en 16 virements » et « 2 045,67 SOL en 38 virements », des chiffres gonflés : une même transaction était comptée une fois par wallet. Ces chiffres ont été **publiés à tort dans le commit `edfe2f9`** et sont corrigés ici.
    - `3oqARBND…`, `5S1wWxWZ…`, `2sGCJ7Z3…`, `C6UEzXJc…`, `FBwXQAEb…` et le payeur `43TVSaqF…` n'apparaissent dans **aucune** table DMAGA (wallets, financements, sorties, nœuds) : **aucun lien DMAGA trouvé** pour cet opérateur.
 8. Ce montage (achat bloquant au slot de création, puis redistribution vers des wallets qui rachètent) est un schéma de lancement groupé. Il ne dit rien d'une connaissance du changement de profil de Musk, qui intervient 37 heures plus tard.
 
@@ -125,26 +130,70 @@ Plus gros vendeur sans achat : `0xb1b2d032aa2f52347fbcfd08e5c3cc55216e8404` vend
 - **Interprétation** : ces deux adresses font chacune plus de 3 000 transactions par mois en 2026. Un bot qui achète chaque pool à l'ouverture se retrouve dans DMAGA comme dans XC78, sans rien savoir de Musk. Ce lien **n'est pas discriminant** pour la question posée.
 - La part de ce programme dans l'ensemble des migrations n'est pas mesurée.
 
-## 7. Univers DMAGA contre KM et XC78 : test en cours, non interprété
+## 7. Univers DMAGA contre KM et XC78 : test complet
 
-- **Méthode** : pour chaque adresse et chaque mint, historique du compte de jetons associé (ATA). 7 152 adresses :
-  - 857 prioritaires ;
-  - le groupe des 33 ;
-  - 3 508 membres de clusters ;
-  - 3 429 adresses citées par les rapports et enquêtes ;
-  - le noyau de la mission (44) et 468 contreparties directes.
-- **Avancement** : 10 058 couples sur 14 304 au moment de cette version.
-- **Résultats partiels, à ne pas citer** : les premières adresses actives avant le changement sont surtout des bots à haute fréquence. Exemple : 7 wallets « ≥ 1 M avant l'avatar » de DMAGA, qui font 328 à 493 allers-retours de 0,2 à 0,5 SOL.
-- Groupe des 33 : 48 couples sur 66 testés, **aucune activité** sur KM ni XC78.
+Méthode : `METHODOLOGY.md`, historique de l'ATA de chaque adresse pour chaque mint.
+- Univers : **7 152 adresses × 2 mints = 14 304 couples, tous testés** (`data/ata_scan_summary.csv`).
+- Fenêtre : de la création de chaque token au 04/01/2025. « Avant » veut dire avant 06:02:01 le 31/12.
+- Résultat d'ensemble : 13 848 couples sans aucune activité. Restent 290 bots ou traders à haute fréquence (critère ATA ou DMAGA), 28 à haute fréquence au niveau du wallet, 41 services étiquetés et 97 couples peu actifs.
 
-Correspondances directes déjà vérifiées entre les 100 premiers acheteurs KM / XC78 et les 71 706 wallets DMAGA (`WALLET_OVERLAP.csv`) :
+| Partie de l'univers DMAGA | Couples | Actifs dans la fenêtre | Actifs avant le changement | Nature des actifs avant le changement |
+|---|---|---|---|---|
+| Groupe des 33 | 66 | **0** | **0** | |
+| Noyau nommé (créateur, gagnants `H3QsBrr…`, `GXZvXs…`, `9PrmF8…`, `5QhJJc…`, `Ei5yGz8d…` et les wallets deBridge, `B5fC3Dg4…`, `FKtvVzBS…`, `G41vRrs…`) | 88 | **0** | **0** | |
+| Contreparties directes du noyau (468 financeurs et destinations de sortie, hubs exclus) | 936 | 2 | 1 | `DMJmb8aJ…`, trader à haute fréquence |
+| Wallets prioritaires (857) | 1 714 | 95 | 37 | les 37 sont des bots ou traders à haute fréquence |
+| Membres de clusters (3 508) | 7 016 | 195 | 32 | 27 haute fréquence, 5 peu actifs |
+| Adresses citées par les rapports (3 429) | 6 858 | 176 | 96 | 66 haute fréquence, 28 services, 2 peu actifs |
+
+**Aucun wallet du groupe des 33, du noyau ou des gagnants DMAGA ne touche KM ni XC78**, ni avant ni après le changement de profil, jusqu'au 04/01/2025.
+
+Contreparties du noyau :
+- **CONFIRMÉ** : `5QhJJcFZu2ashyKyWSTGHcsyo6ZBCbpVuJqeutvQHScd`, gagnant DMAGA lié au créateur, crée le compte USDC de `DMJmb8aJMzzNur1hAwQoArPEX8dLfbuuuYZnGn6jd8DL` puis lui transfère **7 000 USDC le 20/01/2025 à 05:35:54** (`4DWwAWbH…`, signataire unique).
+- **CONFIRMÉ** : `DMJmb8aJ…` achète KM le 14/12/2024 à 02:18:17 (`5ZxEY11s…`), 12 min 47 s après le post « Kekius Maximus 😂 » de Musk. Il achète aussi XC78 à partir du 31/12 06:26:26, après le changement.
+- **Chronologie incompatible avec le scénario « gains DMAGA → achat Kekius »** : le virement de 5QhJJc arrive 37 jours après l'achat KM, pas avant.
+- `DMJmb8aJ…` est un trader à haute fréquence : environ 1 000 tx dans les 24 h avant son achat KM. Son premier achat DMAGA date du 20/01/2025 à 10:24:39 (10 SOL), 4 h 49 min après le virement de 5QhJJc. Le transfert est direct et personnel : 5QhJJc crée le compte de destination. **HYPOTHÈSE** : un même propriétaire, ou un paiement entre deux personnes. Rien ne départage les deux.
+
+Les 7 couples peu actifs d'avant le changement (`data/ata_overlap.csv`) :
+- **Calendrier des premiers achats Kekius** :
+  - trois tombent le 14/12, entre 02:10:14 et 02:20:17, de 5 à 15 min après « Kekius Maximus 😂 » (02:05:30) : `DZwQ66i2…`, `EwPnMPtr…`, `CKMVA5xe…` ;
+  - `aaYqdhGp…` achète le 10/12 à 07:37:46, 9 min après la création de KM ;
+  - les trois autres achètent plus tard : `G2aZ6e8Q…` le 15/12, `G1Qo4NyE…` le 24/12, et `Ejh8nKp4…` sur XC78 le 29/12 à 22:31, 6 h après la création, puis en 48 allers-retours.
+- **Deux seulement ont acheté DMAGA en juillet 2024**, et tous deux ont perdu :
+  - `DZwQ66i2…` : 0,2475 SOL le 14/07, perte de 0,11 SOL. Sur KM, il fait 8 achats (21,61 SOL), dont le premier 284 s après le post de Musk (`5XENanVA…`) ;
+  - `Ejh8nKp4…` : 0,562 SOL le 15/07, perte de 0,0035 SOL.
+- **Les cinq membres de clusters** sont dans 5 petits clusters DMAGA différents. Quatre achètent DMAGA en octobre 2024 ; `G2aZ6e8Q…` n'a aucun achat DMAGA. **HYPOTHÈSE** : `CKMVA5xe…` et `aaYqdhGp…` achètent DMAGA pour la première fois à 94 s d'intervalle (05/10/2024 23:09:47 et 23:11:21), sans lien de fonds relu.
+
+Correspondances directes avec les 100 premiers acheteurs KM et XC78 (`WALLET_OVERLAP.csv`) :
 - `CaShxDq2…`, `DQeJQ91U…` et `ATomG2gR…` achètent DMAGA pour 0,0002 SOL à 02:15:44-45, 13 s après la migration. Leurs « financements » enregistrés viennent de l'autorité Raydium, c'est-à-dire de produits de swaps : bots d'arbitrage, **non discriminant**.
-- `CH7MJuK5…` fait 8 639 virements vers 88 wallets, achète DMAGA 104 fois et touche KM 3 461 fois, et `D2vZhPW1…` lui envoie 5 530 SOL : hub ou bot, **REJETÉ** comme lien personnel.
-- 8 adresses parmi les 100 premiers de KM ont tradé DMAGA, toutes après le changement de photo du 21/07/2024. La plus précoce, `7wYSQEU1…`, achète le 22/07 à 03:20. Même adresse, CONFIRMÉ, mais **non discriminant**. Trois d'entre elles (`GTvBQnRv…`, `xK5mDD8D…`, `8J9panvq…`) achètent pour la première fois DMAGA en moins de 14 minutes, entre le 05/11/2024 23:53:51 et le 06/11 00:07:29 : HYPOTHÈSE d'un même opérateur, `UNRESOLVED.md`.
+- `CH7MJuK5…` fait 8 639 virements vers 88 wallets, achète DMAGA 104 fois et touche KM 3 461 fois. `D2vZhPW1…` lui envoie 5 530 SOL. Hub ou bot, **REJETÉ** comme lien personnel.
+- 8 adresses parmi les 100 premiers de KM ont tradé DMAGA, toutes après le changement de photo du 21/07/2024 ; la plus précoce, `7wYSQEU1…`, achète le 22/07 à 03:20. Même adresse, CONFIRMÉ, mais **non discriminant**.
 
-## 8. Réponse provisoire à la question
+## 8. Réponse à la question
 
-Pas avant la fin du test du §7.
-- À ce stade, **aucune entité n'est démontrée commune** aux deux opérations par un flux de fonds non mutualisé.
-- Aucun flux DMAGA → Kekius n'est trouvé : ni sur Ethereum, ni par deBridge, ni par les 100 premiers acheteurs.
-- Seul lien confirmé : un opérateur de bot de sniping, non discriminant.
+**Aucune même entité financière n'est démontrée dans les deux opérations.** Le suivi des fonds donne :
+1. **Nouvelles relations financières, toutes CONFIRMÉES** (`FUNDING_GRAPH.csv`) :
+   - le montage XC78 : Go5 et l'opérateur `3oqARBND…`, la redistribution vers 10 wallets, les bundles Jito, les frais vers `C6UEzXJc…` ;
+   - `DQmMnaki…` → `FJkb8WnW…`, deux wallets d'un même bot de sniping ;
+   - `5QhJJc…` → `DMJmb8aJ…`, 7 000 USDC le 20/01/2025 ;
+   - les flux Ethereum de `0x33a5…` et du créateur du KEKIUS Ethereum.
+2. **Wallets présents dans les deux événements** :
+   - des bots, des traders à haute fréquence et des services ;
+   - quelques petits traders qui réagissent aux posts publics de Musk ;
+   - aucun gagnant DMAGA de juillet 2024.
+   - Le seul lien entre un gagnant DMAGA et un acheteur Kekius (5QhJJc → DMJmb8aJ) est postérieur à l'achat Kekius.
+3. **Profits vérifiés** :
+   - `0x33a5…` : 16,0 ETH d'achats avant le changement, 285,71 ETH de ventes jusqu'au 04/01 ;
+   - `0xb1b2…` : 1 424,10 ETH de ventes, avec des jetons retirés d'exchanges ;
+   - XC78 : l'opérateur `3oqARBND…` engage 140,53 SOL et en récupère 759,18, soit +618,65 SOL nets.
+4. **Liens entre chaînes** :
+   - aucun entre DMAGA et le KEKIUS Ethereum par les destinataires deBridge ;
+   - aucun pont observé dans les flux relus ici.
+5. **Explication la plus économe** : les trois tokens naissent de posts publics de Musk (10, 14 et 29/12). Les achats précoces suivent ces posts de quelques secondes à quelques minutes. L'accumulation avant le 31/12 est diffuse : sur Ethereum, 4 222 acheteurs. Les opérations coordonnées observées (lancement groupé de XC78, bots de sniping) sont des schémas de lancement, sans lien de fonds avec DMAGA.
+
+Ce que ce résultat n'exclut pas :
+- une même personne derrière des wallets **sans lien de fonds lisible**, parce que la traçabilité s'arrête aux exchanges, aux services ou aux bridges ;
+- des achats par comptes de jetons non associés, que le test ATA ne voit pas ;
+- d'autres copies Kekius non inventoriées.
+
+Voir `UNRESOLVED.md`.

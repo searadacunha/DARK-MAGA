@@ -5,20 +5,19 @@ README racine, ni aux études gelées, ni aux PR #15, #16 et #17. Le travail par
 (piste `B5fC3Dg4…`, détection Pump.fun) n'est pas dupliqué. `B5fC3Dg4…` et `FKtvVzBS…` sont seulement inclus dans l'univers du test ATA.
 
 ## Fait
-- Unité 1 : identification des tokens, chronologie, Ethereum complet, lancement XC78, 100 premiers acheteurs, lien de bot DQmMnaki → FJkb8WnW (`FINDINGS.md`).
+- Unités 1 à 3 : tokens, chronologie, Ethereum complet, lancement XC78 (bundles Jito, opérateur `3oqARBND…`, bilan +618,65 SOL), 100 premiers acheteurs, revue d'outils (`TOOLS_REVIEW.md`).
+- Test ATA complet : 14 304 couples (`data/ata_scan_summary.csv`), classement et relecture des candidats (`k18`, `data/ata_overlap.csv`). Réponse dans `FINDINGS.md` §8.
+- 15 tests hors ligne.
 
 ## En cours
-- Test ATA : `scripts/k14_ata_scan.py` (RPC public, reprenable, écrit `data/ata_scan.jsonl`) et `scripts/k14h_ata_scan_reverse.py` (Helius, ordre inverse, `data/ata_scan_h.jsonl`).
-  - Univers `data/dmaga_universe.csv` : 7 152 adresses, dont 354 ajoutées par `k19` après le lancement de `k14`.
-  - **Relancer `k14` une fois terminé**, pour couvrir les couples ajoutés.
-  - Les deux fichiers `.jsonl` ne sont pas publiés (signatures brutes), seule leur synthèse le sera.
+- `scripts/k37_operator_outflows.py` : sorties SOL de `3oqARBND…`. Reprenable, cache RPC public ; 1 940 tx sur 4 386 lues au premier passage.
+  - Une fois terminé : relancer `k50_tables.py`, compléter U4 dans `UNRESOLVED.md`, puis lancer les tests.
 
 ## Reprendre
-1. `cd investigations/2026-11-06_dmaga_kekius_cross_token/scripts && ../../../scripts/py.sh k14_ata_scan.py`
+1. `cd investigations/2026-11-06_dmaga_kekius_cross_token/scripts && ../../../scripts/py.sh k37_operator_outflows.py`
    - `scripts/py.sh` exige le disque de l'enquête d'origine ; sinon, utiliser `python3` avec `DMAGA_BIG` défini.
-2. Classer les couples actifs avant 06:02:01 : bot, hub, ou wallet à faible activité. Relire les seconds au niveau de la transaction (achats, ventes, SOL).
-3. Ajouter les lignes à `data/ata_overlap.csv`, puis lancer `k50_tables.py` et les tests.
-4. Pistes suivantes : `UNRESOLVED.md` U2 à U7.
+2. Pistes suivantes : `UNRESOLVED.md` U2, U5, U6, U9, U13 à U15.
+3. Les reçus se régénèrent depuis `evidence/receipts_args.txt` : `tr '\n' '\0' < ../evidence/receipts_args.txt | xargs -0 ../../../scripts/py.sh k40_receipts.py`.
 
 ## Données hors dépôt (à recréer ou copier)
 - `KEKIUS_EXT` (défaut `../raw` à côté du clone) :

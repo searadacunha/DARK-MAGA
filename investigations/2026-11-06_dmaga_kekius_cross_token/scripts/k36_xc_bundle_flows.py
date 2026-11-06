@@ -1,4 +1,6 @@
-"""XC78 : contreparties SOL (≥ 0,5 SOL) des 16 wallets des achats co-signés et de Go5, toute leur histoire lisible,
+"""(Corrigé le 06/11 : la première version additionnait la variation de la contrepartie ligne à ligne.)
+
+XC78 : contreparties SOL (≥ 0,5 SOL) des 16 wallets des achats co-signés et de Go5, toute leur histoire lisible,
 puis recherche de ces contreparties dans les tables DMAGA (wallets, funding_edges, exit_flows, nodes).
 Sortie : data/xc_bundle_counterparties.csv."""
 import csv, json
@@ -28,7 +30,10 @@ for w in sorted(bund):
             continue
         for cp, v in sd.items():
             if cp != w and abs(v) >= 5 * 10**8 and (v > 0) != (me > 0):
-                rows.append([w, cp, "out" if me < 0 else "in", round(abs(v) / 1e9, 9), utc(t["blockTime"]), x["signature"], len(sg), trunc])
+                # wallet_sol = variation propre du wallet ; counterparty_sol_in_tx = variation de la contrepartie dans toute la tx
+                # (une tx peut servir plusieurs wallets : ne jamais additionner la seconde colonne ligne à ligne)
+                rows.append([w, cp, "out" if me < 0 else "in", round(abs(me) / 1e9, 9), round(abs(v) / 1e9, 9), utc(t["blockTime"]),
+                             x["signature"], len(sg), trunc])
 B = str(DMAGA_BIG)
 cps = sorted({r[1] for r in rows})
 duckdb.sql("create table c(a varchar)"); duckdb.executemany("insert into c values (?)", [(a,) for a in cps])
@@ -42,7 +47,15 @@ for name, q in [("wallets", f"select owner from '{B}/wallets.parquet' join c on 
         hit[a].append(name)
 with open(DATA / "xc_bundle_counterparties.csv", "w", newline="") as f:
     wr = csv.writer(f)
-    wr.writerow(["bundle_wallet", "counterparty", "direction", "sol", "utc", "signature", "n_sigs_wallet", "truncated", "in_dmaga_tables"])
+    wr.writerow(["bundle_wallet", "counterparty", "direction", "wallet_sol", "counterparty_sol_in_tx", "utc", "signature", "n_sigs_wallet",
+                 "truncated", "in_dmaga_tables"])
     for r in rows:
         wr.writerow(r + [";".join(hit.get(r[1], []))])
-print(len(rows), "flux ≥ 0,5 SOL ;", len(cps), "contreparties ;", "dans DMAGA :", {a: hit[a] for a in hit})
+tot = defaultdict(lambda: [set(), 0.0])
+for r in rows:
+    k = (r[1], r[2])
+    if r[6] not in tot[k][0]:
+        tot[k][0].add(r[6]); tot[k][1] += r[4]
+print(len(rows), "lignes ;", len(cps), "contreparties ; dans DMAGA :", dict(hit))
+for (cp, d), (txs, v) in sorted(tot.items(), key=lambda x: -x[1][1]):
+    print(" ", cp[:8], d, len(txs), "tx distinctes", round(v, 3), "SOL (variation de la contrepartie, dédupliquée par tx)")

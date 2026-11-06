@@ -124,6 +124,24 @@ class Solana(unittest.TestCase):
         # le pourboire figure aussi dans les reçus : 0,05 et 0,1 SOL vers le compte de pourboire HFqU5x63…
         self.assertEqual(sol_deltas(rec("5p39GsYPf4zwCMRdLV8iJrqtHjcQw8VtPAP6oYugqCF3oyj98JEFXg7VT78uPpJWhxxKWHDWGsENG1ndDRuAjhST"))["HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe"], 50_000_000)
 
+    def test_xc78_operator_balance(self):
+        ops = "3oqARBNDr56L2oWQ9aR2QzS7FeTMEubd8J2v29wP5N58"
+        t = rec("3UrcoNZAHDPDwRY2MNdTVcExXFJTRjr4wM6XS7fEAUnYBW4zFq9D2Wm2gvAHKCPV4YHpFTZt5m7wtofTJM549qfy")
+        sd = sol_deltas(t)
+        self.assertEqual(signers(t)[0], ops)
+        self.assertEqual(utc(t["blockTime"]), "2024-12-29 16:31:41")
+        rows = list(csv.DictReader(open(INV / "data" / "xc_bundle_counterparties.csv")))
+        funded = {r["bundle_wallet"] for r in rows if r["counterparty"] == ops and r["direction"] == "in"}
+        self.assertEqual(len(funded), 16)
+        self.assertEqual(round(sum(sd[w] for w in funded) / 1e9, 3), 70.472)
+        back, seen = 0.0, set()
+        for r in rows:
+            if r["counterparty"] == ops and r["direction"] == "out" and r["signature"] not in seen:
+                seen.add(r["signature"]); back += float(r["counterparty_sol_in_tx"])
+        self.assertEqual((len(seen), round(back, 2)), (14, 745.29))
+        go5_back = 11_916_477_761 + 1_975_732_039
+        self.assertEqual(round(back + go5_back / 1e9 - (sum(sd[w] for w in funded) + 70_060_000_000) / 1e9, 2), 618.65)
+
 
 class Ethereum(unittest.TestCase):
     @classmethod
@@ -186,6 +204,47 @@ class Tables(unittest.TestCase):
                 self.assertEqual(b["timestamp"][:19].replace("T", " "), r["utc"])
                 self.assertAlmostEqual(int(b["value"]) / 1e18, float(r["amount"]), places=6)
         self.assertEqual(n, 13)
+
+
+class AtaUniverse(unittest.TestCase):
+    """Chiffres de FINDINGS §7, relus dans data/ata_scan_summary.csv et data/ata_overlap.csv (publiés)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.S = list(csv.DictReader(open(INV / "data" / "ata_scan_summary.csv")))
+        cls.O = list(csv.DictReader(open(INV / "data" / "ata_overlap.csv")))
+
+    def test_coverage_and_core(self):
+        self.assertEqual(len(self.S), 14304)
+        self.assertEqual(len({(r["address"], r["token"]) for r in self.S}), 14304)
+        tag = lambda t: [r for r in self.S if t in r["dmaga_tags"].split(";")]
+        act = lambda rows: [r for r in rows if int(r["n_in_window_to_0104"]) > 0]
+        self.assertEqual((len(tag("group33")), len(act(tag("group33")))), (66, 0))
+        self.assertEqual((len(tag("core")), len(act(tag("core")))), (88, 0))
+        cp = act(tag("core_cp"))
+        self.assertEqual({r["address"] for r in cp}, {"DMJmb8aJMzzNur1hAwQoArPEX8dLfbuuuYZnGn6jd8DL"})
+        pri_pre = [r for r in tag("priority") if int(r["n_before_0602"]) > 0]
+        self.assertEqual(len(pri_pre), 37)
+        self.assertTrue(all(r["class"].startswith("haute_frequence") for r in pri_pre))
+
+    def test_low_activity_pre_event(self):
+        lo = [r for r in self.O if r["interpretation"].startswith("faible_activite") and "avant le changement" in r["interpretation"]]
+        self.assertEqual(len(lo), 7)
+        self.assertNotIn("core", ";".join(r["relation"] for r in lo))
+
+    def test_dmjmb_and_dzwq_receipts(self):
+        idx = json.loads((REC / "INDEX.json").read_text())
+        r = {why.split(" ")[0]: rec(s) for s, why in idx.items() if why.startswith(("DZwQ66i2", "DMJmb8aJ", "5QhJJc"))}
+        musk_post = 1734141930  # 2024-12-14 02:05:30, post 1867752745039458668 (snowflake)
+        self.assertEqual(r["DZwQ66i2"]["blockTime"] - musk_post, 284)
+        self.assertEqual(token_deltas(r["DZwQ66i2"], KM)["DZwQ66i2hQypHU2J4QdFs3gbxUmbcpd22qdLSfkc7NGg"], 38_667_436_464)
+        self.assertEqual(utc(r["DMJmb8aJ"]["blockTime"]), "2024-12-14 02:18:17")
+        usdc = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+        u = r["5QhJJc"]
+        self.assertEqual(signers(u), ["5QhJJcFZu2ashyKyWSTGHcsyo6ZBCbpVuJqeutvQHScd"])
+        self.assertEqual(token_deltas(u, usdc)["DMJmb8aJMzzNur1hAwQoArPEX8dLfbuuuYZnGn6jd8DL"], 7_000_000_000)
+        self.assertEqual(utc(u["blockTime"]), "2025-01-20 05:35:54")
+        self.assertGreater(u["blockTime"], r["DMJmb8aJ"]["blockTime"])  # le virement est postérieur à l'achat KM
 
 
 if __name__ == "__main__":
