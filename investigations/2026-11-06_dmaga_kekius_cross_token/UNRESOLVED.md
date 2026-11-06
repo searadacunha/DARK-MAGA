@@ -5,7 +5,7 @@
 | U1 | Fait le 06/11 : test ATA complet, 14 304 couples (FINDINGS §7). Reste : les comptes de jetons non associés, invisibles à ce test | Pour les wallets du noyau, relecture complète de leurs tx de décembre 2024 | moyen |
 | U2 | Créateur XC78 `9dtGg97Q…` (1 839 tx depuis mars 2024) ↔ opérateur `3oqARBND…` / `Go5rFkwK…` | Transferts entre eux avant le 29/12/2024 | quelques dizaines d'appels |
 | U3 | Résolu le 06/11 : les 16 acheteurs groupés de XC78 sont financés par `3oqARBND…` dans une seule tx (`3UrcoNZA…`, FINDINGS §4.7) | | |
-| U4 | Fait le 06/11 : 16 668,98 SOL de l'opérateur vers 1 510 destinations ; 3 figurent dans DMAGA, toutes classées service, hub ou montants faibles (FINDINGS §4.7). Reste : identifier `MfJ9N5ao…` (4 600 SOL) et les plus grosses destinations | Étiquettes ou comportement des 20 premières destinations | moyen |
+| U4 | Écran des sorties de l'opérateur : 16 668,98 SOL de variations positives sur 1 510 comptes candidats ; trois correspondent à des tables DMAGA, sans signal discriminant (FINDINGS §4.7) | Rejouer les instructions natives et internes pour confirmer les transferts directs ; identifier `MfJ9N5ao…` et les 20 premiers candidats | moyen |
 | U5 | KM : 133 acheteurs sur la courbe en 2 min 01 s. Snipers liés au créateur `4GUgVRft…` ? | Financements des 30 premiers | moyen |
 | U6 | KEKIUS Ethereum : 44 des 50 acheteurs du bloc d'ouverture n'ont aucune tx entrante de valeur avant ce bloc (`data/eth_open_block_funders.csv`) | Transactions internes et contrats de bots qui livrent ces adresses | moyen |
 | U7 | Résolu le 06/11 : `0xb1b2d032…` retire ses KEKIUS de MEXC 21, Gate.io et CoinEx (FINDINGS §5). Où vont ses 1 424 ETH ? | Historique complet (Routescan répond 502 ou expire sur cette adresse) | faible |
