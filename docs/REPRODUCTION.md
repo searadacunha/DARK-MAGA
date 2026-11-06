@@ -28,6 +28,16 @@ python3 scripts/check_publication.py --target audit-2026-11-03
 
 Use `--target main` only for a candidate based on `main`. The guard reads local Git refs; it does not fetch them. Passing it is not server-side branch protection.
 
+## Forensic pipeline integrity (proposed 6 November fixes)
+
+The pipeline must rebuild `token_edges.parquet` **before** running `ana_20_pnl.py`, because cost basis consumes transfers that are missing from the standard trade normalization. Stale transfer files must not be reused in a fresh PnL calculation.
+
+The proposed `dmaga/db.py` deduplicates overlapping source slices using transaction, event type, owner, venue and token delta, while retaining the preferred raw-history source. `ana_19_export.py` reads the fresh shards, validates a staging Parquet and only then replaces the previously validated export. The normalizer retains the last materialized export if shard rebuilding fails. Failed batch commands now stop the driver.
+
+The `Forensic pipeline regression checks` workflow runs offline parser, PnL and deduplication tests on `main` pull requests. These tests do **not** independently validate the historical July 2024 PnL, full token-transfer coverage, source-provider labels or the conclusions in the root README.
+
+Before treating regenerated numerical claims as independently reproduced, rerun the complete derivation with the archived raw data on an isolated external volume, check the physical `trades.parquet` for duplicate keys, run the report self-check, and reconcile affected wallet-level and cohort results against the audit branch. Do not rewrite any frozen protocol or source archive.
+
 ## Full reproduction requires external data
 
 Raw responses and large Parquet files are outside Git. Their recorded paths and manifests are in `state/STATE.md`, `evidence/RAW_MANIFEST.tsv` and, on the audit branch, `evidence/DATA_V2_MANIFEST.tsv`.

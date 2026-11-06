@@ -1,6 +1,6 @@
 # Enquête Dark MAGA ($DMAGA)
 
-Enquête forensique on-chain et X sur `7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump`. Dépôt privé uniquement. Rien de ce dépôt
+Enquête forensique on-chain et X sur `7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump`. Dépôt PUBLIC : ne jamais y publier de secrets, d'identités privées ni de données personnelles non nécessaires. Rien de ce dépôt
 n'accuse une personne : l'échelle A, B, C, D du rapport s'applique à chaque constat.
 
 ## Reprise
