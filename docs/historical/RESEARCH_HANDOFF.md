@@ -1,3 +1,5 @@
+> **UPDATE — 2026-11-06 PASS 2:** See [pass2/README.md](pass2/README.md), [pass2/DMAGA_GROK_TO_CLAUDE_HANDOFF.md](pass2/DMAGA_GROK_TO_CLAUDE_HANDOFF.md) and [pass2/PROMPT_CLAUDE_PASS2.md](pass2/PROMPT_CLAUDE_PASS2.md). The original A7 reply-time paradox is resolved in N06; a new documentary avatar upper bound of 19:25:23 UTC is proposed in N07; the A1UD/6QFD/H4mQ full addresses and four social comparator-mint candidates are now reported. These are still documentary observations, not on-chain proofs. The material below records the prior state and may contain superseded research tasks.
+
 # 2026-11-06 | Historical X intelligence — integration and verification plan
 
 This dossier is a **historical research addendum**, not a new verdict on insider trading. It preserves the source report in `DMAGA_HISTORICAL_INTELLIGENCE_2026-11-06.md` and the 12 lead IDs in `X_SOURCE_MANIFEST.json`. The original report's raw X responses, screenshots, local `/workspace/dmaga_evidence/` folder, and blockchain receipts **were not attached**. They must be obtained and checksummed before claiming source-level reproduction.
