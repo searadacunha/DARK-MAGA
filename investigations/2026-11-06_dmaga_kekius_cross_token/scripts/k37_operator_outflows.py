@@ -1,5 +1,5 @@
-"""Sorties SOL de l'opérateur XC78 3oqARBND… (toute son histoire, 4 386 tx) : destinations d'au moins 1 SOL, sommes et dates,
-puis recherche des destinations dans les tables DMAGA. Sortie : data/xc_operator_outflows.csv."""
+"""Écran de variations de soldes SOL associées à l'opérateur XC78 3oqARBND… (toute son histoire, 4 386 tx) : destinations d'au moins 1 SOL, sommes et dates,
+puis recherche de comptes candidats dans les tables DMAGA. ATTENTION : une variation positive simultanée ne suffit pas à prouver un transfert direct si plusieurs comptes financent une transaction. Sortie : data/xc_operator_outflows.csv."""
 import csv, json
 from collections import defaultdict
 import duckdb
