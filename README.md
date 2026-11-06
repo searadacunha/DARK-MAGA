@@ -1,159 +1,106 @@
 # Dark MAGA: Did Musk Know?
 
-On **July 21, 2024**, Elon Musk changed his X profile picture to a Dark MAGA image.
+*The profile picture changed. The token had been trading for seven days. The money trail led much further than one Solana chart.*
 
-A Solana memecoin using the same imagery, **$DMAGA**, had launched a week earlier.
+On **July 21, 2024**, Elon Musk adopted a red-and-blue laser-eye “Dark MAGA” image on X. The Solana token **$DMAGA** had launched on **July 14**. Some of its earliest buyers were holding substantial positions long before Musk's profile changed.
 
-Buying accelerated around the profile change. But some wallets were already holding the token.
+This investigation reconstructs their **trades, token transfers, early funding, exchange deposits and cross-chain orders**. It follows specific transactions rather than treating screenshots, influencer claims or shared service accounts as evidence of common ownership.
 
-One early buyer had spent approximately **$1,087**. Its reconstructed realized trading PnL reached **$990,744**.
-
-That raised the question behind this investigation:
-
-> **Did anyone trade on advance knowledge of Elon Musk's profile-picture change?**
-
-I reconstructed the trading, traced the funding, mapped financial connections and followed the money across blockchains.
-
-Here is what the evidence shows.
-
-[Profile-change chronology][social] · [Trading reconstruction][traders] · [Numerical review][review-h]
+**[Trading data](reports/TOP_TRADERS.md) · [Wallet network](reports/COORDINATION.md) · [Cross-chain evidence](investigations/2026-11-05_evm-recipient-deeptrace/FINDINGS.md) · [Historical X archive](docs/historical/pass2/README.md)**
 
 ---
 
-# 1. The Buyer Who Was Already There
+## 1. Two buys. Forty-eight sales. Nearly $1 million in reconstructed trading profit.
 
-The wallet was:
+The wallet:
 
 `H3QsBrrivimFJmSpTXuvig2n1Bh7JuYxrriRSEszT6cc`
 
-Its first recorded purchase was on **July 14, 2024, at 16:43:58 UTC**, seven days before the profile change.
+made its first recorded $DMAGA purchase on **July 14, 2024, at 16:43:58 UTC**, seven days before the profile change.
 
-The reconstructed record contains **two purchases and 48 sales**.
-
-| Recorded trading activity | Result |
+| Reconstructed activity | Result |
 |---|---:|
-| Purchase cost | **$1,086.77** |
+| Purchase cost, at historical USD prices | **$1,086.77** |
+| Number of purchases / sales | **2 / 48** |
 | Realized trading PnL | **5,490.86 SOL** |
-| Trading PnL in USD | **$990,743.77** |
-| Last recorded sale | July 23, 2024 |
+| Realized trading PnL, USD conversion | **$990,743.77** |
+| Last recorded sale | **July 23, 2024** |
 
-The USD accounting uses prices at the time of the trades.
+These amounts are **reconstructed realized trading PnL**, based on the observed swaps and contemporaneous SOL/USD prices. They are not the portfolio's peak paper value, an exchange cash-out, or an after-fees-and-taxes bank profit.
 
-This is reconstructed trading PnL, not a peak portfolio valuation or a verified withdrawal to a bank account. It is not presented as an all-cost, after-tax return.
+This wallet is **not** assigned to the creator or to the 33-wallet component below. The financial result is established at the wallet level; its owner and what that owner knew are not.
 
-The investigation starts with the transactions: **who bought, when they bought, and what happened to the money.**
+[Reconstructed rankings and accounting definitions](reports/TOP_TRADERS.md) · [Claim-by-claim numerical review](docs/README_REVIEW_2026-11-05.md)
 
-[Trade history and accounting definitions][traders] · [Cross-checked figures][review-h]
+## 2. Thirty-three wallets. Forty direct token transfers.
 
----
+A second investigation identified **33 wallets linked by 40 direct transfers of at least one million $DMAGA each**. These are actual token movements, not coincidences created by a shared exchange, router or DEX.
 
-# 2. Thirty-Three Wallets. Forty Direct Transfers.
+**Fifteen** of these wallets bought during the token's **first hour**.
 
-A separate part of the investigation reconstructed a component of **33 wallets connected by 40 direct $DMAGA transfers**, each involving at least one million tokens.
+Before Musk's avatar change, their aggregate holdings had an estimated **upper bound of 217 million DMAGA**, about **23% of the supply outside liquidity pools** at that reference point.
 
-These links are token transfers between the addresses, not merely use of the same exchange or trading service.
+In the following 24 hours, the component's recorded swaps produced approximately **4,525 SOL in sale proceeds**, or **2.4%** of the market-wide recorded SOL sale proceeds over that window.
 
-**Fifteen of the 33 wallets bought during the token's first hour.**
+The creator is **outside** this transfer-defined 33-wallet component. Its transactions establish a connected network; they do not establish one beneficial owner.
 
-Their reconstructed holdings before Musk's profile change reached an **upper bound of 217 million tokens**, approximately **23% of the tokens outside liquidity pools** at that point.
+[Direct-transfer component, signatures and thresholds](reports/COORDINATION.md) · [Case evidence](docs/CASE_REPORT.md)
 
-In the following 24-hour window, their recorded swap sales generated approximately **4,525 SOL in proceeds**.
+## 3. Follow the funding, then the exits.
 
-That is sale proceeds, not profit, and it represents approximately **2.4% of recorded market-wide sale proceeds** in that window.
+The creator's funding and deposit investigation reveals another financial structure.
 
-The token creator is **outside** this 33-wallet component. The early buyer above is not being assigned to it either.
+On **July 14, between 01:32:23 and 01:40:50 UTC**, **14 wallets**, including the future creator, received their first recorded funding through Coinbase hot wallets. The mint was created at **02:05:25 UTC**.
 
-**The finding is a measurable network of transfers and positions. It is not proof that all 33 wallets belong to one person.**
-
-[Component, holdings and sales][case] · [Independent numerical checks][review-h]
-
----
-
-# 3. The Creator's Trail: Funding In, Deposits Out
-
-The creator's financial trail led to a different set of addresses.
-
-On **July 14, 2024, between 01:32:23 and 01:40:50 UTC**, fourteen wallets received their first recorded funding through Coinbase hot wallets.
-
-The token was created at **02:05:25 UTC**.
-
-The fourteen, including the creator, later paid into at least one of two deposit addresses examined in the investigation:
+Their later movements converge on two identified deposit accounts:
 
 - `9W9b3zgHH9mCEHDhsdbnbEPHStm9vvXS4aia4DWHBxpL`
 - `Caw4RrwkmxqtbLSFzgSs6id3XiFxWQxs2t1mrn5a3mME`
 
-The relevant pattern was not simply "these wallets used Coinbase."
+The historical account review identified **27 qualifying senders shared by both deposits**, representing roughly **71% of incoming value at each** under the specified matching rules.
 
-It was **closely timed first funding, followed by later convergence on specific deposit addresses**.
+This is more informative than merely observing that wallets use Coinbase: it combines **time-concentrated first funding and subsequent convergence to the same destinations**. Exchange accounts remain attribution boundaries; their customers are not identified.
 
-Across the reviewed histories, the two deposits shared **27 qualifying sending wallets**. Those shared senders accounted for approximately **71% of the incoming amounts on each side**, under the review's stated thresholds.
+[Funding and deposit evidence](docs/README_REVIEW_2026-11-05.md) · [Wallet-level investigation](docs/CASE_REPORT.md)
 
-The addresses are strongly corroborated as Coinbase deposit accounts. Their account holders and ultimate beneficiaries are not identified.
+## 4. The trail crosses chains.
 
-The funding-and-deposit pattern also appears outside the token's launch period.
+The bridge-order review decoded **76 deBridge orders** across the investigated populations, with **1,018,687.18 USDC committed on the source side** (including proportional bridge fees). **41** were matched to Ethereum execution, representing **942,534.32 USDC of source-side commitments**. These counts cover a broader investigated population, **not just the 33 wallets**; they are neither an aggregate $DMAGA profit nor a verified total of received funds.
 
-[Funding sequence, deposit overlap and transaction checks][review-i]
+One especially direct path stands out:
 
----
+> **Three Solana wallets → four deBridge orders → one Ethereum destination, within nine minutes and 36 seconds.**
 
-# 4. The Trail Did Not End on Solana
-
-The cross-chain investigation decoded **76 deBridge orders** across the investigated wallet populations.
-
-Their source-side amount, including the proportional bridge fee, was **1,018,687.18 USDC**.
-
-| Cross-chain evidence | Recorded result |
-|---|---:|
-| Decoded orders, all investigated populations | **76** |
-| Source-side USDC, including proportional fees | **1,018,687.18** |
-| Orders with execution matched on Ethereum | **41** |
-| Source-side USDC associated with those 41 orders | **942,534.32** |
-
-The remaining **35 destination executions are not verified in the published review**. Fixed SOL fees are excluded from the USDC totals.
-
-These are orders across the collected histories, including activity outside the July 21 event. They are not all attributed to the exact 33-wallet component, and their full value is not claimed to be $DMAGA profit.
-
-One route is particularly concrete:
-
-**Three Solana wallets. Four orders. The same Ethereum recipient. Nine minutes and 36 seconds.**
-
-On **July 22, 2024**, those orders committed **263,573.15 USDC** on the source side and named this recipient:
+On **July 22**, the four source orders committed **263,573.15 USDC** to the same Ethereum recipient:
 
 `0xb947bf7f409e998b28f8e218802fc9575c3c8c57`
 
-All four destination executions were matched in the review.
+All four destination executions were matched. Subsequent investigations trace this destination's movements through Ethereum, Base, BSC and back toward Solana, using decoded orders and transaction-level checks. Shared destination and demonstrable transfers are not, by themselves, proof of one human operator.
 
-This connects the source orders to a shared destination. It does not identify the person behind that destination.
+[Bridge-order reconciliation](docs/README_REVIEW_2026-11-05.md) · [Ethereum recipient deep trace](investigations/2026-11-05_evm-recipient-deeptrace/FINDINGS.md) · [Audited Base / BSC / Solana trace](investigations/2026-11-06_debridge_base_bsc_solana/FINDINGS.md)
 
-[Decoded orders][orders] · [Cross-chain reconciliation and execution evidence][review-i]
+## 5. Reconstructing the moment the market reacted.
 
----
+The timing is central, but the exact moment Musk clicked “save” is not observable in the evidence.
 
-# 5. Follow the Evidence
+An archived view of his profile at **19:03:27 UTC on July 21** still shows the old avatar. The historical X archive includes a post by **@realjohnnewburg at 19:25:23 UTC** containing a screenshot of the changed profile, earlier than the previously catalogued screenshots. That post gives a **documentary upper bound**, subject to authenticating the image and its provenance—not an exact click timestamp.
 
-This repository combines **Solana transaction reconstruction, wallet-network analysis, exchange-deposit tracing, cross-chain order matching, public-source chronology and statistical testing**.
+The investigation also preserves early public appearances of the artwork, repost/original relationships, dated analyst observations and the subsequent removal of the avatar as a **separate event**.
 
-| Start here | What it contains |
+[Original social chronology](docs/SOCIAL_FINDINGS.md) · [Historical sources and provenance](docs/historical/DMAGA_HISTORICAL_INTELLIGENCE_2026-11-06.md) · [Second-pass X findings](docs/historical/pass2/DMAGA_X_NEW_FINDINGS.md)
+
+## Read the evidence
+
+| Evidence collection | What it documents |
 |---|---|
-| [Trading reconstruction][traders] | Purchases, sales, accounting definitions and wallet-level results. |
-| [Case report][case] | The investigation's detailed findings and evidence levels. |
-| [H numerical review][review-h] and [I transaction review][review-i] | Claim-level checks, corrections and the scope of each conclusion. |
-| [Decoded bridge orders][orders] | Source transactions, makers, amounts and destination recipients. |
-| [Frozen study][study] | Protocol, comparison data and statistical results. |
-| [Reproduction and branch guide](docs/REPRODUCTION.md) | Code checks, external-data requirements and research handover. |
+| [Trading reconstruction](reports/TOP_TRADERS.md) | Wallet-level purchases, sales, realized PnL and accounting scope |
+| [Direct transfers and network tests](reports/COORDINATION.md) | Transfer-defined components, funding and statistical controls |
+| [Creator and early-wallet case report](docs/CASE_REPORT.md) | Launch transactions and chronological wallet evidence |
+| [EVM deep trace](investigations/2026-11-05_evm-recipient-deeptrace/FINDINGS.md) | Source-to-destination order matching and traced receipts |
+| [Multichain forensic audit](investigations/2026-11-06_debridge_base_bsc_solana/FINDINGS.md) | Audited order IDs, Base/BSC flows and bounds |
+| [DMAGA × Kekius investigation](investigations/2026-11-06_dmaga_kekius_cross_token/FINDINGS.md) | Separate cross-token comparison with transaction-level tests |
+| [Historical X evidence, passes 1 and 2](docs/historical/pass2/README.md) | 1,001 retained posts in pass 2, original/repost graph and testable wallet leads |
+| [Statistical control study](etude_final/results.md) | Comparison against 211 tokens, with its stated testing scope |
+| [Reproduction guide](docs/REPRODUCTION.md) | Data availability, validation requirements and research versions |
 
-The evidence links above point to a fixed snapshot of the research branch. Where an older synthesis conflicts with a later transaction-level correction, the later correction governs the figures used here. The [README evidence ledger](docs/README_REVIEW_2026-11-05.md) records those choices.
-
-**Research status:** the findings above are scoped to the cited records; full investigation validation remains pending. The complete raw archive is external to Git, so a checkout alone cannot reproduce every result.
-
-Detailed research material is in French. This overview is in English.
-
-**Solana mint:** `7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump`
-
-[social]: https://github.com/searadacunha/Dark-MAGA-Investigation/blob/6e839acc022a38427fdb1f4f3b221488db454a78/docs/SOCIAL_FINDINGS.md
-[traders]: https://github.com/searadacunha/Dark-MAGA-Investigation/blob/6e839acc022a38427fdb1f4f3b221488db454a78/reports/TOP_TRADERS.md
-[review-h]: https://github.com/searadacunha/Dark-MAGA-Investigation/blob/6e839acc022a38427fdb1f4f3b221488db454a78/audits/2026-11-03/work_H/REAUDIT_CONCLUSIONS.md
-[review-i]: https://github.com/searadacunha/Dark-MAGA-Investigation/blob/6e839acc022a38427fdb1f4f3b221488db454a78/audits/2026-11-03/work_I/REFUTATION.md
-[case]: https://github.com/searadacunha/Dark-MAGA-Investigation/blob/6e839acc022a38427fdb1f4f3b221488db454a78/docs/CASE_REPORT.md
-[orders]: https://github.com/searadacunha/Dark-MAGA-Investigation/blob/6e839acc022a38427fdb1f4f3b221488db454a78/audits/2026-11-03/work_I/i14_orders.csv
-[study]: https://github.com/searadacunha/Dark-MAGA-Investigation/blob/6e839acc022a38427fdb1f4f3b221488db454a78/etude_final/results.md
+**Scope:** Solana token `7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump`. This is an evidence-led inquiry into early trading and financial flows, **not a claim that Elon Musk knowingly coordinated trades or that a named person controls the linked wallets**. Historical X testimony and unverified wallet leads are kept separately from confirmed chain transactions.
