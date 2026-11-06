@@ -59,15 +59,30 @@ Slot de création 310594124 (16:33:45), puis slot 310594130 (16:33:48). Reçus f
    - 3EcUR1sZ, F2jTjuYT, AMgtmMMF, 6vpKExvX ;
    - 8C9utWVQ, CF7MA2t9.
 3. **CONFIRMÉ** : dans le même slot, 4 transactions **co-signées chacune par 4 wallets** achètent 673,91 M jetons (67,4 %) pour 16 wallets. Les 10 bénéficiaires du point 2 en font partie. Payeurs des frais : `DcxRmDYU…`, `3EcUR1sZ…`, `8C9utWVQ…`, `BmeKXuaj…`.
-4. **CORROBORÉ, contrôle commun** de Go5 et de ces 16 wallets : Go5 paie 10 d'entre eux dans sa propre transaction. Signer à quatre une même transaction suppose que les clés étaient réunies au moment de la construire. Six des 16 acheteurs n'ont pas reçu de SOL de Go5 dans cette transaction : les 4 du groupe payé par `BmeKXuaj…`, plus `A7ZxBfBx…` et `7qnbEYhM…` du groupe payé par `8C9utWVQ…`. Leur financement est **NON VÉRIFIÉ**.
-5. **NON VÉRIFIÉ** : un lien entre le créateur `9dtGg97Q…` (1 839 tx depuis mars 2024) et Go5 ou `3oqARBND…`.
-6. **CONFIRMÉ, financement de l'opération** : Go5 est un wallet neuf (24 tx en tout).
+4. **CONFIRMÉ (index Jito), soumission commune** (`evidence/jito/`) :
+   - La création `2xz9tgPB…`, signée par le créateur, et l'achat de 74,9 % par Go5 (`5p39GsYP…`) forment **un même bundle Jito**, `516a792e…` (slot 310594124, `blockIndex` 1621). **Go5 paie le pourboire** de 0,05 SOL.
+   - Au slot 310594130, la vente-redistribution de Go5 et les 4 rachats co-signés forment **un seul bundle**, `6317153c…` (5 transactions), pourboire de 0,1 SOL payé par Go5.
+   - Un bundle est envoyé d'un bloc par un seul expéditeur, qui détenait donc déjà les transactions signées du créateur, de Go5 et des 16 wallets. **Le créateur et l'opérateur agissent de concert : CORROBORÉ** (index hors chaîne, plus transferts et co-signatures sur la chaîne). Le créateur `9dtGg97Q…` n'échange en revanche aucun SOL avec Go5 ni avec `3oqARBND…` (point 6) : pas de flux de fonds entre eux.
+   - Pour comparer : la création de KM est seule dans son bundle `b722456c…`, pourboire de 0,008 SOL payé par son créateur. L'achat DMAGA de `FJkb8WnW…` (14/07/2024) est lui aussi seul dans son bundle `b18117c9…`, pourboire de 0,01 SOL payé par FJkb8WnW : un geste de bot de sniping.
+5. **CORROBORÉ, contrôle commun** de Go5 et de ces 16 wallets : Go5 paie 10 d'entre eux dans sa propre transaction. Signer à quatre une même transaction suppose que les clés étaient réunies au moment de la construire. Six des 16 acheteurs n'ont pas reçu de SOL de Go5 dans cette transaction : les 4 du groupe payé par `BmeKXuaj…`, plus `A7ZxBfBx…` et `7qnbEYhM…` du groupe payé par `8C9utWVQ…`. Leur financement est **NON VÉRIFIÉ**.
+6. **Créateur `9dtGg97Q…` : lanceur en série** (1 839 tx depuis mars 2024).
+   - Il crée encore deux tokens Pump.fun sur des thèmes Musk : « Elon's Alterego Adrian Dittmann » `LYHrmUwemzqSKirX4LRX9tXVkx2HnraTgze8Zbepump` le 30/12 à 17:39:55 (sig `33Pw67cN…`), et « Trumpus Maximus » `WAJmwPfRFnuonu2SHy5YpZTAfwENGVAnECahSZPpump` le 31/12 à 12:10:25 (sig `3NkgZoab…`), après le changement de profil. Chacun migre en moins de 2 minutes, et le créateur touche chaque fois la prime de migration de 0,5 SOL, comme pour XC78.
+   - Aucune de ses 52 transactions du 23/12 au 01/01 ne touche Go5, `3oqARBND…`, `5S1wWxWZ…`, `2sGCJ7Z3…` ou `C6UEzXJc…`.
+   - Un lien de fonds entre le créateur et l'opérateur reste **NON VÉRIFIÉ** : il n'est pas trouvé dans cette fenêtre.
+7. **CONFIRMÉ, financement de l'opération** : Go5 est un wallet neuf (24 tx en tout).
    - `3oqARBNDr56L2oWQ9aR2QzS7FeTMEubd8J2v29wP5N58` le crédite de 70,06 SOL à 16:31:42, 2 minutes avant la création.
    - Le 30/12, les fonds reviennent à `3oqARBND…` : 11,916 SOL dans une tx co-signée par Go5, `5S1wWxWZ…` et `2sGCJ7Z3…`, puis 1,976 SOL de Go5.
    - Chaque retour verse des frais à `C6UEzXJcTqqJHpAGUts2tA4s6E7MS5KoPzzfsrT6qCpL`, à un taux presque constant (6,957 % et 6,961 %) : service probable.
    - `3oqARBND…` naît le 23/12/2024 avec 86,08 SOL de `FBwXQAEb…`. Cette adresse n'a pas d'étiquette mais fait plus de 2 000 transactions en 12 jours : service probable, **traçabilité rompue**. `3oqARBND…` redistribue ensuite ses fonds à de nombreux wallets (16 virements le 25/12) et compte 4 386 tx jusqu'en 2026 : profil d'opérateur de lancements en série.
+   - Historiques complets des 16 wallets (24 à 63 tx chacun, `data/xc_bundle_counterparties.csv`). Ils n'ont que 5 contreparties d'au moins 0,5 SOL :
+     - le pool et la courbe de XC78 ;
+     - `3oqARBND…` : il leur verse 1 129,01 SOL en 16 virements, et ils lui renvoient 2 045,67 SOL en 38 virements ;
+     - `C6UEzXJc…` : 82,66 SOL de frais en 17 virements ;
+     - `8Q7G3PuW…` : 18,98 SOL en 11 virements.
+
+     Ces totaux couvrent toute leur histoire, du 2024-12-29 au 2024-12-31, d'autres lancements compris. Le bénéfice de l'opération se concentre chez `3oqARBND…`.
    - `3oqARBND…`, `5S1wWxWZ…`, `2sGCJ7Z3…`, `C6UEzXJc…`, `FBwXQAEb…` et le payeur `43TVSaqF…` n'apparaissent dans **aucune** table DMAGA (wallets, financements, sorties, nœuds) : **aucun lien DMAGA trouvé** pour cet opérateur.
-7. Ce montage (achat bloquant au slot de création, puis redistribution vers des wallets qui rachètent) est un schéma de lancement groupé. Il ne dit rien d'une connaissance du changement de profil de Musk, qui intervient 37 heures plus tard.
+8. Ce montage (achat bloquant au slot de création, puis redistribution vers des wallets qui rachètent) est un schéma de lancement groupé. Il ne dit rien d'une connaissance du changement de profil de Musk, qui intervient 37 heures plus tard.
 
 KM (10/12) : 133 acheteurs sur la courbe en 2 min 01 s. Les 100 premiers (`data/sol_first100_buyers_KM.csv`) n'ont que 2 tx co-signées, et aucune redistribution de ce type n'a été cherchée en détail (`UNRESOLVED.md`).
 

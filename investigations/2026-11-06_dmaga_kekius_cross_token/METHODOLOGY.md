@@ -33,7 +33,13 @@
 - **Changement de source en cours de collecte** : à partir du 7 394e couple, le pool Helius a répondu « max usage reached ». La suite passe par le RPC public. **Contrôle** : 30 couples déjà lus via Helius, 15 actifs et 15 vides, ont été relus via le RPC public, avec **30/30 ensembles de signatures identiques** (`data/ata_backend_check.json`).
 - **Piège écarté** : `solana-rpc.publicnode.com` répond `[]`, sans erreur, pour une ATA qui a un historique (constaté le 06/11/2026). Il n'est pas utilisé.
 - **Seuil de hub** : une contrepartie de sortie ou de financement qui touche plus de 25 wallets DMAGA est exclue du noyau (`k19`).
-- **Bot à haute fréquence** : on classe ainsi un wallet qui fait plus de 50 opérations DMAGA, ou plus de 100 transactions sur l'ATA Kekius dans la fenêtre. Ses correspondances sont non discriminantes.
+- **Bot ou trader à haute fréquence** : critères de `k18`, chacun suffisant :
+  - plus de 50 opérations DMAGA ;
+  - plus de 100 transactions sur l'ATA Kekius dans la fenêtre ;
+  - au moins 1 000 signatures sur l'ATA ;
+  - au moins 200 transactions du wallet entier dans les 24 h avant son premier mouvement Kekius. Ce critère est ajouté après la relecture de `DMJmb8aJ…`, environ 1 000 tx par jour : le volume sur l'ATA ne suffit pas à le voir.
+
+  Ses correspondances sont non discriminantes.
 
 ## Classement d'une relation
 

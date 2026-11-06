@@ -108,6 +108,22 @@ class Solana(unittest.TestCase):
         r2 = got["2024-12-30 18:21:24"][fee] / got["2024-12-30 18:21:24"][ops]
         self.assertEqual((round(r1 * 100, 3), round(r2 * 100, 3)), (6.957, 6.961))
 
+    def test_jito_bundles(self):
+        J = INV / "evidence" / "jito"
+        b = lambda p: (lambda d: d[0] if isinstance(d, list) else d)(json.loads((J / p).read_text()))
+        x = b("bundle_516a792e2da6fe47.json")
+        self.assertEqual((x["slot"], x["tippers"], x["landedTipLamports"]), (310594124, [GO5], 50_000_000))
+        self.assertEqual([s[:10] for s in x["txSignatures"]], ["2xz9tgPBSz", "5p39GsYPf4"])
+        y = b("bundle_6317153c0b5e9c7b.json")
+        self.assertEqual((y["slot"], y["tippers"], y["landedTipLamports"], len(y["txSignatures"])), (310594130, [GO5], 100_000_000, 5))
+        idx = json.loads((REC / "INDEX.json").read_text())
+        co = {s for s, why in idx.items() if "co-signé" in why}
+        self.assertEqual(set(y["txSignatures"]), co | {"5GvjoEMEiPfjqnck7iegRCGuKUrtfe1amJYvvR6D7WxrcPWA19peM163vuEQuorCZDFpYHmknUJ5TDSnPxHfYBxn"})
+        km = b("bundle_b722456cda8d8bab.json")
+        self.assertEqual((km["txSignatures"], km["tippers"]), (["51W3rg9BpBtWXTTcoRhB3akNPXUpPq9XnkjkDyHV7hCS7wR6MU8U9pnYGUWFW4qBW68iFhSHTxGRCELi8NEcxFsK"], ["4GUgVRftPkeqTNFc7nwZVRjqheBPMVToAhNYdkQVUz3e"]))
+        # le pourboire figure aussi dans les reçus : 0,05 et 0,1 SOL vers le compte de pourboire HFqU5x63…
+        self.assertEqual(sol_deltas(rec("5p39GsYPf4zwCMRdLV8iJrqtHjcQw8VtPAP6oYugqCF3oyj98JEFXg7VT78uPpJWhxxKWHDWGsENG1ndDRuAjhST"))["HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe"], 50_000_000)
+
 
 class Ethereum(unittest.TestCase):
     @classmethod
