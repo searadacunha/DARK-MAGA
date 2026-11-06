@@ -6,7 +6,7 @@ Question : que valent, transaction par transaction, les pistes du mémo historiq
 |---|---|
 | `FINDINGS.md` | Constats hiérarchisés (CONFIRMÉ, CORROBORÉ, HYPOTHÈSE, REJETÉ), signatures, heures, montants |
 | `METHODOLOGY.md` | Sources, règles, reproduction, limites |
-| `data/x_observations_reconciled.csv` | Les 5 156 observations X : original, repost, réponse, citation, objet réel et preuve |
+| `data/x_observations_reconciled.csv` | Les 5 157 observations X : original, repost, réponse, citation, objet réel et preuve |
 | `data/ledger_7GVC_*.csv`, `data/ledger_9Sxm_*.csv` | Grands livres décodés instruction par instruction, 13-25/07/2024 |
 | `data/jeffro_claims.csv`, `data/jeffro_satellites.csv` | Affirmations de Jeffro, verdicts, signatures |
 | `data/noah_*.csv` | Avoirs à l'heure du post (contrôlés par ATA), arêtes, contreparties communes et leur revue |

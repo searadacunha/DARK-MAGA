@@ -3,7 +3,7 @@
 Généré par `scripts/rep_75_timeline.py`. Heures UTC. Attention, cette échelle note la **source** de chaque ligne, elle diffère de celle des conclusions du rapport. Fiabilité : A, fait directement contrôlable (transaction, post archivé, capture datée) ; B, une seule source
 indirecte ou une lecture à confirmer ; C, non revérifié dans un fichier du projet. Une date de post vient de son identifiant ; dans tous les cas lus, elle
 égale la métadonnée d'origine, sauf pour un repost :
-fxtwitter et le point d'intégration rendent alors l'original, dont la date diffère de celle de l'ID demandé (372 reposts ainsi résolus sur 5156 observations ;
+fxtwitter et le point d'intégration rendent alors l'original, dont la date diffère de celle de l'ID demandé (372 reposts ainsi résolus sur 5157 observations ;
 réconciliation complète, Wayback comprise : `investigations/2026-11-06_historical_replay/data/x_observations_reconciled.csv`). Un repost n'est jamais cité : le générateur s'arrête. Capitalisation : prix du pool juste avant l'instant × 10^9 × SOLUSDT à la minute.
 
 | UTC | Fait | Fiabilité | Capitalisation | Source |
@@ -32,7 +32,8 @@ réconciliation complète, Wayback comprise : `investigations/2026-11-06_histori
 | 21/07/2024 18:55:15 | @kikisknees répond à @PragmaticPrim8 et Musk avec une image | B | 929 k$ | id 1815098229903839717, supprimé, texte Wayback. Média perdu. « @PragmaticPrim8 @elonmusk @DarkMagaCoin https://t.co/kBkWptN6Js » |
 | 21/07/2024 19:03:27 | Borne basse : Musk a encore son ancien avatar | A | 892 k$ | capture Wayback 19:03:27 UTC, evidence/web/wb_elonmusk/ |
 | 21/07/2024 19:23:20 | Envoi probable du nouvel avatar | B | 834 k$ | snowflake de profile_images/1815105297410666496 : 19:23:20,585 UTC. L'id date le téléversement ; lecture à confirmer |
-| 21/07/2024 19:27:24 | Borne haute : premier post qui montre le nouvel avatar (@AutismCapital) | A | 871 k$ | id 1815106321810919673, archivé. Capture du profil de Musk ; l'heure est celle du post, pas du clic ni de la capture. Avatar recadré à pHash 4/64 du visuel (médiane 30 sur 703 médias), evidence/x_media. « Elon put on the wartime PFP. » |
+| 21/07/2024 19:25:23 | Borne haute : premier post qui montre le nouvel avatar (@realjohnnewburg) | A | 773 k$ | id 1815105812076904904, archivé. Capture de la page de profil @elonmusk ; l'heure est celle du post, pas du clic ni de la capture. Avatar recadré à pHash 2/64 du visuel (médiane 30 sur 704 médias), evidence/x_media. « Elon Musk just changed his profile pic » |
+| 21/07/2024 19:27:24 | @AutismCapital montre aussi le nouvel avatar | A | 871 k$ | id 1815106321810919673, archivé. Capture du profil, avatar à pHash 4/64 du visuel. « Elon put on the wartime PFP. » |
 | 21/07/2024 19:30:13 | @DavidFBailey montre aussi le nouvel avatar (ancienne borne haute) | A | 1,26 M$ | id 1815107030606385507, archivé.  « 👀🫢 » |
 | 21/07/2024 19:32:17 | @ChrisWinig réagit | A | 2,45 M$ | id 1815107549903135205, archivé via le repost 1815107774113587625. Original ; 1815107774113587625 (19:33:11) en est un repost, URL d'archive au nom de @DarkMagaCoin. « Elon just made this his profile picture!  DARK MAGA RISES!!! » |
 | 21/07/2024 19:33:05 | @DarkMagaCoin réagit | A | 2,31 M$ | id 1815107751745601643, archivé.  « Our resident genius @elonmusk has a DMAGA PFP and YOU'RE FADING??? LOL. » |

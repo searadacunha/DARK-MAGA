@@ -1,10 +1,10 @@
 {
- "observations": 5156,
- "distinct_requested_ids": 5156,
+ "observations": 5157,
+ "distinct_requested_ids": 5157,
  "relations": {
   "reply": 1925,
   "quote": 330,
-  "original": 910,
+  "original": 911,
   "unavailable_unclassified": 1509,
   "repost": 482
  },
@@ -12,7 +12,7 @@
  "repost_by_wayback_refs": 110,
  "metadata_snowflake_disagree": 372,
  "metadata_disagree_explained_by_repost": 372,
- "distinct_objects_seen": 5005,
+ "distinct_objects_seen": 5006,
  "reposts_whose_original_is_also_a_row": 137,
  "reposter_evidence": {
   "archived_url_path_unverified": 370,
@@ -20,7 +20,7 @@
   "": 2
  },
  "corpus_author_check": {
-  "True": 3245,
+  "True": 3246,
   "": 1509,
   "unknown": 402
  }

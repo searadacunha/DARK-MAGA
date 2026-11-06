@@ -7,7 +7,7 @@
 | Signatures et transactions Solana (jsonParsed, instructions internes) | RPC public `api.mainnet-beta.solana.com` via `k16_pubrpc` (enquête Kekius) | aucune | cache par signature hors dépôt (`HIST_EXT/pub`) ; environ 0,5 transaction/s, nombreuses réponses 429 |
 | Swaps, virements DMAGA, flux SOL et USDC de l'enquête d'origine | `data_v2/*.parquet` du disque de l'enquête (Helius, 02-03/11) | — | non publiés en entier ; voir §8 de FINDINGS pour le trou `Transfer` |
 | Posts X | `api.fxtwitter.com` et `cdn.syndication.twimg.com` (`dmaga.xposts`), charges Wayback déjà archivées | aucune | réponses brutes dans `evidence/x_hist/` et `evidence/x_raw/` |
-| Médias X | `pbs.twimg.com` | aucune | seules les empreintes sont publiées ici (`evidence/x_hist_media/MANIFEST.json`), sauf la capture @AutismCapital, versée au corpus comme les 703 autres médias |
+| Médias X | `pbs.twimg.com` | aucune | seules les empreintes sont publiées ici (`evidence/x_hist_media/MANIFEST.json`), sauf les captures @AutismCapital et @realjohnnewburg, versées au corpus comme les 703 autres médias |
 | Cours SOL/USD | archives SOLUSDT 1 min de Binance (`raw/solusd` de l'enquête d'origine) | — | clôture de la minute |
 | Contrats KLLARY, RETIREDIO, JOE, ZOOMER | pistes d'un agent de recherche (Reddit 13/07/2024, Wayback CoinGecko 27/05/2024, GeckoTerminal), relues sur la chaîne (`h50`) | aucune | sources brutes de l'agent non publiées |
 
@@ -88,8 +88,8 @@ scripts/py.sh scripts/guard.py -- scripts/py.sh scripts/rep_75_timeline.py
 - Un compte de jetons non associé échappe aux tests par ATA.
 - `trades.parquet` omet les virements `Transfer` simples (FINDINGS §8). Aucun solde de ce dossier n'en dépend sans contrôle par ATA.
 
-**Capture @AutismCapital**
-- Elle prouve l'heure de publication, pas celle du clic ni de la capture.
+**Captures @realjohnnewburg et @AutismCapital**
+- Elles prouvent l'heure de publication, pas celle du clic ni de la capture.
 - Le pHash compare un disque recadré au visuel : il ne prouve pas que la page capturée était réelle.
 
 **Agent de recherche**

@@ -14,8 +14,8 @@ Un virement confirmé ne prouve ni l'identité civile, ni la détention des clé
 
 | # | Constat | Classement |
 |---|---|---|
-| 1 | 482 des 5 156 observations X sont des reposts. Pour 372 d'entre elles, la ligne porte l'auteur, la date et le texte de l'original. La chronologie citait 4 reposts comme des originaux, dont le « post pmarca » des cohortes, daté 1 h 00 min 29 s trop tard. | CONFIRMÉ |
-| 2 | Avatar de Musk visible au plus tard à 19:27:24, et non 19:30:13 (capture @AutismCapital). La fenêtre indécidable passe à 23 min 57 s et ses achats de 148,73 à 39,87 SOL. | CONFIRMÉ (heure du post), B pour le contenu de la capture |
+| 1 | 482 des 5 157 observations X sont des reposts. Pour 372 d'entre elles, la ligne porte l'auteur, la date et le texte de l'original. La chronologie citait 4 reposts comme des originaux, dont le « post pmarca » des cohortes, daté 1 h 00 min 29 s trop tard. | CONFIRMÉ |
+| 2 | Avatar de Musk visible au plus tard à 19:25:23, et non 19:30:13 : captures de la page de profil par @realjohnnewburg (19:25:23) puis @AutismCapital (19:27:24). La fenêtre indécidable passe à 21 min 56 s et ses achats de 148,73 à 20,85 SOL. | CONFIRMÉ (heure des posts), B pour le contenu des captures |
 | 3 | Les 190 SOL de 7GVC proviennent de la clôture de sa **propre** position Jupiter Perpetuals : 189,656069 SOL, 33 min 14 s avant la création du mint. Ce n'est pas un financeur tiers. | CONFIRMÉ |
 | 4 | Achat de 41,2 M, virement de 20 M à 9Sxm, financements de 5, 60 et 16 SOL vers trois satellites, qui achètent dans la minute ou les 2 min 29 s suivantes. Les trois abréviations se résolvent sans ambiguïté. | CONFIRMÉ (le « 2 minutes » est faux : 11 min 26 s) |
 | 5 | Circuit 7GVC ↔ 9Sxm ↔ AeiMit ↔ satellites : virements directs dans les deux sens (SOL, USDC, DMAGA), activation de comptes, balayage commun le 06/11/2024. Aucune co-signature. | CONFIRMÉ pour les virements ; contrôle commun : HYPOTHÈSE forte, non démontrée |
@@ -34,7 +34,7 @@ Un virement confirmé ne prouve ni l'identité civile, ni la détention des clé
 - Le collecteur a enregistré l'auteur, la date et le texte de cet original sous l'ID du repost.
 - Les deux API concordent sur les 372 cas, et `dmaga.xposts.returned_ids` relit ces réponses brutes.
 
-**Comptes** (`data/x_reconcile_summary.json`), sur 5 156 observations (5 155 plus le post @AutismCapital ajouté le 06/11)
+**Comptes** (`data/x_reconcile_summary.json`), sur 5 157 observations : les 5 155 d'origine, plus les posts @AutismCapital et @realjohnnewburg ajoutés le 06/11
 
 | Relation | Nombre |
 |---|---|
@@ -43,11 +43,11 @@ Un virement confirmé ne prouve ni l'identité civile, ni la détention des clé
 | dont reposts trouvés par les références des charges Wayback | 110 |
 | Réponses | 1 925 |
 | Citations | 330 |
-| Originaux | 910 |
+| Originaux | 911 |
 | Indisponibles non classés | 1 509 |
 
 - Les 372 écarts entre métadonnée et ID sont tous des reposts, sans exception ; le script s'arrête s'il en trouve un autre.
-- 5 005 objets distincts.
+- 5 006 objets distincts.
 - Auteur du repost :
   - 110 lus dans la charge Wayback ;
   - 370 seulement par le compte de l'URL d'archive, preuve faible, notée `archived_url_path_unverified` ;
@@ -71,37 +71,40 @@ Un virement confirmé ne prouve ni l'identité civile, ni la détention des clé
 - Il ne répond pas à `1815088124193579253` (18:15:06), qui n'a pas de parent. Le sens des réponses est cohérent.
 - Effet de bord utile : l'annonce de Biden est publique au plus tard à 17:59:47 (événement `annonce_biden`, source ajoutée).
 
-## 2. Borne haute de l'avatar de Musk (A2) et fenêtres d'achat
+## 2. Borne haute de l'avatar de Musk (A2, passe 2 N07) et fenêtres d'achat
 
-**Pièce**
-- Post `1815106321810919673` de @AutismCapital, 21/07/2024 19:27:24 : métadonnée X et ID concordent.
-- Image `evidence/x_media/1815106321810919673_GTCNjq-bEAIJvfT.png`, sha256 `44246ed67868eabca54bf3a13101d8fc598a1a1e8141069daf73f809c887a255`.
+**Pièces**
 
-**Lecture**
-- Profil « Elon Musk », badge certifié et affiliation X, avatar rouge aux yeux laser bleus.
-- Le disque d'avatar recadré est à **pHash 4/64** du visuel. Parmi les 703 médias archivés, la médiane est de 30, et les plus proches (4) sont toutes des copies du visuel Winig/Musk.
+| Post | Heure (UTC) | Image (sha256) | Lecture |
+|---|---|---|---|
+| `1815105812076904904` de @realjohnnewburg (« Elon Musk just changed his profile pic »), signalé par la passe 2 (N07) | 19:25:23 | `evidence/x_media/1815105812076904904_GTCNAerXYAA-ajC.png`, `93d239a02ca23f83aa3c158e6754786cdf037472f0a4467f3900ecc416cb0ce3` | page de profil `@elonmusk`, « Joined June 2009 », 190,2 M d'abonnés, avatar rouge aux yeux laser bleus ; disque recadré à **pHash 2/64** du visuel |
+| `1815106321810919673` de @AutismCapital (« Elon put on the wartime PFP. ») | 19:27:24 | `evidence/x_media/1815106321810919673_GTCNjq-bEAIJvfT.png`, `44246ed67868eabca54bf3a13101d8fc598a1a1e8141069daf73f809c887a255` | profil « Elon Musk », badge certifié et affiliation X ; disque recadré à **pHash 4/64** |
 
-**Ce que la pièce ne prouve pas**
-- L'heure du clic ou de la capture : la capture précède le post, d'un délai inconnu.
-- L'authenticité de la capture : elle est de même nature que celle de Bailey (19:30:13), qui reste citée.
+- Pour les deux heures, la métadonnée X et l'ID concordent.
+- Contrôle négatif : parmi les 704 médias archivés, la médiane est de 30 ; les plus proches (2 à 4) sont toutes des copies du visuel Winig/Musk.
+- Ce que les pièces ne prouvent pas :
+  - l'heure du clic ou de la capture, qui précède le post d'un délai inconnu ;
+  - l'authenticité des pages capturées, de même nature que la capture Bailey (19:30:13), qui reste citée.
+- La borne basse Wayback (19:03:27) ne change pas. Fenêtre documentée : **[19:03:27 ; 19:25:23], 21 min 56 s**.
 
 **Effet sur les fenêtres** (`h40_windows.py`, `data/windows_sensitivity.csv`)
-- Mêmes exclusions et même requête que `ana_50`, sur les données courantes.
-- Les anciennes bornes reproduisent exactement les chiffres publiés : l'écart ci-dessous vient des seules bornes.
+- Même requête et mêmes exclusions qu'`ana_50`, sur les données courantes.
+- Les anciennes bornes reproduisent exactement les chiffres publiés : l'écart vient des seules bornes.
 
 | Fenêtre | Achats publiés (SOL) | Nouvelles bornes : achats (SOL) | Nouveaux acheteurs |
 |---|---|---|---|
 | avant_pmarca | 5 330,66 | 5 327,01 | 1 450 |
 | pmarca_a_winig | 815,06 | 818,71 | 89 |
-| fenetre_musk [19:03:27 ; 19:27:24) | 148,73 | **39,87** | 12 |
-| musk_plus_1h | 5 377,61 | 5 378,23 | 481 |
-| reclassé [19:27:24 ; 19:30:13) | — | 108,86 (26 achats, 24 wallets) | 6 |
-| partie finale de fenetre_musk [19:23:20 ; 19:27:24) | — | 36,58 | 11 |
+| fenetre_musk [19:03:27 ; 19:25:23) | 148,73 | **20,85** (13 achats) | 8 |
+| musk_plus_1h | 5 377,61 | 5 347,29 | 476 |
+| reclassé [19:25:23 ; 19:30:13) | — | 127,88 (44 achats, 39 wallets) | 10 |
+| dont [19:25:23 ; 19:27:24), avant la capture @AutismCapital | — | 19,02 | 4 |
+| partie finale de fenetre_musk [19:23:20 ; 19:25:23) | — | 17,56 | 7 |
 
-- 108,86 SOL d'achats passent de « indécidable » à « après la borne haute ». Les 33 swaps sont listés dans `data/trades_1927_1930.csv`.
-- La capitalisation passe de 871 k$ (19:27:24) à 1,26 M$ (19:30:13) : la hausse commence après le post d'@AutismCapital.
-- Avant l'avatar, dans la fenêtre documentée, il reste 39,87 SOL d'achats, dont 3,29 SOL avant le téléversement probable de l'image (19:23:20, B).
-- `data/windows.csv`, `data/events.json` et `docs/TIMELINE.md` sont régénérés.
+- 127,88 SOL d'achats passent de « indécidable » à « après la borne haute ». Les 53 swaps sont listés dans `data/trades_1925_1930.csv`.
+- Capitalisation au cours du pool : 834 k$ à 19:23:20, 773 k$ à 19:25:23, 871 k$ à 19:27:24, 1,26 M$ à 19:30:13. La hausse suit les premières captures publiques.
+- Avant la première capture, il reste 20,85 SOL d'achats, dont 3,29 SOL avant le téléversement probable de l'image (19:23:20, B).
+- `data/windows.csv`, `data/events.json` et `docs/TIMELINE.md` sont régénérés. `musk_borne_haute` vaut 19:25:23 ; `musk_capture_autismcapital` (19:27:24) et `musk_borne_haute_bailey` (19:30:13) sont gardés pour la sensibilité.
 - Deux fenêtres dont les bornes n'ont pas bougé changent aussi : `retrait_plus_7j` (106 081 → 102 944 SOL) et `butler_oct`. L'ancien fichier précédait la déduplication du 06/11 (PR #19). Ce n'est pas un effet des bornes.
 
 ## 3. Affirmations de @JeffroBTC (A3)
@@ -120,6 +123,7 @@ Post `1815291249102119198`, 22/07/2024 07:42:14 ; texte long intégral dans `dat
 
 **Les trois satellites**
 - Chaque abréviation est résolue par préfixe et suffixe parmi les destinations SOL de 7GVC et 9Sxm : une seule adresse à chaque fois, sinon le script s'arrête.
+- Contrôle indépendant : le commentaire de Jeffro `1815291795787690478` (22/07 07:44:25, réponse à son post, signalé par la passe 2, N01) donne les cinq adresses complètes. Elles sont identiques aux cinq de ce rejeu.
 
 | Satellite | Financement par 7GVC | 1er achat DMAGA | DMAGA achetés | Prix moyen | Jeffro |
 |---|---|---|---|---|---|
@@ -379,6 +383,7 @@ Sources : `h53_h3qs.py`, `data/h3qs_by_mint.csv` et `data/h3qs_rotations.csv`. L
 
 **Autres limites**
 - Cours en dollars : clôture SOLUSDT Binance de la minute.
+- Pistes de la passe 2 (`docs/historical/pass2/`, fusionnée pendant ce rejeu) non traitées : N03 (BILLY), N08 (troncature des % de Noah), N11 (BARRON), N12 (arbitrage atomique), N13 (ventes Hasten), N15 (suivi d'A1UD jusqu'au 5 août). N01 et N07 sont intégrées (§2, §3) ; N04-N06 rejoignent §1 et §6.
 - Non traités : A8 (BOSSIE), A9 (appel de @CristusVictor, original retrouvé et archivé : `data/x_hist_posts.jsonl`), A10 (affirmation d'octobre), A12 (homonyme Ethereum), B9.
 
 ## 10. Pistes ouvertes

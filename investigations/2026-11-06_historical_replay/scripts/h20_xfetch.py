@@ -29,6 +29,8 @@ def get(i, name, url):
         b = _get(url)
     except urllib.error.HTTPError as e:
         return e.code, None
+    except urllib.error.URLError as e:  # source muette : notée dans fx_http / synd_http, l'autre source reste lue
+        return f"error:{e.reason}", None
     (OUT / f"{i}.{name}.json").write_bytes(b)
     return 200, json.loads(b)
 
@@ -41,10 +43,13 @@ if __name__ == "__main__":
     if path.exists():
         rows = {json.loads(l)["requested_id"]: json.loads(l) for l in path.open()}
     for i in ids:
-        if i in rows:
-            continue
-        fc, fx = get(i, "fx", f"https://api.fxtwitter.com/i/status/{i}")
-        sc, sy = get(i, "synd", f"https://cdn.syndication.twimg.com/tweet-result?id={i}&token={_token(i)}&lang=en")
+        # une réponse brute déjà reçue n'est pas redemandée : la ligne se reconstruit toujours depuis les fichiers
+        got = {}
+        for name, url in (("fx", f"https://api.fxtwitter.com/i/status/{i}"),
+                          ("synd", f"https://cdn.syndication.twimg.com/tweet-result?id={i}&token={_token(i)}&lang=en")):
+            f = OUT / f"{i}.{name}.json"
+            got[name] = (200, json.loads(f.read_bytes())) if f.exists() else get(i, name, url)
+        (fc, fx), (sc, sy) = got["fx"], got["synd"]
         t = (fx or {}).get("tweet") or {}
         sy = sy if (sy and sy.get("created_at")) else {}
         ret = {x for x in (t.get("id"), sy.get("id_str")) if x}
@@ -61,5 +66,4 @@ if __name__ == "__main__":
             "fx_http": fc, "synd_http": sc, "fetched_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         }
         print(i, rows[i]["relation"], rows[i]["author"], rows[i]["created_utc_metadata"], flush=True)
-        time.sleep(1)
     path.write_text("".join(json.dumps(rows[k], ensure_ascii=False) + "\n" for k in sorted(rows)))
