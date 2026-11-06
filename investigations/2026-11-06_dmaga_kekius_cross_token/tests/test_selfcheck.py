@@ -91,6 +91,23 @@ class Solana(unittest.TestCase):
         init = rec("3hpRnD1mQ9LwfjkdwMFoP7RX2aEp3Z3GJoA9ipriyQGPKrs3v7bdj2bvwLLRNXcfBSwuqG5r55GqMvSNz7tTi5RR")
         self.assertEqual(xc["blockTime"] - init["blockTime"], 1)
 
+    def test_xc78_operator_funding(self):
+        idx = json.loads((REC / "INDEX.json").read_text())
+        ops = "3oqARBNDr56L2oWQ9aR2QzS7FeTMEubd8J2v29wP5N58"
+        got = {}
+        for sig, why in idx.items():
+            if "3oqARBND" in why:
+                t = rec(sig)
+                got[utc(t["blockTime"])] = sol_deltas(t)
+        self.assertEqual(got["2024-12-29 16:31:42"][GO5], 70_060_000_000)
+        self.assertEqual(got["2024-12-30 11:26:46"][ops], 11_916_477_761)
+        self.assertEqual(got["2024-12-30 18:21:24"][ops], 1_975_732_039)
+        self.assertEqual(got["2024-12-23 19:14:41"][ops], 86_082_111_120)
+        fee = "C6UEzXJcTqqJHpAGUts2tA4s6E7MS5KoPzzfsrT6qCpL"
+        r1 = got["2024-12-30 11:26:46"][fee] / got["2024-12-30 11:26:46"][ops]
+        r2 = got["2024-12-30 18:21:24"][fee] / got["2024-12-30 18:21:24"][ops]
+        self.assertEqual((round(r1 * 100, 3), round(r2 * 100, 3)), (6.957, 6.961))
+
 
 class Ethereum(unittest.TestCase):
     @classmethod

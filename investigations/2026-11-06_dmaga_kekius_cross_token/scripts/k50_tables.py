@@ -70,6 +70,21 @@ for s, amt in [("3kXEwKY5A9Givucjcd59n77qRWwoj4J8sgBPTtxMm8Ey5SLVGuAACFhuU2nueM6
     fg.append(["DQmMnakiKr1YNE2gcpggLCzBrauBwFbQkAaao2FTbjgp", "FJkb8WnWocfuQYj4v4vg5VpZoST3LebjQk8WpuD7VbgC", "solana", "SOL", amt,
                utc(t["blockTime"]), s, "transfert système, avant l'achat DMAGA de FJkb8WnW (14/07/2024 02:15:33)", "CONFIRMÉ", "directe",
                "evidence/receipts ; FINDINGS §6"])
+OPS = "3oqARBNDr56L2oWQ9aR2QzS7FeTMEubd8J2v29wP5N58"
+idx = json.loads((EVID / "receipts" / "INDEX.json").read_text())
+for sig, why in idx.items():
+    if "3oqARBND" not in why:
+        continue
+    t = rec(sig)
+    sd = sol_deltas(t)
+    payers = [a for a, v in sd.items() if v < 0 and a in signers(t)]
+    for dst, v in sd.items():
+        if v <= 0 or dst in payers or v < 10**8:
+            continue
+        nat = "frais prélevés à un taux presque constant (6,957 % et 6,961 % du montant reçu par 3oqARBND) : service probable" if dst.startswith("C6UEzXJc") else why
+        fg.append(["+".join(payers), dst, "solana", "SOL", repr(v / 1e9), utc(t["blockTime"]), sig, nat, "CONFIRMÉ",
+                   "rompue en amont : FBwXQAEb non étiqueté, plus de 2 000 tx en 12 jours" if dst == OPS and "FBwXQAEb" in why else "directe",
+                   "evidence/receipts ; FINDINGS §4"])
 EVM = [  # (src, dst, tx, nature, traçabilité) : montant et heure relus dans data/eth_history ou evidence/blockscout_*.json
     ("0x016606acc6b0cfe537acc221e3bf1bb44b4049ee", "0xaa4f58e9aafd36b4b6446f6dc417c02908641a7c", "0x771dc8d4f1907a3eef0e674f975bb6815de648c30f7889f086f97395c8fdad7a", "seul financement du créateur du KEKIUS Ethereum", "rompue : portefeuille chaud ChangeHero"),
     ("0x98db3a41bf8bf4ded2c92a84ec0705689ddeef8b", "0x33a57f4e88c9ceb0788eb41a407e51533d70cc4d", "0x82644cf71a54d3b0984ccd08444589198afcd3ef5fc7fa24698966e546ec043e", "premier apport", "rompue : Ramp Network (rampe fiat)"),

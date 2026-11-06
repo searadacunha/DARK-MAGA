@@ -60,8 +60,14 @@ Slot de création 310594124 (16:33:45), puis slot 310594130 (16:33:48). Reçus f
    - 8C9utWVQ, CF7MA2t9.
 3. **CONFIRMÉ** : dans le même slot, 4 transactions **co-signées chacune par 4 wallets** achètent 673,91 M jetons (67,4 %) pour 16 wallets. Les 10 bénéficiaires du point 2 en font partie. Payeurs des frais : `DcxRmDYU…`, `3EcUR1sZ…`, `8C9utWVQ…`, `BmeKXuaj…`.
 4. **CORROBORÉ, contrôle commun** de Go5 et de ces 16 wallets : Go5 paie 10 d'entre eux dans sa propre transaction. Signer à quatre une même transaction suppose que les clés étaient réunies au moment de la construire. Six des 16 acheteurs n'ont pas reçu de SOL de Go5 dans cette transaction : les 4 du groupe payé par `BmeKXuaj…`, plus `A7ZxBfBx…` et `7qnbEYhM…` du groupe payé par `8C9utWVQ…`. Leur financement est **NON VÉRIFIÉ**.
-5. **NON VÉRIFIÉ** : un lien entre le créateur `9dtGg97Q…` et Go5.
-6. Ce montage (achat bloquant au slot de création, puis redistribution vers des wallets qui rachètent) est un schéma de lancement groupé. Il ne dit rien d'une connaissance du changement de profil de Musk, qui intervient 37 heures plus tard.
+5. **NON VÉRIFIÉ** : un lien entre le créateur `9dtGg97Q…` (1 839 tx depuis mars 2024) et Go5 ou `3oqARBND…`.
+6. **CONFIRMÉ, financement de l'opération** : Go5 est un wallet neuf (24 tx en tout).
+   - `3oqARBNDr56L2oWQ9aR2QzS7FeTMEubd8J2v29wP5N58` le crédite de 70,06 SOL à 16:31:42, 2 minutes avant la création.
+   - Le 30/12, les fonds reviennent à `3oqARBND…` : 11,916 SOL dans une tx co-signée par Go5, `5S1wWxWZ…` et `2sGCJ7Z3…`, puis 1,976 SOL de Go5.
+   - Chaque retour verse des frais à `C6UEzXJcTqqJHpAGUts2tA4s6E7MS5KoPzzfsrT6qCpL`, à un taux presque constant (6,957 % et 6,961 %) : service probable.
+   - `3oqARBND…` naît le 23/12/2024 avec 86,08 SOL de `FBwXQAEb…`. Cette adresse n'a pas d'étiquette mais fait plus de 2 000 transactions en 12 jours : service probable, **traçabilité rompue**. `3oqARBND…` redistribue ensuite ses fonds à de nombreux wallets (16 virements le 25/12) et compte 4 386 tx jusqu'en 2026 : profil d'opérateur de lancements en série.
+   - `3oqARBND…`, `5S1wWxWZ…`, `2sGCJ7Z3…`, `C6UEzXJc…`, `FBwXQAEb…` et le payeur `43TVSaqF…` n'apparaissent dans **aucune** table DMAGA (wallets, financements, sorties, nœuds) : **aucun lien DMAGA trouvé** pour cet opérateur.
+7. Ce montage (achat bloquant au slot de création, puis redistribution vers des wallets qui rachètent) est un schéma de lancement groupé. Il ne dit rien d'une connaissance du changement de profil de Musk, qui intervient 37 heures plus tard.
 
 KM (10/12) : 133 acheteurs sur la courbe en 2 min 01 s. Les 100 premiers (`data/sol_first100_buyers_KM.csv`) n'ont que 2 tx co-signées, et aucune redistribution de ce type n'a été cherchée en détail (`UNRESOLVED.md`).
 
@@ -86,7 +92,15 @@ Recalculé depuis les transferts et la jambe WETH des pools (test `test_0x33a5_p
 Créateur du KEKIUS Ethereum :
 - `0xaa4f58e9…` est financé une seule fois, 1,47295009 ETH le 14/11/2024 depuis un portefeuille chaud ChangeHero : service d'échange, traçabilité rompue.
 - Il apporte 1 ETH de liquidité, ouvre le trading puis renonce à la propriété en 1 min 24 s.
-- 50 adresses achètent dans le bloc d'ouverture. Leur lien avec le créateur n'a pas été cherché.
+- 50 adresses achètent dans le bloc d'ouverture.
+  - 44 n'ont reçu aucun ETH par une tx directe avant ce bloc : financement par transaction interne, ou adresses de destination de bots.
+  - Les 6 autres ont pour premier financeur un portefeuille chaud Binance (4) ou une adresse non étiquetée (2) (`data/eth_open_block_funders.csv`).
+  - Aucune n'est financée par le créateur. Le financement des 44 n'est **pas résolu**.
+
+Plus gros vendeur sans achat : `0xb1b2d032aa2f52347fbcfd08e5c3cc55216e8404` vend 32,25 M contre 1 424,10 ETH jusqu'au 04/01.
+- **CONFIRMÉ** : ses jetons viennent de retraits d'exchanges : MEXC 21 (23,42 M dès le 29/12, tx `0x68c52712…`), Gate.io (10,16 M le 02/01) et CoinEx 26 (1,60 M le 31/12).
+- Profil d'arbitrage entre exchanges et DEX, ou de teneur de marché. **Traçabilité rompue** chez les exchanges.
+- Aucun lien avec DMAGA.
 
 ## 6. Un lien DMAGA ↔ XC78 qui passe par un opérateur de bot
 
