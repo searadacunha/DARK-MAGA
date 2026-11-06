@@ -35,10 +35,11 @@ def raw6(s): return int((Decimal(s) * 10 ** 6).to_integral_value())
 
 def fill_taint(relay_traced=False):
     """tx d'exécution Base -> (min_num, max_num, den, tx Ethereum) : part de b947 de l'ordre Ethereum payé par b298.
-    relay_traced : bornes basses de s15 (relais tracé, pire cas propre à chaque ordre) au lieu de celles de s51 (relais = b947)."""
+    relay_traced : bornes basses du relais tracé (s51 corrigé le 06/11, égales à s15) ; sinon bornes sous H (relais = b947), recalculées
+    par s15 avec la règle de la première version de s51. Les bornes hautes sont les mêmes dans les deux cas."""
     s51 = {r["tx_hash"].lower(): r for r in rd(N.PREV / "evidence/s51_b298_usdc_bounds.csv")}
-    if relay_traced:
-        for r in rd(R / "evidence/s15_s51_corrected.csv"): s51[r["tx_hash"].lower()]["from_b947_min"] = r["from_b947_min_relay_traced"]
+    col = "from_b947_min_relay_traced" if relay_traced else "from_b947_min_under_H"
+    for r in rd(R / "evidence/s15_s51_corrected.csv"): s51[r["tx_hash"].lower()]["from_b947_min"] = r[col]
     eth = {r["orderId"].lower(): r for r in rd(N.PREV / "evidence/dln_orders_evm.csv")}
     out = {}
     for d in rd(R / "evidence/s12_dln_base.csv"):

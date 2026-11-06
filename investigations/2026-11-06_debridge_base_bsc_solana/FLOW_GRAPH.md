@@ -24,7 +24,7 @@ flowchart LR
     CB3["Coinbase GJRs4FwH…"] -->|"2,25 Md BONK 12/11"| EI5
     EI5 -->|"5,02 Md BONK 12/11"| GV2
     EI5 -->|"DCA 482 SOL → FvgqHM, tout le 18/11"| AE["2aeEoq5n… (neuf)"]
-    AE -->|"vente 393,81 SOL 20/11, réinvestie"| AE
+    AE -->|"vente 393,81 SOL nets 20/11, réinvestie"| AE
     EI5 -->|"1,55 SOL 08/04/2024"| D39["39dTXaMM… dépôt Coinbase"]
     HP2["Hp2BtvnZ…"] -->|"3,27 SOL 07/05/2024"| D39
     HP2 -->|"1,013 SOL 13/05/2024"| EI5
@@ -44,4 +44,4 @@ flowchart LR
   CBD -.->|"même jour, valeur comparable, non prouvé"| CB3
 ```
 
-Lecture de la frontière (`FINDINGS.md` §3) : o1 et o2 portent ensemble au moins 100 028,64 USDC de b947. La répartition entre la branche Coinbase et la branche MEXC dépend de la règle d'allocation au relais.
+Lecture de la frontière (`FINDINGS.md` §3) : o1 et o2 portent ensemble au moins 100 028,64 USDC venus de b947. La répartition entre la branche Coinbase et la branche MEXC dépend de la règle d'allocation au relais.

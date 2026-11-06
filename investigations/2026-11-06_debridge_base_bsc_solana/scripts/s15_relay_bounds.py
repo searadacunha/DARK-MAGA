@@ -5,7 +5,8 @@ s51 compte toute entrée venue du relais comme 100 % b947. Or b298 renvoie 100 0
 ensuite 100 000 USDC non marqués, qu'il peut rendre à b298 dans n'importe laquelle de ses sorties suivantes.
 
 Ce script, sans réseau, sur les historiques publiés du dossier précédent (b298_full_history.csv, relay_4978_history.csv) :
-1. rejoue s51 tel quel (relais = b947) et vérifie qu'il retrouve les 31 bornes publiées au micro-USDC près ;
+1. rejoue la règle H de la première version de s51 (relais = b947) : 31 bornes, 472 143,22 USDC de bornes basses en tout. s51 a été
+   corrigé le 06/11 (relais tracé) : ses bornes publiées doivent égaler celles de l'étape 2, calculées ici par un second code ;
 2. applique la même règle au relais (entrée de b298 marquée à sa borne basse), puis reporte les bornes du relais sur
    ses envois à b298 : bornes de chaque sortie prise seule (pire cas propre à cette sortie) ;
 3. borne commune aux deux ordres du 12/11/2024 (o1 = 0x4b7c7a2f vers Base, o2 = 0xca823779 vers BSC) : scénario S* où o1 et o2
@@ -64,12 +65,12 @@ def relay_split(R2, clean_by_tx):
 
 if __name__ == "__main__":
     R2 = b298_events(); RR = relay_events()
-    # 1. rejouer s51
-    pub = {r["tx_hash"].lower(): int(round(float(r["from_b947_min"]) * 10 ** 6)) for r in rd(EV / "s51_b298_usdc_bounds.csv")}
+    # 1. règle H (première version de s51) ; s51 publie désormais les bornes avec le relais tracé
+    pubr = rd(EV / "s51_b298_usdc_bounds.csv")
+    pub = {r["tx_hash"].lower(): int(round(float(r["from_b947_min"]) * 10 ** 6)) for r in pubr}
     rep = low(R2, s51_taint)
-    diff = [tx for tx, v in pub.items() if abs(rep[tx][1] - v) > 1]
-    assert not diff, f"s51 non reproduit : {diff[:3]}"
-    print(f"1. s51 reproduit : {len(pub)} bornes publiées retrouvées (écart <= 1e-6 USDC)")
+    assert len(pub) == 31 and sum(rep[tx][1] for tx in pub) == 472143218089, "règle H non reproduite"
+    print(f"1. règle H (relais = b947) : {len(pub)} sorties, bornes basses sommées {sum(rep[tx][1] for tx in pub) / 1e6:,.6f} USDC")
     # 2. le relais, même règle : entrées de b947 marquées, renvoi de b298 marqué à sa borne basse s51 (0)
     rel_taint = lambda r: int(r["amount_raw"]) if r["counterparty"] == B947 else (rep.get(r["tx_hash"].lower(), (0, 0))[1] if r["counterparty"] == B298 else 0)
     rel = low(RR, rel_taint)
@@ -79,18 +80,20 @@ if __name__ == "__main__":
     outs_rel = [r for r in RR if r["direction"] == "OUT"]
     clean_rel = {r["tx_hash"].lower(): int(r["amount_raw"]) - rel[r["tx_hash"].lower()][1] for r in outs_rel}
     corr = low(R2, relay_split(R2, clean_rel))  # chaque envoi du relais à son propre pire cas : bornes individuelles
+    diff = [tx for tx, v in pub.items() if abs(corr[tx][1] - v) > 1]
+    assert not diff, f"s51 corrigé (dossier précédent) et ce calcul divergent : {diff[:3]}"
+    print(f"   s51 corrigé = relais tracé ici : {len(pub)}/{len(pub)} bornes basses (écart <= 1e-6 USDC)")
     rows = []
     for r in outs_rel:
         tx = r["tx_hash"].lower(); x, lo = rel[tx]
-        rows.append(dict(utc=r["timestamp_utc"], tx=tx, wallet="relay", amount=x / 1e6, from_b947_min=lo / 1e6, s51_assumed=x / 1e6))
+        rows.append(dict(utc=r["timestamp_utc"], tx=tx, wallet="relay", amount=x / 1e6, from_b947_min=lo / 1e6, under_H=x / 1e6))
     for tx in (O1, O2):
         x = corr[tx][0]
-        rows.append(dict(utc="2024-11-12", tx=tx, wallet="b298", amount=x / 1e6, from_b947_min=corr[tx][1] / 1e6, s51_assumed=rep[tx][1] / 1e6))
+        rows.append(dict(utc="2024-11-12", tx=tx, wallet="b298", amount=x / 1e6, from_b947_min=corr[tx][1] / 1e6, under_H=rep[tx][1] / 1e6))
     N.write_csv(N.ROOT / "evidence/s15_relay_bounds.csv", rows)
-    pubr = rd(EV / "s51_b298_usdc_bounds.csv")
     N.write_csv(N.ROOT / "evidence/s15_s51_corrected.csv", [dict(utc=r["utc"], tx_hash=r["tx_hash"], amount=r["amount"], dln_dest=r["dln_dest"],
-                label=r["label"][:40], from_b947_min_s51=r["from_b947_min"], from_b947_min_relay_traced=corr[r["tx_hash"].lower()][1] / 1e6) for r in pubr])
-    for r in rows[-2:]: print(f"   ordre {r['tx'][:10]} : {r['amount']:,.6f} USDC, borne basse seule {r['from_b947_min']:,.6f} (s51 : {r['s51_assumed']:,.6f})")
+                label=r["label"][:40], from_b947_min_under_H=rep[r["tx_hash"].lower()][1] / 1e6, from_b947_min_relay_traced=corr[r["tx_hash"].lower()][1] / 1e6) for r in pubr])
+    for r in rows[-2:]: print(f"   ordre {r['tx'][:10]} : {r['amount']:,.6f} USDC, borne basse seule {r['from_b947_min']:,.6f} (sous H : {r['under_H']:,.6f})")
     # 3. borne commune : non-marqué du relais réparti entre ses sorties vers b298, o1 et o2 puisant d'abord dans le non-marqué
     t_in = max(r["timestamp_utc"] for r in ins if r["counterparty"] == B298)   # le non-marqué n'existe qu'après le renvoi de b298
     after = [r for r in outs_rel if r["timestamp_utc"] > t_in]
@@ -110,6 +113,6 @@ if __name__ == "__main__":
             if best is None or tot < best[0]: best = (tot, s[O1][1], s[O2][1], {k[:10]: v / 1e6 for k, v in a.items() if v})
     J = dict(orders=[O1, O2], amounts=[corr[O1][0] / 1e6, corr[O2][0] / 1e6], joint_min_from_b947=best[0] / 1e6,
              at_allocation=best[3], o1_marked=best[1] / 1e6, o2_marked=best[2] / 1e6, relay_unmarked_max=C_relay / 1e6,
-             s51_individual=[rep[O1][1] / 1e6, rep[O2][1] / 1e6], corrected_individual=[corr[O1][1] / 1e6, corr[O2][1] / 1e6])
+             under_H_individual=[rep[O1][1] / 1e6, rep[O2][1] / 1e6], corrected_individual=[corr[O1][1] / 1e6, corr[O2][1] / 1e6])
     (N.ROOT / "evidence/s15_joint_bound.json").write_text(json.dumps(J, indent=1) + "\n")
     print(f"3. borne commune : marqué(o1) + marqué(o2) >= {best[0] / 1e6:,.6f} USDC, atteinte avec {best[3]} (o1 {best[1] / 1e6:,.6f}, o2 {best[2] / 1e6:,.6f})")

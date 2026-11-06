@@ -1,4 +1,5 @@
-"""CROSSCHAIN_LINKS.csv : chaque ordre DLN qui touche b298, 0x2ac17414 ou Ei5yGz8d, relié des deux côtés par son orderId
+"""CROSSCHAIN_LINKS.csv : les ordres DLN entre Base et Ethereum, d'Ethereum et de Base vers Ei5yGz8d, et l'aller-retour BSC de b298
+(88 liens), reliés des deux côtés par son orderId. Les autres ordres de ces wallets sont dans dln_orders_evm.csv du dossier précédent.
 (journal CreatedOrder/FulfilledOrder sur EVM, « Order Id » dans les logs Solana). Aucun rapprochement par montant ou par heure.
 Les reçus Ethereum des fills manquants sont relus (RPC public, cache)."""
 import csv, sys, os, json

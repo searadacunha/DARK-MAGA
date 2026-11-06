@@ -48,7 +48,7 @@ python3 -I s99_selfcheck.py      # 37 assertions, réseau coupé, sur evidence/ 
 ../../../scripts/py.sh s52_lp_check.py   # optionnel, scipy : bornes de s51 recoupées par un programme linéaire exact
 python3 -I s98_verify_refs.py    # réseau requis : relit sur la chaîne chaque hash et signature de FINDINGS.md
 ```
-Les deux passaient dans un clone neuf de cette branche le 05/11, sous Python 3.12 et 3.14. `s98` a besoin d'un accès Helius pour les 9 signatures Solana. Après les corrections du 06/11 : voir l'entrée du 06/11 de `JOURNAL_AGENTS.md` à la racine.
+Les deux passaient dans un clone neuf de cette branche le 05/11, sous Python 3.12 et 3.14. `s98` a besoin d'un accès Helius pour les 9 signatures Solana. Le 06/11, après les corrections : `s99` (37 contrôles) passe dans un clone neuf sous Python 3.12 et 3.14 ; `s98` relit 50 références Ethereum et 9 signatures Solana, 0 échec, depuis le cache (un seul reçu lu sur le RPC public) ; `s52_lp_check.py` passe avec scipy 1.18.
 
 ## Reproduire la collecte (réseau)
 Depuis `scripts/`, avec un cache local par défaut dans `../raw/`, ignoré par git :

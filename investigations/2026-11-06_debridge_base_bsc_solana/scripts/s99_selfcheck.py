@@ -78,8 +78,8 @@ check(sum(1 for r in rd("CROSSCHAIN_LINKS.csv") if r["level"] == "VERIFIED") == 
 # Bornes de provenance, corrigées après audit (s15, s16, s17) : soldes archive en cache, chaîne exacte, relais tracé
 import s15_relay_bounds as S15, s16_mexc_chain_bound as S16, s17_joint_destinations as S17
 J = json.loads((R / "evidence/s15_joint_bound.json").read_text())
-check(J["corrected_individual"] == [46.814553, 0.0] and J["s51_individual"] == [100046.825553, 99981.823743],
-      "relais tracé : o1 >= 46,814553 USDC de b947 (s51 : 100 046,825553), o2 >= 0 (s51 : 99 981,823743)")
+check(J["corrected_individual"] == [46.814553, 0.0] and J["under_H_individual"] == [100046.825553, 99981.823743],
+      "relais tracé : o1 >= 46,814553 USDC de b947 (sous H : 100 046,825553), o2 >= 0 (sous H : 99 981,823743)")
 check(abs(J["joint_min_from_b947"] - 100028.638296) < 1e-6, "borne commune : o1 + o2 portent au moins 100 028,638296 USDC de b947, quelle que soit l'allocation")
 m = S16.chain(99981823743); ms = S16.chain(99981823743, strict=True)
 check(abs(m["marked_deposit_usdc_min"] - 100027.93) < 0.01 and abs(ms["marked_deposit_usdc_min"] - 99383.28) < 0.01,

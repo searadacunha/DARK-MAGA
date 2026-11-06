@@ -32,14 +32,14 @@ Une **borne** est une quantité minimale garantie pour *toute* règle d'allocati
 |---|---|
 | « Au moins 23,7486 ETH des 24 ETH déposés chez Coinbase viennent de b947 » | **Sous H** : au moins 23,748588117 ETH. La valeur publiée incluait 459,67 gwei de frais. **Sans hypothèse** : 0 (§3) |
 | « Au moins 100 067,30 USDC (54,82 %) des 182 548,80 USDC déposés chez MEXC viennent de b947 » | **Sous H** : au moins 100 027,93 USDC (54,80 %) au prorata, 99 383,28 USDC (54,44 %) en attribution stricte par pool. **Sans hypothèse** : 0 (§3) |
-| Les deux bornes ensemble | **Nouveau, sans hypothèse** : les deux ordres du 12/11 portent ensemble au moins **100 028,638296 USDC** de b947, et les deux bornes ne peuvent pas être nulles en même temps (§3) |
+| Les deux bornes ensemble | **Nouveau, sans hypothèse** : les deux ordres du 12/11 portent ensemble au moins **100 028,638296 USDC venus de b947**, et les deux bornes ne peuvent pas être nulles en même temps (§3). Si l'on ne marque que l'USDC des exécutions deBridge reçues par b947 : au moins 50 015,307517 |
 | « La dernière part (BONK) est exacte » | C'est un prorata. La vente passe par trois pools à des prix différents : en strict, 0,547621 au lieu de 0,551168 |
-| 87 liens deBridge | **88** : l'ordre `0x1596c70d…` (06/08/2024), exécuté par un solver tiers, manquait. Les 88 sont authentifiés par l'orderId recalculé |
+| 87 liens deBridge | **88** : l'ordre `0x1596c70d…` (06/08/2024), exécuté par un solver tiers, manquait. Les 88 sont authentifiés par l'orderId recalculé. Ce sont les 88 liens construits par `s52_links.py` : ordres entre Base et Ethereum, ordres d'Ethereum et de Base vers `Ei5yGz8d`, aller-retour BSC. Les 11 autres ordres exécutés de b298 et b947, dont les 9 d'`Ei5yGz8d` vers Ethereum, sont au dossier précédent (`dln_orders_evm.csv`) |
 | 19 ordres DLN d'`Ei5yGz8d`, plus un vingtième échoué | **18 ordres réussis et 1 échoué** (refait 16 s plus tard) |
 | `E72DuqDL` : 94,96 SOL en 18 virements | **95,061118054 SOL en 20 virements**. Le seuil de 0,1 SOL omettait deux envois, ainsi que `2aeEoq5n` et `Gcyg2jeL` |
 | 289,03 SOL « produit des ventes » rendus à `Ei5yGz8d` | Le retour inclut 1,0 SOL de gaz. Revenu net des ventes : **288,029811170 SOL** |
 | 06/11 : « 34,00 SOL → Jupiter DCA » | 33,00 SOL déposés, **10,56 exécutés**, 22,44 rendus 65 min plus tard |
-| 17/11 : DCA de 482 SOL, destination inconnue | **Nouveau** : tout le FvgqHM acheté part vers un wallet neuf, `2aeEoq5n`, qui le vend 393,81 SOL (§7) |
+| 17/11 : DCA de 482 SOL, destination inconnue | **Nouveau** : tout le FvgqHM acheté part vers un wallet neuf, `2aeEoq5n`, qui le vend 393,81 SOL nets (§7) |
 | HIGHER = `0xbf0533…` (`NEXT_STEPS.md`) | Faux : ce jeton date de mai 2024. Le HIGHER de novembre est `0x0578d8a44db98b23bf096a382e016e29a5ce0ffe` |
 | Soldes Ethereum relevés à la main | Remplacés par des lectures d'état archive en cache, publiées en fixtures. Les écarts étaient de −4, −3 272 et +5 wei |
 
@@ -121,11 +121,13 @@ Une **borne** est une quantité minimale garantie pour *toute* règle d'allocati
   - 19:25:11, b298 reçoit 100 088,752857 USDC de Rizzolver (UniswapX), produit d'une vente ;
   - 19:28:35, b298 renvoie 100 000 USDC au relais.
 - **La contradiction de s51** : s51 donne lui-même **0** comme borne basse de la part b947 de ce renvoi, mais compte ensuite toute sortie du relais vers b298 comme 100 % b947. Au pire cas, le relais détient 100 000,011 USDC non marqués, qu'il peut rendre dans n'importe laquelle de ses sorties suivantes.
-- **s51 rejoué tel quel** : 31 bornes sur 31 retrouvées au micro-USDC près. Avec le relais tracé selon la même règle :
-  - o1 : au moins **46,814553 USDC** de b947 (s51 : 100 046,825553) ;
-  - o2 : au moins **0** (s51 : 99 981,823743) ;
-  - les bornes basses de s51 sommées passent de 472 143,22 à 137 938,74 USDC (`evidence/s15_s51_corrected.csv`). C'est une correction à apporter à la PR #15, qui n'est pas modifiée ici.
-- **Borne commune sans hypothèse** : le non-marqué du relais est réparti de toutes les façons possibles entre ses sorties (pas de 1 %), o1 et o2 puisent d'abord dans le non-marqué. Dans toute allocation, **o1 et o2 portent ensemble au moins 100 028,638296 USDC de b947**. L'audit EVM trouve le même chiffre par un autre code.
+- **Première version de s51, rejouée** : sa règle (relais = b947) redonne ses 31 bornes. Avec le relais tracé selon la même règle :
+  - o1 : au moins **46,814553 USDC** de b947 (sous H : 100 046,825553) ;
+  - o2 : au moins **0** (sous H : 99 981,823743) ;
+  - les bornes basses sommées passent de 472 143,22 à 137 938,74 USDC (`evidence/s15_s51_corrected.csv`).
+  - **s51 est corrigé en conséquence** (dossier précédent, `FINDINGS.md` §10) : ses 31 bornes publiées égalent celles de `s15`, calculées par un second code (assertion dans `s15`), et l'optimum d'un programme linéaire exact (`s52_lp_check.py` du dossier précédent).
+- **Borne commune sans hypothèse** : le non-marqué du relais est réparti de toutes les façons possibles entre ses sorties (pas de 1 %), o1 et o2 puisent d'abord dans le non-marqué. Dans toute allocation, **o1 et o2 portent ensemble au moins 100 028,638296 USDC venus de b947**. L'audit EVM trouve le même chiffre par un autre code ; le dossier précédent le démontre directement (`s51_bounds.py`, `joint_min`) et le recoupe par programme linéaire.
+  - b947 n'a jamais détenu de DMAGA. Sur les 434 291,32 USDC qu'il envoie, 384 277,99 viennent des exécutions deBridge des makers DMAGA, 50 003,33 de b298 et 10 d'un sosie. En ne marquant que les premiers, la borne commune est d'au moins **50 015,307517 USDC**. Les seuils de nullité ci-dessous (23 492,94 USDC au plus) restent en dessous : les deux bornes ne peuvent pas non plus être nulles ensemble sous ce marquage.
 - **Frontière entre les deux destinations** :
 
 | Non-marqué du relais placé dans l'envoi qui paie o2 | Part b947 de o1 / o2 (USDC) | 24 ETH vers Coinbase | Dépôt MEXC (prorata / strict) |
@@ -191,17 +193,18 @@ Adresse complète : `0x2ac17414e34c9a1f70f6eadb6230fa503301e878`.
 | 01:51:56 → 02:30:13 | DCA `G1fC4VgkodbFbsEwV8k8mzb2cMkngfqpiCNMGRZkCwvU` : 482,000000000 SOL → 3 018 194,265441 `FvgqHMfL9yn39V79huDPy3YUNDoYJpuLWng2JfmQpump`, 35 exécutions ; `Ei5yGz8d` n'en détenait pas avant | ouverture `4ZsTdUCfERWjfWgkEdiD24RnYujrc1DsPJjoKax2dGgBNvBphrppYnwJeSdhYt6WeYqaQAqN2gNe5FvKC6PzFjq2`, clôture `JV9unw1Cc11X9tB4Egq4butjHYNar5KhbriMcwsxxuXFLM91tkmbkAuHCvKLaesuLLgQkQjBbhZynUpn9Gq4Z6B` |
 | 18/11 18:26:29 | `Ei5yGz8d` → `2aeEoq5n8Cip2raJsiWHBVKuoJL4rid7adepkVYnVzDm`, 0,025808220 SOL, première tx du wallet | `4WfkDUmKQzAvsNA3SAp6rUWiNtW53ecTwvQ3dp6pAf4CteFdoWdrJMipTgt5xgiraGcW1f7E3RvkXdz2e3x57M8S` |
 | 18:26:55 (26 s après) | **tout le FvgqHM du DCA**, 3 018 194,265441, vers `2aeEoq5n` | `3ZousK8fdGScWUYDbfNdVWHKQdVhFCczi23tyPwBnAJnD4aA375qS9MrsW9xfNM8Smn9wsrfJ8z8UFruHg9GuyUx` |
-| 20/11 23:41:00 | `2aeEoq5n` vend tout en une tx : +393,812873522 SOL | `sJyecugFxKoMBwaRgEEsDC5W14G7qj399iLueQFNUiG6S9rjShTmmkRjU5RxCahpkxpaBykyhoeyppd9XGcyZfP` |
+| 20/11 23:41:00 | `2aeEoq5n` vend tout en une tx : +393,812873522 SOL nets (397,189388322 en sortie du pool, moins une commission de 3,376109800 SOL, 0,85 %, et 0,000405 de frais) | `sJyecugFxKoMBwaRgEEsDC5W14G7qj399iLueQFNUiG6S9rjShTmmkRjU5RxCahpkxpaBykyhoeyppd9XGcyZfP` |
 | 21/11 00:54:40 → 05:12:51 | DCA `fAW4DxfedJY5nmDtiSXJ27j9dT9h1sPS1voqpJApSWv` : 393,000000000 SOL → 3 650 704,976691 `8tSeXYSXzFvaDX1nbWrEFFaFuPHuWqpzksKYxQPvpump`, 250 exécutions | `5vpv7XatzhbYcmis4U8AigGCx3N4BrVhiPtb2tdHY4hAQVNEsqc4Td4yMvgfwjfyrYQqHRreHAirjvbFAvv1JHB1`, `2kNiyhDKuAToAJGan6N1VCc1tmrHU7RWHCh8Y3JQL3LztzqPyhGd94HyxV7ahPNKLvenZF6ivc8xWQdKGmqxLaiw` |
-| 22/11 → 04/01/2025 | ventes du 8tSeXY (dont +92,1096 SOL le 22/11), puis trading de mèmes. Le wallet finit à 0 | `data/sol_2aeEoq5n_txs.csv` |
+| 22/11 → 04/01/2025 | ventes du 8tSeXY (dont +92,1096 SOL le 22/11, sur une position complétée le même jour par un achat de 17,0 SOL), puis trading de mèmes. Le wallet finit à 0 SOL | `data/sol_2aeEoq5n_txs.csv` |
 
 - **Provenance** :
   - au moins 99,996 % du dépôt DCA vient de l'exécution b298 du 17/11 ;
   - le FvgqHM transféré est exactement la sortie de ce DCA ;
-  - les 393,81 SOL de la vente sont donc des fonds de b298.
+  - les 393,81 SOL de la vente proviennent donc, pour au moins 99,996 %, de l'exécution b298 du 17/11.
   - La part b947 de l'ordre `0xdf0b6cf7` n'est pas bornée : cet ordre donne de l'ETH, et l'historique Ethereum publié n'a pas les frais de gaz nécessaires au modèle par actif (`UNRESOLVED.md` §4).
 - **Retours** :
-  - 2,876076839 SOL à `Ei5yGz8d` (3 virements), 2,0 SOL à `E72DuqDL`, 0,51238 SOL à `25mYnjJ2…` ;
+  - 2,876076839 SOL à `Ei5yGz8d` (3 virements) et 2,0 SOL à `E72DuqDL` ;
+  - les 0,51238 SOL versés à `25mYnjJ2…` ne sont pas un retour : ce sont 13 commissions d'environ 0,85 % prélevées dans des achats passés par le routeur `6m2CDdhR…` ;
   - une exécution deBridge de b298 vers `2aeEoq5n` le 24/11 (0,2114 ETH → 2,791 SOL), déjà au dossier précédent.
   - Le produit n'est pas reconsolidé : il est réinvesti, puis perdu en grande partie.
 - **Le mécanisme se répète** : wallet neuf financé par `Ei5yGz8d` dans la minute, qui reçoit une position entière et la vend.
