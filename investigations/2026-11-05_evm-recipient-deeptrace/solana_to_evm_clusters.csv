@@ -4,7 +4,7 @@ evm_destination,take_chain,solana_maker,n_orders,usd_total,first_utc,last_utc,so
 0x21f3a0e26d33cb48e114c4f58019463cc79799fd,8453,DfYyxDNEXBzZWVPuJrNfko1rDrtR8SiqWLeGUMmNn8DT,2,2415.59,2024-05-21 22:17:10,2024-05-25 20:20:40,solana-i14,False,,,,,0,seul maker
 0x221c4998a69276545e63ccf451d52524266619b1,1,EZXUvi4X5k3Aj99rGzNQoBtAzFqzYUjGhHNu8A1Ty8s4,1,391.17,2024-06-17 23:38:59,2024-06-17 23:38:59,solana-i14,True,0,,,,0,seul maker
 0x2ac17414e34c9a1f70f6eadb6230fa503301e878,8453,Ei5yGz8dPndr1aCeHZsfqJBcS3VBbz75VHEhxxJKLy3V,2,5238.78,2024-11-26 05:19:21,2024-11-26 09:33:16,solana-i14,True,1,,,,0,seul maker
-0x2d86499a410a9ac2139833ba8d6942b8a8700a7b,1,26kExMGtjfxhfXVGg1FaTRDuFiLkd1BgKS3UkxwAcHqR,1,2793.09,2025-09-15 18:37:23,2025-09-15 18:37:23,ethereum-fill-only,False,,C73Yv9iH|CMr4kjkt,,,0,destination commune seule
+0x2d86499a410a9ac2139833ba8d6942b8a8700a7b,1,26kExMGtjfxhfXVGg1FaTRDuFiLkd1BgKS3UkxwAcHqR,16,63838.91,2025-09-15 18:37:23,2026-08-24 16:14:59,ethereum-fill-only,False,,C73Yv9iH|CMr4kjkt,,,0,destination commune seule
 0x2d86499a410a9ac2139833ba8d6942b8a8700a7b,1,C73Yv9iHmTaf8SU2XFnGLt7QXUDqbeWNtUYza9WJhkae,31,517982.86,2024-07-21 22:53:42,2025-08-23 01:14:47,ethereum-fill-only|solana-i14+ethereum-fill,True,0,26kExMGt|CMr4kjkt,,,0,destination commune seule
 0x2d86499a410a9ac2139833ba8d6942b8a8700a7b,1,CMr4kjktCaVZRYSkV3dPRcpH7kZBp4Cf64fZs7kjhBiQ,2,25516.46,2024-07-26 02:47:35,2024-07-26 02:49:47,ethereum-fill-only,False,,26kExMGt|C73Yv9iH,,,0,destination commune seule
 0x703bf8c292b72efdd60243b17be782b58cd61ce0,42161,7SEoKiBLaGhZxr5V8JYGdiV55ZhkgC727ftSYDST148i,1,11211.9,2025-01-18 09:43:43,2025-01-18 09:43:43,solana-i14,False,,,,,0,seul maker

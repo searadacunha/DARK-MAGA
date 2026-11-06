@@ -6,7 +6,7 @@ Niveaux : **VERIFIED** (relu sur la chaîne, script et hash fournis) ; **SUPPORT
 On distingue toujours *même destination* ≠ *même opérateur* ≠ *même bénéficiaire effectif*.
 
 Adresses : b947 = `0xb947bf7f409e998b28f8e218802fc9575c3c8c57`, b298 = `0xb29826d809aa04d2ead6f2310d8965a45b87fa67`, relais = `0x4978cd7e5a3565cafcc88a105940b0ea01adc04d`, `Ei5yGz8d` = `Ei5yGz8dPndr1aCeHZsfqJBcS3VBbz75VHEhxxJKLy3V`. Toutes les heures sont en UTC.
-Autocontrôle hors ligne : `scripts/s99_selfcheck.py` (31 assertions, réseau coupé, sur 9 reçus figés dans `evidence/selfcheck_cache/`) ; `scripts/s98_verify_refs.py` relit sur la chaîne les 47 références Ethereum et les 9 signatures Solana citées ici (`evidence/s98_refs_check.csv`, 0 échec) rejoue chaque constat marqué « [sc] ».
+Autocontrôle hors ligne : `scripts/s99_selfcheck.py` (37 assertions, réseau coupé, sur 11 reçus figés dans `evidence/selfcheck_cache/`) ; `scripts/s98_verify_refs.py` relit sur la chaîne les 50 références Ethereum et les 9 signatures Solana citées ici (`evidence/s98_refs_check.csv`, 0 échec) rejoue chaque constat marqué « [sc] ».
 
 ---
 
@@ -20,7 +20,7 @@ Chaîne complète : **Solana → maker `GZXKYzwZPgWH8TwyY9f8dkCQ9EKK6nrPZADGcEwf
 | Ordre (journal `FulfilledOrder` décodé sur Ethereum) | giveChainId 7565164 (Solana), giveToken USDC `EPjFWdd5…`, giveAmount 121 013,214273, makerOrderNonce 1721973287043, receiverDst = orderAuthorityDst = b947 |
 | Exécution sur Ethereum, 2024-07-26 05:56:11, bloc 20388771 | tx `0x47e8da75f698f8c40419230c2274136c57666b92a91bef55c481e63a91758e14`, envoyée par `0x555ce236…` à DlnDestination `0xe7351fd770a37282b91d153ee690b63579d6dd7f`, 120 957,888072 USDC vers b947 |
 
-- Décodeur maison sans dépendance (`scripts/dln.py`). **Contrôle positif :** l'ordre test connu de `Gcyg2jeL` (tx `0xdb07ade91b6ed02470a9283a346f7062ba45dbb65ea5030763dd1150b78d8b3d`) redonne bien maker `Gcyg2jeLfSY9gxxHf5za5QU74ijtxBb1dB2mdGSPZH3m` et 9,992001 USDC.
+- Décodeur maison sans dépendance (`scripts/dln.py`). Il lit les deux versions de `FulfilledOrder` : la v1 (`0xd281ee92`) et la v2 de 2026 (`0xc164aca3`), qui ajoute un mot avant `sender` (§10). **Contrôle positif :** l'ordre test connu de `Gcyg2jeL` (tx `0xdb07ade91b6ed02470a9283a346f7062ba45dbb65ea5030763dd1150b78d8b3d`) redonne bien maker `Gcyg2jeLfSY9gxxHf5za5QU74ijtxBb1dB2mdGSPZH3m` et 9,992001 USDC.
 - `GZXKYzwZ` était déjà dans le corpus (`audits/2026-11-03/work_G/flow_boundaries.csv`, branche `audit-2026-11-03`, « wallet non suivi, aucun historique lu »). Son ordre deBridge ne l'était pas : il n'appartient à aucun des 76 ordres de `investigations/2026-11-05_debridge_winners/evidence/i14_orders.csv`.
 
 ## 2. `GZXKYzwZ` : wallet de vente jetable d'`Ei5yGz8d`, alimenté par neuf wallets en 100 secondes. VERIFIED (transactions) ; SUPPORTED (contrôle commun) [sc]
@@ -95,8 +95,10 @@ b947 a aussi rendu de l'ETH à b298 deux fois : `0x5f71dbe266a66528cb95184a568ef
 
 Les retraits de KuCoin et de MEXC vers b947, l'appoint et le gaz venus de b298, puis le dépôt de la somme exacte tombent dans les mêmes minutes. C'est compatible avec un seul opérateur qui pilote les comptes d'exchange et b298 ; ce n'en est pas la preuve.
 
-**c. Juillet-octobre 2024 : USDC issus de ventes de DMAGA conservés environ 71 jours, puis transférés vers b298.**
+**c. Juillet-octobre 2024 : l'USDC de b947 gardé 71 jours, puis vidé en entier vers b298.** b947 n'a jamais détenu de DMAGA : il reçoit de l'USDC.
 - b947 reçoit 263 320,105094 USDC le 22/07 (4 ordres, 263 573,151396 USDC donnés côté Solana, frais compris), 50 003,330779 de b298 le 25/07 (tx `0xac4a12bd7eac6283bec6af0f43b3191c2964ee7c0f77dcefd8c29238566e1211`) et 120 957,888072 le 26/07 (§1). Soit 434 281,323945 USDC.
+  - Seuls les 384 277,993166 USDC des cinq exécutions deBridge viennent de makers DMAGA (§1, §2, `evidence/s40_metrics.json`). Les 50 003,33 USDC de b298 n'en viennent pas.
+  - Le 01/10 à 15:47:23, entre deux envois, b947 reçoit aussi 10 USDC réels d'un sosie. Il envoie donc 434 291,323945 USDC.
 - Ces 50 003,33 USDC suivent de 4 min un retrait de 49 999,0 USDC du hot wallet Coinbase 10 vers b298 (2024-07-25 08:18:11, tx `0x2b3c8d6b557e9a700b20163ea548852fee49746d01871467d059049b051dbd2c`).
 - **Aucune sortie** dans les 5 min, 1 h, 24 h ou 7 j qui suivent chaque arrivée (`b947_post_dmaga_flows.csv`).
 - Le 01/10/2024, de 15:46:11 à 15:49:59, b947 vide son solde, gaz de b298 reçu 2 min avant :
@@ -148,23 +150,37 @@ Inférence : gaz venu d'un hot wallet étiqueté de l'exchange, puis vidage vers
 
 Contreparties non-service partagées : `evm_shared_counterparties.csv` (hubs de service retirés : CEX, routeurs, ponts, contrats de jetons, distributeurs d'airdrops).
 
-## 6. Après les 263 573 USDC : où va l'argent. VERIFIED (trajet) ; bornes conditionnelles sous H
+## 6. Après les 263 573 USDC : où va l'argent. VERIFIED (trajet) ; bornes sans FIFO, relais tracé
 
-**Rectification du 06/11/2026 :** les montants publiés par `s51_bounds.py` et `evidence/s51_b298_usdc_bounds.csv` supposent que les USDC reçus du relais `0x4978cd7e…` proviennent entièrement de `b947` (**hypothèse H, non démontrée**). Le relais avait aussi reçu 100 000 USDC de `b298` le 06/10/2024. Par conséquent, les bornes du tableau ci-dessous **ne sont pas des bornes inconditionnelles**. Sans H, le recalcul donne 46,814553 USDC pour l'ordre Base du 12/11 (o1) et 0 pour l'ordre BSC du même jour (o2), mais une borne **conjointe** de 100 028,638296 USDC pour o1 et o2 est rapportée et testée séparément. Voir l'[audit correctif de la PR #16](https://github.com/searadacunha/Dark-MAGA/pull/16) et son `FINDINGS.md` §3. La provenance des fonds doit toujours être distinguée du simple montant transféré.
+**Rectification du 06/11/2026 :** la version fusionnée le 06/11 à 07:43 UTC présentait ce tableau sous l'hypothèse H (le relais `0x4978cd7e…` ne transporte que de l'USDC de b947), non démontrée : le relais avait aussi reçu 100 000 USDC de b298 le 06/10/2024. Le relais est maintenant tracé avec la même règle que b298, et les bornes ci-dessous valent sans cette hypothèse (§10). La provenance des fonds doit toujours être distinguée du simple montant transféré.
 
-1. **b947** garde tout 71 jours, puis vide son stock vers b298, directement (100 000) ou par le relais (334 291,32 → b298). Comptabilité de stock : le solde tombe à 0,012, aucune hypothèse FIFO n'est nécessaire.
-2. **b298** mélange ces fonds avec d'autres. `evidence/s51_b298_usdc_bounds.csv` calcule pour chaque sortie USDC des bornes **sous H uniquement** ; l'audit de la PR #16 fournit le modèle et les corrections sans H.
-   - Borne basse : la sortie moins le maximum d'argent propre disponible.
-   - Borne haute : le minimum entre la sortie et le maximum d'argent venu de b947 disponible.
+1. **b947** garde son USDC 71 jours, puis le vide vers b298, directement (100 000) ou par le relais (334 291,32). Comptabilité de stock : le solde tombe à 0,012, et tout ce que b947 envoie aboutit chez b298, sans hypothèse FIFO.
+2. **b298** mélange ces fonds avec d'autres. `evidence/s51_b298_usdc_bounds.csv` encadre chaque sortie USDC entre une borne basse et une borne haute.
+   - Marqué : l'USDC que b947 envoie à partir du 01/10/2024, directement ou par le relais. Tout le reste est non marqué.
+   - Borne basse : la sortie moins le maximum d'argent non marqué disponible.
+   - Borne haute : le minimum entre la sortie et le maximum d'argent marqué disponible.
    - Calcul en entiers bruts, autocontrôle borne basse ≤ borne haute.
+   - **Le relais n'est pas un conduit pur.** b298 lui renvoie 100 000 USDC le 06/10/2024 à 19:28:35 (`0x6407f6bccc370f06128fd95981f5c13475fc3be04922d6213d84d05c97944d8c`), 3 min après avoir reçu 100 088,75 USDC de Rizzolver. La borne basse de la part marquée de ce renvoi est 0. Le relais est donc tracé avec la même règle que b298.
+   - Les 31 bornes basses et hautes sont égales à l'optimum d'un programme linéaire exact sur les deux réservoirs (`scripts/s52_lp_check.py`).
+   - **Correction du 06/11/2026** : la première version comptait toute sortie du relais comme 100 % b947 (§10). Ses bornes basses, 472 143,22 USDC en tout, ne valaient que sous cette hypothèse, non démontrée. Elles tombent à 137 938,74 USDC.
 
-| Destination des USDC attribués à b947 sous hypothèse H (à partir du 01/10/2024) | Au moins sous H | Au plus sous H |
+| Destination de l'USDC venu de b947 (à partir du 01/10/2024) | Au moins | Au plus |
 |---|---|---|
-| deBridge → **b298 lui-même sur Base** (3 ordres : 06/11, 12/11, 15/11) | 124 233,75 | 124 261,38 |
-| deBridge → **b298 lui-même sur BSC** (12/11, 157,37 BNB reçus) | 99 981,82 | 99 989,83 |
-| Ventes USDC → ETH par UniswapX et solveurs (`0x43ee35d5542f5b826fa92832bd97caff153675a8`, `0xbcc66fc7402daa98f5764057f95ac66b9391cd6b`, Rizzolver `0x225a38bc71102999dd13478bfabd7c4d53f2dc17`) | 247 663,99 | 259 955,49 |
+| deBridge → **b298 lui-même sur Base** (3 ordres : 06/11, 12/11, 15/11) | 46,81 | 124 261,38 |
+| deBridge → **b298 lui-même sur BSC** (12/11, 157,37 BNB reçus) | 0 | 99 989,83 |
+| Ventes USDC → ETH par UniswapX et solveurs (`0x43ee35d5542f5b826fa92832bd97caff153675a8`, `0xbcc66fc7402daa98f5764057f95ac66b9391cd6b`, Rizzolver `0x225a38bc71102999dd13478bfabd7c4d53f2dc17`) | 137 712,91 | 259 955,49 |
 | Dépôt Coinbase inféré `0x0ff70a96` (04/10) | 0 | 74 820,98 |
 | Ordres USDC directs vers `Ei5yGz8d` | 0 | 16 483,03 |
+
+   **Les deux ordres du 12/11/2024, pris ensemble.** o1 (`0x4b7c7a2fcda576c58c961dee9d35840fba0151a9156cc0c48a0282c2fb024e16`) donne 100 048,914457 USDC vers Base, o2 (`0xca82377984453a77f40592a694c5ad4c8076acce66b64a25e7c43f119f3cf8a4`) 99 989,828367 USDC vers BSC.
+   - Pris seuls, ils ont pour bornes basses 46,814553 et 0.
+   - Ensemble, ils portent au moins **100 028,638296 USDC venus de b947**, quelle que soit l'allocation (`scripts/s51_bounds.py`, `joint_min`) :
+     - après le 06/11/2024 08:31:47 et jusqu'à o2, l'USDC non marqué que les deux ordres peuvent emporter se limite au solde de b298 et à ses autres entrées non marquées, 10,093528 USDC en tout ;
+     - s'y ajoute ce que le relais peut lui rendre de non marqué : au plus 100 000,011 USDC, le renvoi de b298 et 0,011 d'un sosie ;
+     - 200 038,742824 − 10,093528 − 100 000,011 = 100 028,638296. Le programme linéaire trouve le même minimum.
+   - **Part des seules ventes.** Sur les 434 291,32 USDC envoyés par b947, 384 277,99 viennent des cinq exécutions deBridge des makers DMAGA, 50 003,33 de b298 et 10 d'un sosie.
+     - Si l'on ne marque que les premiers, b947 peut lui aussi transmettre jusqu'à 50 013,330779 USDC non marqués.
+     - La borne commune tombe alors à **50 015,307517 USDC**, même démonstration, même minimum au programme linéaire.
 
 3. **Montants quasi identiques dans les minutes qui suivent :**
    - arrivée de 100 000 du relais le 12/11 à 17:40:23 → ordre vers b298 sur BSC à 17:42:47 (99 989,83, 144 s) ;
@@ -196,8 +212,8 @@ Historique complet relu : 41 648 lignes, 20 384 tx signées, 15 425 transferts d
   - 6 253 interactions avec le routeur du bot Maestro, 516 entrées depuis le hot wallet Rollbit ;
   - nonces 2 196 sur Base, 620 sur BSC, 366 sur Arbitrum.
   Ce n'est ni un service ni un coffre : c'est un trader de mèmes à très haute fréquence.
-- **deBridge :** 170 entrées d'ETH venues de DlnDestination (587,14 ETH, du 11/12/2023 au 04/10/2026). 318 ordres décodés sur Ethereum (`evidence/dln_orders_evm.csv`, partiel par construction, `UNRESOLVED.md` §6) :
-  - entrants : 31 de `C73Yv9iH` (517 982,86 USD ; les 27 du corpus et 4 absents du corpus), 2 de `CMr4kjktCaVZRYSkV3dPRcpH7kZBp4Cf64fZs7kjhBiQ`, 1 de `26kExMGtjfxhfXVGg1FaTRDuFiLkd1BgKS3UkxwAcHqR`, et 75 de 2d86 lui-même depuis Base, Arbitrum, Avalanche et BSC ;
+- **deBridge :** 170 entrées d'ETH venues de DlnDestination (587,14 ETH, du 11/12/2023 au 04/10/2026). 392 ordres décodés sur Ethereum, 186 reçus et 206 émis (`evidence/dln_orders_evm.csv`, partiel par construction, `UNRESOLVED.md` §6). Les 74 exécutions reçues entre le 01/03 et le 04/10/2026 utilisent la v2 de `FulfilledOrder` ; elles manquaient à la première version (§10) :
+  - entrants : 31 de `C73Yv9iH` (517 982,86 USD ; les 27 du corpus et 4 absents du corpus), 16 de `26kExMGtjfxhfXVGg1FaTRDuFiLkd1BgKS3UkxwAcHqR`, 2 de `CMr4kjktCaVZRYSkV3dPRcpH7kZBp4Cf64fZs7kjhBiQ`, 1 de `0xbf987dce9000bd7752ad22fc752c3f0ac6e89f16`, et 136 de 2d86 lui-même (Base 56, Arbitrum 34, Avalanche 18, identifiant de chaîne 4663 13, BSC 8, HyperEVM 4, autres 3) ;
   - sortants : 27 vers `C73Yv9iH` et 20 vers `26kExMGt` sur Solana, et le reste vers 2d86 lui-même (Base 71, Arbitrum 32, BSC 24, HyperEVM 10, Avalanche 7…).
   - Aller-retour répété avec `C73Yv9iH` : même schéma que b298 ↔ `Ei5yGz8d`, mais sur l'autre branche.
 - **Nouveau, son coffre `coin-etf.eth`** (`0xebc71f680a785314c413baaa9722a9f85bb3316e`, nom tagué par Blockscout, pas un contrat) :
@@ -212,7 +228,7 @@ Historique complet relu : 41 648 lignes, 20 384 tx signées, 15 425 transferts d
     | 02:42:11, 10,247 ETH | 02:43:23, 10 ETH, `0x48af5155c9bd1d26a143f12bc28e189eeea57ba2e7caf5a8d80c6cd05716dc57` |
     | 03:17:11, 7,672 ETH | 03:17:59, 8 ETH, `0xa18e59d70b9c9cf10b03734f1d4221deaadbbabbcb400e360e8b9dee08db8299` |
 
-    L'ETH de DMAGA ne fait donc que traverser 2d86 : sa destination suivante est `coin-etf.eth`. Second correspondant Solana régulier : `26kExMGtjfxhfXVGg1FaTRDuFiLkd1BgKS3UkxwAcHqR` (20 ordres de 2d86 vers lui et 1 dans l'autre sens, décodés sur Ethereum ; un traçage indépendant par l'API deBridge en compte davantage toutes chaînes confondues, non recompté ici) ;
+    L'ETH de DMAGA ne fait donc que traverser 2d86 : sa destination suivante est `coin-etf.eth`. Second correspondant Solana régulier : `26kExMGtjfxhfXVGg1FaTRDuFiLkd1BgKS3UkxwAcHqR` (20 ordres de 2d86 vers lui et 16 dans l'autre sens, décodés sur Ethereum ; un traçage indépendant par l'API deBridge en compte davantage toutes chaînes confondues, non recompté ici) ;
   - schéma d'aller-retour coffre ↔ wallet de trading, sur trois ans et demi.
 - **Séparation des branches :** aucune contrepartie non-service commune entre {2d86, 86f9} et {b947, b298, relais}, une fois retirés OpenSea Fees 3 et le Spoke Pool Across (`evm_shared_counterparties.csv`). `coin-etf.eth` ne touche aucune de ces adresses ni aucun des quatre dépôts inférés. La branche `C73Yv9iH` (sous-ensemble 0 des 33) et la branche `Ei5yGz8d` (sous-ensemble 1) ne se rejoignent pas sur Ethereum dans ce qui a été lu.
 
@@ -220,7 +236,7 @@ Historique complet relu : 41 648 lignes, 20 384 tx signées, 15 425 transferts d
 
 | Hypothèse | Statut | Pourquoi |
 |---|---|---|
-| H1 même opérateur | **SUPPORTED (fort)** | Cinq signaux indépendants : 100 % du gaz de b947 vient de b298, juste à temps ; ETH rendu à b298 ; vidage total du stock d'USDC vers b298, en direct et par un relais gazé par b298 seul ; séances de 2023 où l'appoint de b298 et les retraits CEX vers b947 tombent dans les mêmes minutes ; trois adresses de dépôt par utilisateur communes (MEXC, Stake, KuCoin). Pas VERIFIED : aucune preuve de clé commune. |
+| H1 même opérateur | **SUPPORTED (fort)** | Cinq signaux indépendants : 100 % du gaz de b947 vient de b298, juste à temps ; ETH rendu à b298 ; vidage total de l'USDC de b947 vers b298, en direct et par un relais gazé par b298 seul ; séances de 2023 où l'appoint de b298 et les retraits CEX vers b947 tombent dans les mêmes minutes ; trois adresses de dépôt par utilisateur communes (MEXC, Stake, KuCoin). Pas VERIFIED : aucune preuve de clé commune. |
 | H2 client / prestataire | EXPLORATORY (faible) | Un prestataire qui garde les fonds d'un client ne les rapatrie pas tous chez lui. b298 a un usage personnel : mèmes, création de jetons via 20lab, Stake.com, Coinbase. Un prestataire OTC servant `Ei5yGz8d` reste théoriquement possible, mais b298 n'a qu'un seul maker DLN tiers : `Ei5yGz8d`. |
 | H3 wallet principal + secondaire | **SUPPORTED (fort)** | Forme précise de H1 : b298 est le principal (2 355 jours, 270 contreparties, 134 jetons, 5 chaînes). b947 n'a signé que 16 tx, toutes payées avec de l'ETH venu de b298 ; 10 contreparties en tout. |
 | H4 simple contrepartie historique | **REFUTED** | Le gaz, les vidages totaux et les dépôts communs dépassent de loin une contrepartie. |
@@ -235,3 +251,17 @@ Historique complet relu : 41 648 lignes, 20 384 tx signées, 15 425 transferts d
 - `REFUTATION.md` §4 : « 21 tx propres depuis le 11/09/2022 » compte les tx de premier niveau (21, dont 16 signées par b947). Le compteur Blockscout « transactions_count 0 » de `i20_evm.txt` est périmé.
 - **Échec silencieux de source :** Routescan `tokentx` omet les transferts ERC-20 antérieurs à juillet 2023 (vérifié sur b947 : `0x7fac1dda…` existe en reçu RPC, absent de `tokentx`). Tout historique pris là doit être recoupé (Blockscout v2 ou reçus).
 - Ma propre première version écartait comme empoisonnement 16 vraies ventes d'USDC/USDT de b298 exécutées par UniswapX et des solveurs (286 217,93), dont le gaz est payé par un tiers. Corrigé dans `scripts/s10_history.py`. Le solde USDC reconstitué de b298 retombe à 0 et concorde avec `balanceOf` (0).
+
+## 10. Corrections du 06/11/2026, après l'audit du dossier `2026-11-06_debridge_base_bsc_solana`
+
+- **Bornes du relais (`scripts/s51_bounds.py`).**
+  - La première version comptait toute entrée venue du relais `0x4978cd7e` comme 100 % b947. Or b298 lui renvoie 100 000 USDC le 06/10/2024, et la même règle donne 0 à la part marquée de ce renvoi.
+  - Le relais est maintenant tracé avec la même règle. o1 passe de 100 046,825553 à 46,814553 USDC, o2 de 99 981,823743 à 0. Les bornes basses sommées passent de 472 143,22 à 137 938,74 USDC.
+  - La borne commune de o1 et o2 (§6) est nouvelle. Les bornes hautes ne changent pas.
+  - Autocontrôle : `s99_selfcheck.py` (F8), recoupement exact : `s52_lp_check.py`.
+- **Décodeur DLN (`scripts/dln.py`).**
+  - La première version ne reconnaissait que la v1 de `FulfilledOrder`. La v2 (`0xc164aca3`, signature `FulfilledOrder(Order, bytes32, uint256, address, address)`) a une tête de cinq mots ; son `uint256` égale le `takeAmount` de l'ordre dans les 78 cas du cache.
+  - 74 exécutions vers 2d86, du 01/03 au 04/10/2026, manquaient à `evidence/dln_orders_evm.csv`. Les 4 autres événements v2 du cache vont à des receveurs hors périmètre, dans les mêmes tx.
+  - Rejeu hors ligne : le CSV publié est d'abord reproduit à l'octet près avec l'ancien décodeur ; avec le nouveau, 74 lignes s'ajoutent, aucune ne change. Seuls les horodatages des 74 tx ont été lus sur le RPC public (148 appels).
+  - Conséquence : la ligne `26kExMGt` → 2d86 de `solana_to_evm_clusters.csv` passe de 1 à 16 ordres (63 838,91 USD). Le reste du dossier ne lit pas les exécutions reçues par 2d86.
+  - Autocontrôle : `s99_selfcheck.py` (F9), sur deux reçus v2 figés.
