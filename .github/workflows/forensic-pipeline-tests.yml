@@ -25,7 +25,7 @@ jobs:
     timeout-minutes: 12
     env:
       PYTHONDONTWRITEBYTECODE: "1"
-      DMAGA_EXT: ${{ runner.temp }}/dark-maga-offline
+      DMAGA_EXT: /tmp/dark-maga-offline
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
     steps:
       - name: Check out the candidate
