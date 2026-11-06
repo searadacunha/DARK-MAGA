@@ -1,5 +1,8 @@
 # État de la recherche : destinataires EVM des sorties Dark MAGA
 
+> **Addendum du 06/11/2026 :** le modèle de bornes `s51_bounds.py` repose sur l'hypothèse H d'un relais contenant uniquement des USDC venus de b947. Cette hypothèse n'est pas démontrée et les minima ne doivent pas être présentés comme inconditionnels. Les nouveaux calculs et les traces Base/BSC/Solana sont dans la [PR #16](https://github.com/searadacunha/Dark-MAGA/pull/16).
+
+
 **Date :** 05/11/2026. **Statut :** passe principale terminée. 2d86 est décrit mais pas tracé en aval ; l'activité de b298 sur Base et BSC n'est pas lue (`UNRESOLVED.md` §3).
 
 Le dossier a été construit hors du dépôt local, puis publié depuis un clone neuf. Le dépôt local contient une étude gelée (`etude_final/`) et son verrou refuse `git worktree`. Rien dans `etude_final/` ni le README n'a été modifié.
