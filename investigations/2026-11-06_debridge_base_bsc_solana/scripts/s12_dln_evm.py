@@ -21,7 +21,8 @@ def fills(rcpt):
 def created(rcpt, chain_id):
     out = []
     for l in rcpt["logs"]:
-        if l["address"].lower() != N.DLN_SRC or len(l["data"]) < 2 + 64 * 20: continue
+        if (l["address"].lower() != N.DLN_SRC or not l.get("topics")
+                or l["topics"][0].lower() != D.CREATED_ORDER or len(l["data"]) < 2 + 64 * 20): continue
         try: o = D.decode_fulfilled(l["data"])
         except Exception: continue
         if o["giveChainId"] != chain_id: continue
