@@ -50,9 +50,13 @@
 
 Un transfert confirmé ne prouve ni une identité civile, ni la propriété des clés, ni une information privilégiée.
 
+## Qualification des sorties SOL (`k37`)
+
+Le tableau `xc_operator_outflows.csv` est un **écran de contreparties candidates**, calculé à partir des deltas natifs de chaque transaction où le solde de `3oqARBND…` diminue d'au moins 1 SOL. Une augmentation simultanée du solde d'un tiers n'est pas, à elle seule, la preuve d'un transfert direct depuis `3oqARBND…`, notamment dans les transactions multi-signées ou comportant plusieurs comptes débiteurs. Le seuil de 1 SOL et l'intersection avec les tableaux DMAGA décrivent la portée du dépistage ; ils ne constituent pas une reconstruction des instructions de transfert et ne permettent pas d'exclure des chemins non captés. Pour qualifier chaque arête comme directe, relire les instructions System Program et leurs instructions internes, source, destination, lamports et signature, puis recalculer les agrégats. L'estimation des retours de l'opération XC78 à l'opérateur est testée séparément sur les transactions du groupe de 16 wallets, et ne dépend pas de cette table de destinations candidates.
+
 ## Reproductibilité
 
-- `tests/` : 9 tests hors ligne (`python3 -I -m unittest discover -s investigations/2026-11-06_dmaga_kekius_cross_token/tests`).
+- `tests/` : 15 tests hors ligne (`python3 -I -m unittest discover -s investigations/2026-11-06_dmaga_kekius_cross_token/tests`).
   - Ils relisent les reçus figés, recalculent `0x33a5…` depuis les transferts publiés et vérifient chaque ligne Ethereum de `FUNDING_GRAPH.csv`.
   - Passés le 06/11/2026 sous Python 3.12 et 3.14.
 - Les collectes (`k10`, `k14`, `k30`, `k31`, `k33`) sont reprenables et mises en cache. Elles demandent le réseau ; `k10` et `k14h` demandent aussi le pool Helius.
