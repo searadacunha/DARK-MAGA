@@ -58,10 +58,20 @@ def movements(tx):
             continue
         t, info = p.get("type"), p.get("info") or {}
         if ix.get("programId") == SYSTEM and t in ("transfer", "transferWithSeed"):
-            out.append({"path": path, "kind": "sol", "src": info["source"], "dst": info["destination"], "amount": int(info["lamports"]),
+            source, destination, lamports = info["source"], info["destination"], int(info["lamports"])
+            # A native SOL transfer into a WSOL account changes its lamport balance
+            # even before syncNative; account closure must return that full balance.
+            run[source] = run.get(source, 0) - lamports
+            run[destination] = run.get(destination, 0) + lamports
+            out.append({"path": path, "kind": "sol", "src": source, "dst": destination, "amount": lamports,
                         "mint": "SOL", "src_owner_known": True, "dst_owner_known": True})
         elif ix.get("programId") == SYSTEM and t in ("createAccount", "createAccountWithSeed"):
-            out.append({"path": path, "kind": "sol_create", "src": info["source"], "dst": info["newAccount"], "amount": int(info["lamports"]),
+            source, destination, lamports = info["source"], info["newAccount"], int(info["lamports"])
+            # Temporary token accounts often start with 0 in preBalances and
+            # are closed back to 0 in postBalances. Include their creation rent.
+            run[source] = run.get(source, 0) - lamports
+            run[destination] = run.get(destination, 0) + lamports
+            out.append({"path": path, "kind": "sol_create", "src": source, "dst": destination, "amount": lamports,
                         "mint": "SOL", "src_owner_known": True, "dst_owner_known": True})
         elif ix.get("programId") in (TOKEN, TOKEN22) and t in ("transfer", "transferChecked"):
             s, d = info["source"], info["destination"]
@@ -74,8 +84,11 @@ def movements(tx):
             out.append({"path": path, "kind": "token", "src": so or s, "dst": do or d, "amount": amt, "mint": mint, "src_account": s, "dst_account": d,
                         "authority": info.get("authority") or info.get("multisigAuthority"), "src_owner_known": so is not None, "dst_owner_known": do is not None})
         elif ix.get("programId") in (TOKEN, TOKEN22) and t == "closeAccount":
-            a = info["account"]
-            out.append({"path": path, "kind": "close", "src": (ta.get(a) or (a, None))[0] or a, "dst": info["destination"], "amount": run.get(a, 0),
+            a, destination = info["account"], info["destination"]
+            refund = run.get(a, 0)
+            run[a] = 0
+            run[destination] = run.get(destination, 0) + refund
+            out.append({"path": path, "kind": "close", "src": (ta.get(a) or (a, None))[0] or a, "dst": destination, "amount": refund,
                         "mint": (ta.get(a) or (None, None))[1], "account": a, "src_owner_known": a in ta, "dst_owner_known": True})
     return out
 
