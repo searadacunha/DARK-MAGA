@@ -141,16 +141,16 @@
   {
    "src": "NxtXcmEW3gQvrCdBEm5GYT3zaqMre3QiPUhnwViNsD7",
    "dst": "GFpqfjEQFhXRbWEJCwUqKuNjSNTCgqAsANMbVyTGmi1p",
-   "sol": 5.0,
-   "t": 1719416826,
-   "sig": "5Hz6XCFDAWXAPi5aC2oXB9cYRoKT2RHzZGztWdgivPdimyXpMwTSA3bPC4Uor24XPUBuH2f2mP2rYtk3xDqNGdWy"
+   "sol": 0.9,
+   "t": 1720923035,
+   "sig": "3LbJJBTyQyN2aV7SffCrKgPq2oc8xsBVDhhwt4X5rXFcYaGS7YbgvL25UNa8ZxBSisybHryv62gi8DhZogVVtHfu"
   },
   {
    "src": "NxtXcmEW3gQvrCdBEm5GYT3zaqMre3QiPUhnwViNsD7",
    "dst": "GFpqfjEQFhXRbWEJCwUqKuNjSNTCgqAsANMbVyTGmi1p",
-   "sol": 0.9,
-   "t": 1720923035,
-   "sig": "3LbJJBTyQyN2aV7SffCrKgPq2oc8xsBVDhhwt4X5rXFcYaGS7YbgvL25UNa8ZxBSisybHryv62gi8DhZogVVtHfu"
+   "sol": 5.0,
+   "t": 1719416826,
+   "sig": "5Hz6XCFDAWXAPi5aC2oXB9cYRoKT2RHzZGztWdgivPdimyXpMwTSA3bPC4Uor24XPUBuH2f2mP2rYtk3xDqNGdWy"
   }
  ],
  "g41": {
@@ -390,19 +390,20 @@
     "t": 1715451860,
     "sig": "4uhfEncowF1hpKZfrpTpGE65sDfYXdS3sp4UpfoGSj2ZsjCpjzak8zwLWCrpL7FkZ12sZqjQjz4CP8JZLYoc5uDq"
    }
-  ]
+  ],
+  "source": "reprise de data/group_split.json (lecture Helius du 03/11), Helius indisponible : toutes les clés Helius sont épuisées ou refusées"
  },
  "ventes_24h": {
   "groupe_sol": 4524.914100277,
   "groupe_M": 48.80351164895,
-  "marche_sol": 190551.166877689,
-  "part_pct": 2.374645180305536,
+  "marche_sol": 190354.631775964,
+  "part_pct": 2.3770969259117125,
   "part_du_detenu_pct": 22.48631521171403,
   "transferts_hors_groupe_M": 32.101796349994,
   "autres_detenteurs_n": 110,
-  "autres_vendu_M": 224.95121603036603,
-  "autres_detenu_M": 643.5002393441308,
-  "autres_part_pct": 34.957440926461985
+  "autres_vendu_M": 224.95121603036608,
+  "autres_detenu_M": 643.600239344131,
+  "autres_part_pct": 34.95200938079288
  },
  "premieres_60s": {
   "acheteurs": 17,
@@ -429,8 +430,8 @@
    "wallets": 4
   },
   "envoi_a_borne_haute": {
-   "sol": 145.439552458,
-   "wallets": 46
+   "sol": 17.838882029,
+   "wallets": 11
   }
  },
  "premier_financeur": {

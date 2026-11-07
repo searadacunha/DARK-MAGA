@@ -1,5 +1,7 @@
 # Coordination : tests et liens financiers
 
+> **Version héritée, non régénérée le 07/11/2026.** `scripts/rep_72_links.py` lit le réseau Helius, dont le pool est épuisé. Ce fichier garde la borne haute 19:30:13 et le PnL d'avant le dédoublonnage de `trades.parquet`. Valeurs qu'il afficherait aujourd'hui : `reports/data_checks/rebuild_20261107.json` ; explications : `docs/REBUILD_2026-11-07.md`. Aucun chiffre ci-dessous n'est corrigé à la main.
+
 Généré par `scripts/rep_72_links.py`. Une arête prouve qu'une transaction existe. Elle ne prouve ni un propriétaire unique ni une intention.
 
 ## 1. Test gelé : DMAGA contre les autres pics tardifs

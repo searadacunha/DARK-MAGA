@@ -8,8 +8,8 @@
   },
   "wallets_non_etiquetes": {
    "8YSi5yNRN2KMbGU7Q3i5w9W6fTRxnk1qatQ5YmzS5da7": 2840.0,
-   "AGG2FsrpP4wN6hjptovXH3sykfdMt6ESADJGLxMYKcJZ": 300.1,
    "E1wDwfkh1ySipYTgqx6DtCQrri2L8KCwzECC3arUMXyK": 300.1,
+   "AGG2FsrpP4wN6hjptovXH3sykfdMt6ESADJGLxMYKcJZ": 300.1,
    "BZ2UcCujoCr4XYZE2s23xTWYJMgiFSQoYopYrr1B2QmA": 299.7,
    "5QbApAquHTJ2waLG2VXNctdF1a1QUvsmwTHew4pmnwG5": 299.0,
    "AjM8Qn62EhR4ikJ1rvyeezB1NyvrSsb4zwJiFUFs9ycs": 84.1
@@ -69,8 +69,8 @@
   "wallets_non_etiquetes": {
    "BGVS5SAobvJGpTZ21Q2d9tMwgWTf7zCJZnW31cmbJsjE": 26.4,
    "6KpRyFM9Y6mnem43cavZiNAFKbcwhZcYxfBxvQsVPPUm": 25.9,
-   "3fLABkcqwVMAS1yK5suq5q1Ju8HabbysDTb65VVjFBYR": 22.7,
    "5h2kMxs49Q6Dg1YCTiUQ1yk1VPwX3rs1JUAh1ZHUgQjP": 22.7,
+   "3fLABkcqwVMAS1yK5suq5q1Ju8HabbysDTb65VVjFBYR": 22.7,
    "GCRJD52pGwcCSs4oswYxTBCPatxY1P6WpxCC9R9zty6r": 12.3,
    "8JUEoHNMbWM4eegcMvx6ZQJt3V3fbo8JNjpWiCtJgxfF": 8.6
   },
@@ -275,6 +275,24 @@
    "BkYSQo68TvDn9zE5YYZmYVwKhxWMX51eGzv8Zn3wALW2": 329.8,
    "5XHnYVcdJFrp9mkVoVZSgEK3HQBcE4cVDupX5bBJgiNq": 58.8,
    "CCPM2SSMLhBdPZ9pjBy8TTXYUfhMM3q6naVPm4uzvfnF": 30.8
+  },
+  "tronque": false,
+  "part_non_tracee": 0.0
+ },
+ "7uRDe43iDncwEESfHvyxqYw3tzaVZgvCQn67x3xYyQeY": {
+  "groupe": "gagnants",
+  "frontieres": {
+   "1:Jupiter, compte documenté": 1462.4,
+   "1:pool": 1320.4,
+   "1:service non nommé (vu par ≥ 15 wallets tracés)": 1145.8
+  },
+  "wallets_non_etiquetes": {
+   "BAmh6sXr9Nv2qrT6ebnRbFNfzEmhgPe1Kxrc4RN3FfXV": 701.2,
+   "4xX4PGgox5Jxdhia5ZM7YHf7SW13WWq9FJwSAAhaL28x": 116.8,
+   "26nkKSE4YbYASbnvjSnrKkFxcJkfr7RxQ5tTPSd4jSoY": 98.0,
+   "7wJ8eMPvjEWSCbR4ceMuE32xQhidMy1BrgA8ZTmTtztu": 28.1,
+   "DXxqn3NXGR56iE5Yeq49ZB2igSpRbyEZKLcTAz3AV7LN": 10.0,
+   "UUUXQdoC85FmgUgDMfYj3UsBWMLSjU7gVj4QmYGdMRx": 3.7
   },
   "tronque": false,
   "part_non_tracee": 0.0
@@ -558,6 +576,23 @@
   "tronque": false,
   "part_non_tracee": 0.0
  },
+ "BBcYhznjGjWVNVhaVGC5oBdkipydkjmqsiNciadXBXbY": {
+  "groupe": "gagnants",
+  "frontieres": {
+   "1:pool": 1675.4,
+   "1:service non nommé (vu par ≥ 15 wallets tracés)": 0.7
+  },
+  "wallets_non_etiquetes": {
+   "Gsa1ovpVHP446V4FYXvX1TAT1yytkojkoCbWMX6MEWDE": 295.1,
+   "FzShPmyhacLoXqYPu3deFvgFMY8XesKfQjPTHUjxeKnD": 26.4,
+   "9qudVxMDZKFPQ64ZbjM8wqzjpvnuG6KwmgZhNKTPsYHG": 20.0,
+   "DHmJ7JuoFsVCUC2MGWc5UjeYEA6QKZ6xmMQqWtKD91nM": 14.0,
+   "HQd4aNkPhMSPT3BUdXBABpjHtNia9B5EV5H5qkjN6DuC": 8.8,
+   "HVZVRkiGDe8WGVVFLqezKh9gvu3wCkL5KzqMFXH3fbHH": 8.0
+  },
+  "tronque": false,
+  "part_non_tracee": 0.0
+ },
  "8GrFf2zNh8FGsWzEqtq2ASfFpckGqNuhA1pR2RGrrPB8": {
   "groupe": "gagnants",
   "frontieres": {
@@ -699,44 +734,6 @@
    "6aXEnGtq4yJuZag1qQisuwkEdo4h7J7KTeRydPxtY7pS": 0.8
   },
   "tronque": false,
-  "part_non_tracee": 0.0
- },
- "7dY2yLDbFxUCdBUMLiNJVz9Mq1PfetrDjr9GXAMnMM4J": {
-  "groupe": "gagnants",
-  "frontieres": {
-   "1:pool": 797.9,
-   "1:Jupiter, compte documenté": 629.0,
-   "1:service non nommé (vu par ≥ 15 wallets tracés)": 612.3
-  },
-  "wallets_non_etiquetes": {
-   "2SRNB5zRSWTZJa8mW3SFygaFoGU8RHk38cKeDFSd99Jm": 189.4,
-   "HfGz35oA68BwHw7NjdsxRX4cmsVLn4FBypk8PKsEX3Wc": 28.5,
-   "4p6MZsm9ibuWAhxyPfj14mJeE3XHtSAGHyDeDNm5v6GH": 18.6,
-   "3JBpq4tUrNitMeLtgLB2Ra8MoKFMi2As1hAKZ5NfuYft": 18.0,
-   "6RUDRRLDNLDsNSUqmAUGQxAkQxzusceWhxrs8Q4xSzBQ": 16.0,
-   "9iBYhYh3aFv2ptwX6TxTL5FgooffrK4s5NKPoNgR55mv": 11.0
-  },
-  "tronque": false,
-  "part_non_tracee": 0.0
- },
- "4ToQp55myvfpeprgKuqGbDqyji9Ezm7CZg7QbcTpL33S": {
-  "groupe": "gagnants",
-  "frontieres": {
-   "2:service non nommé (vu par ≥ 15 wallets tracés)": 82190.9,
-   "2:pool": 22150.2,
-   "1:pool": 2275.7,
-   "1:Jupiter, compte documenté": 25.1,
-   "1:service non nommé (vu par ≥ 15 wallets tracés)": 2.7
-  },
-  "wallets_non_etiquetes": {
-   "FyC5nr3WJAir6cntnwwQRuurq4JUCWvsH2VS5p4vYZ8k": 11.8,
-   "GLnfR5wZ9GS5iSrnTPHk9GpdDWWL9pVcSHy8tSg5HMWL": 7.4,
-   "GAirGD53HHm4BumeKi9tVyjxX4pg4L4Y8sPQQgTd7TXe": 7.3,
-   "3USthKPKE632BXhrtkRjpkM2AnUKe3mn5TV2AhEqkswd": 4.9,
-   "8B9Ta7bfKeFa3aS5P7fV48SJztEWQksARMyo3daGzZdZ": 4.4,
-   "EUGD6CmLLyPUPvSDVtqHhAagmyVHvmwRjqX1BdxJ3eht": 4.4
-  },
-  "tronque": true,
   "part_non_tracee": 0.0
  },
  "2BLSXbea4abffYCbs6pkCvPDChe9D4VNsfxJTAauQZPT": {

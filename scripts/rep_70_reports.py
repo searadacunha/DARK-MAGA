@@ -136,7 +136,7 @@ Généré par `scripts/rep_70_reports.py`. Ne prouve aucune connaissance préala
 
 Deux cohortes distinctes : avant le premier visuel public exact ({ts(T_WINIG)} UTC, @ChrisWinig, plus ancienne image identique dans le corpus archivé ;
 une réponse de @kikisknees à Musk à 16:00:08 UTC a un média perdu), et avant l'adoption par Musk (borne basse {ts(T_LOW)} UTC, borne haute {ts(T_HIGH)} UTC,
-identifiant de l'image 19:23:20 UTC). Un achat dans cette fenêtre de 27 minutes n'est classé ni avant ni après.
+identifiant de l'image {ts(EV['musk_envoi_image'])} UTC). Un achat dans cette fenêtre de {(T_HIGH - T_LOW) // 60} minutes n'est classé ni avant ni après.
 
 ## Activité par fenêtre
 {table(["Fenêtre", "Heures", "SOL acheté", "SOL vendu", "Achats", "Ventes", "Wallets", "Nouveaux acheteurs", "Médiane achat/wallet", "Part top 5 %"], rows7)}

@@ -12,6 +12,7 @@ import networkx as nx
 
 from dmaga.config import BIG, DATA
 from dmaga.db import connect
+from dmaga.positions import positions
 from dmaga.labels import label
 
 T_LOW = 1721588607
@@ -23,13 +24,9 @@ G = nx.Graph()
 for a, b, q, t, s in E:
     G.add_edge(a, b)
 pnl = {r[0]: r[1:] for r in con.execute("SELECT owner, realized_sol, net_sol_all, bought_sol, bought_qty, first_buy_time, sold_sol, proceeds_usd, cost_usd, residual_qty FROM w").fetchall()}
-# position juste avant la borne basse, par wallet, depuis les flux normalisés et les transferts tracés
-pos = dict(con.execute(f"""SELECT owner, sum(token_delta)/1e6 FROM trades WHERE block_time<{T_LOW} AND kind IN ('swap','transfer','fee_share','swap_other','lp_add','lp_remove')
-                           AND owner IS NOT NULL GROUP BY 1""").fetchall())
-for a, b, q, t, s in E:  # transferts vus seulement par getTransfersByAddress
-    if not con.execute("SELECT 1 FROM trades WHERE signature=? AND owner=? LIMIT 1", [s, a]).fetchone():
-        pos[a] = pos.get(a, 0) - q
-        pos[b] = pos.get(b, 0) + q
+# position juste avant la borne basse : trades plus tous les virements vus seulement par l'API de transferts (issue #27).
+# L'ancienne correction n'ajoutait que les arêtes token_direct d'au moins 1 M entre wallets du graphe.
+pos = {o: v / 1e6 for o, v in positions(con, T_LOW, str(BIG / "token_edges.parquet")).items()}
 out = []
 for comp in sorted(nx.connected_components(G), key=len, reverse=True):
     members = sorted(comp)

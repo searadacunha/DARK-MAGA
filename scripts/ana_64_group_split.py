@@ -10,7 +10,8 @@ import networkx as nx
 
 from dmaga.config import BIG, DATA
 from dmaga.db import connect
-from dmaga.helius import Helius
+from dmaga.positions import positions
+from dmaga.helius import Helius, RpcError
 from dmaga.labels import label
 
 EV = {e["name"]: e["t"] for e in json.loads((DATA / "events.json").read_text())}
@@ -22,12 +23,9 @@ members = set(g["members"])
 E = con.execute(f"""SELECT src, dst, amount, block_time, signature FROM read_parquet('{BIG}/link_edges.parquet')
                     WHERE type='token_direct' AND amount>=1000000 AND block_time<{T_LOW}""").fetchall()
 E = [e for e in E if e[0] in members and e[1] in members]
-pos = dict(con.execute(f"""SELECT owner, sum(token_delta)/1e6 FROM trades WHERE block_time<{T_LOW} AND kind IN ('swap','transfer','fee_share','swap_other','lp_add','lp_remove')
-                           AND owner IS NOT NULL GROUP BY 1""").fetchall())
-for a, b, q, t, s in E:
-    if not con.execute("SELECT 1 FROM trades WHERE signature=? AND owner=? LIMIT 1", [s, a]).fetchone():
-        pos[a] = pos.get(a, 0) - q
-        pos[b] = pos.get(b, 0) + q
+# position juste avant la borne basse : trades plus tous les virements vus seulement par l'API de transferts (issue #27).
+# L'ancienne correction n'ajoutait que les arêtes token_direct d'au moins 1 M entre wallets du graphe.
+pos = {o: v / 1e6 for o, v in positions(con, T_LOW, str(BIG / "token_edges.parquet")).items()}
 
 
 def held(ws):
@@ -101,32 +99,41 @@ sol_between = []
 for a, b, q, t, s in con.execute(f"SELECT src, dst, amount, block_time, signature FROM read_parquet('{BIG}/link_edges.parquet') WHERE type='sol_direct' AND block_time<{T_LOW}").fetchall():
     if a in idx and b in idx and idx[a] != idx[b]:
         sol_between.append({"src": a, "dst": b, "sol": q, "t": t, "sig": s})
-h = Helius(rps=4)
-# le financeur commun cité par l'audit, résolu depuis les virements réels
-src = {x["fromUserAccount"] for x in h.call("getTransfersByAddress", ["AW63YBXXsGcLPpsDTSrpBMdQ9QXtxTiHsTbcVkY6UFv5", {"direction": "in", "limit": 20, "sortOrder": "asc",
-       "mint": "So11111111111111111111111111111111111111111"}])["data"] if x["fromUserAccount"] and x["fromUserAccount"].startswith("G41vRrsHSh")}
-assert len(src) == 1
-G41 = src.pop()
-out_rows, tok = [], None
-for _ in range(10):
-    c = {"direction": "out", "mint": "So11111111111111111111111111111111111111111", "limit": 100, "sortOrder": "asc",
-         "filters": {"blockTime": {"gte": T0 - 86400, "lt": T0 + 3600}, "amount": {"gte": 50_000_000}}}
-    if tok:
-        c["paginationToken"] = tok
-    r = h.call("getTransfersByAddress", [G41, c])
-    out_rows += r["data"]
-    tok = r.get("paginationToken")
-    if not tok:
-        break
-in_rows = h.call("getTransfersByAddress", [G41, {"direction": "in", "mint": "So11111111111111111111111111111111111111111", "limit": 100, "sortOrder": "desc",
-                                                 "filters": {"blockTime": {"lt": T0}, "amount": {"gte": 100_000_000}}}])["data"]
-first = h.txs_page(G41, details="signatures", sort="asc", limit=1)["data"][0]["blockTime"]
-recent = h.txs_page(G41, details="signatures", sort="desc", limit=1000)
 bought = {r[0] for r in con.execute(f"SELECT owner FROM {W} WHERE n_buys>0").fetchall()}
-g41 = {"address": G41, "first_tx": first, "recent_page": len(recent["data"]), "more": bool(recent.get("paginationToken")), "label": label(G41),
-       "avant_le_mint": [{"dst": x["toUserAccount"], "sol": x["uiAmount"], "t": x["blockTime"], "sig": x["signature"], "dans_le_groupe": x["toUserAccount"] in members,
-                          "a_achete_sur_le_marche": x["toUserAccount"] in bought} for x in out_rows],
-       "financeurs": [{"src": x["fromUserAccount"], "label": label(x["fromUserAccount"]), "sol": x["uiAmount"], "t": x["blockTime"], "sig": x["signature"]} for x in in_rows[:12]]}
+try:
+    h = Helius(rps=4)
+    # le financeur commun cité par l'audit, résolu depuis les virements réels
+    src = {x["fromUserAccount"] for x in h.call("getTransfersByAddress", ["AW63YBXXsGcLPpsDTSrpBMdQ9QXtxTiHsTbcVkY6UFv5", {"direction": "in", "limit": 20, "sortOrder": "asc",
+           "mint": "So11111111111111111111111111111111111111111"}])["data"] if x["fromUserAccount"] and x["fromUserAccount"].startswith("G41vRrsHSh")}
+    assert len(src) == 1
+    G41 = src.pop()
+    out_rows, tok = [], None
+    for _ in range(10):
+        c = {"direction": "out", "mint": "So11111111111111111111111111111111111111111", "limit": 100, "sortOrder": "asc",
+             "filters": {"blockTime": {"gte": T0 - 86400, "lt": T0 + 3600}, "amount": {"gte": 50_000_000}}}
+        if tok:
+            c["paginationToken"] = tok
+        r = h.call("getTransfersByAddress", [G41, c])
+        out_rows += r["data"]
+        tok = r.get("paginationToken")
+        if not tok:
+            break
+    in_rows = h.call("getTransfersByAddress", [G41, {"direction": "in", "mint": "So11111111111111111111111111111111111111111", "limit": 100, "sortOrder": "desc",
+                                                     "filters": {"blockTime": {"lt": T0}, "amount": {"gte": 100_000_000}}}])["data"]
+    first = h.txs_page(G41, details="signatures", sort="asc", limit=1)["data"][0]["blockTime"]
+    recent = h.txs_page(G41, details="signatures", sort="desc", limit=1000)
+    g41 = {"address": G41, "first_tx": first, "recent_page": len(recent["data"]), "more": bool(recent.get("paginationToken")), "label": label(G41),
+           "avant_le_mint": [{"dst": x["toUserAccount"], "sol": x["uiAmount"], "t": x["blockTime"], "sig": x["signature"], "dans_le_groupe": x["toUserAccount"] in members,
+                              "a_achete_sur_le_marche": x["toUserAccount"] in bought} for x in out_rows],
+           "financeurs": [{"src": x["fromUserAccount"], "label": label(x["fromUserAccount"]), "sol": x["uiAmount"], "t": x["blockTime"], "sig": x["signature"]} for x in in_rows[:12]]}
+    g41_source = "Helius, lu à cette exécution"
+except (RpcError, RuntimeError) as e:  # pool Helius épuisé (06/11) : la lecture réseau du 03/11 est reprise telle quelle, et dite
+    g41 = json.loads((DATA / "group_split.json").read_text())["g41"]
+    G41 = g41["address"]
+    for x in g41["avant_le_mint"]:  # seuls ces deux champs dépendent des tables locales : recalculés
+        x["dans_le_groupe"], x["a_achete_sur_le_marche"] = x["dst"] in members, x["dst"] in bought
+    g41_source = f"reprise de data/group_split.json (lecture Helius du 03/11), Helius indisponible : {str(e)[:120]}"
+g41["source"] = g41_source
 
 # ventes en 24 h : groupe contre marché, et contre les autres détenteurs d'au moins 1 M à la borne basse
 end = T_HIGH + 86400
