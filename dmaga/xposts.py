@@ -67,6 +67,24 @@ def _save(i: str, name: str, url: str):
     return 200, json.loads(b)
 
 
+def returned_ids(i: str) -> set[str]:
+    """IDs des objets rendus par fxtwitter et le point d'intégration pour l'ID demandé.
+
+    Pour un repost, ces deux API rendent l'ORIGINAL : un ID rendu différent de `i` signale que `i` est un repost,
+    et que l'auteur, la date et le texte de la ligne x_posts.jsonl sont ceux de l'original (constaté le 06/11/2026 sur 372 lignes)."""
+    out = set()
+    for name, key in (("fx", lambda d: (d.get("tweet") or {}).get("id")), ("synd", lambda d: d.get("id_str"))):
+        p = X_RAW / f"{i}.{name}.json"
+        if p.exists():
+            try:
+                v = key(json.loads(p.read_bytes()))
+            except ValueError:
+                continue
+            if v:
+                out.add(str(v))
+    return out
+
+
 def existing_ids() -> set[str]:
     if not POSTS.exists():
         return set()

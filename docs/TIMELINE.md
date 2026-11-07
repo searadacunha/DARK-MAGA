@@ -2,7 +2,9 @@
 
 Généré par `scripts/rep_75_timeline.py`. Heures UTC. Attention, cette échelle note la **source** de chaque ligne, elle diffère de celle des conclusions du rapport. Fiabilité : A, fait directement contrôlable (transaction, post archivé, capture datée) ; B, une seule source
 indirecte ou une lecture à confirmer ; C, non revérifié dans un fichier du projet. Une date de post vient de son identifiant ; dans tous les cas lus, elle
-égale la métadonnée d'origine. Capitalisation : prix du pool juste avant l'instant × 10^9 × SOLUSDT à la minute.
+égale la métadonnée d'origine, sauf pour un repost :
+fxtwitter et le point d'intégration rendent alors l'original, dont la date diffère de celle de l'ID demandé (372 reposts ainsi résolus sur 5157 observations ;
+réconciliation complète, Wayback comprise : `investigations/2026-11-06_historical_replay/data/x_observations_reconciled.csv`). Un repost n'est jamais cité : le générateur s'arrête. Capitalisation : prix du pool juste avant l'instant × 10^9 × SOLUSDT à la minute.
 
 | UTC | Fait | Fiabilité | Capitalisation | Source |
 |---|---|---|---|---|
@@ -15,10 +17,11 @@ indirecte ou une lecture à confirmer ; C, non revérifié dans un fichier du pr
 | 14/07/2024 03:00:28 | Premier post archivé de @DarkMagaCoin | A | 60 k$ | id 1812321235688157500, archivé.  « Dark MAGA patriots in control.  $DMAGA » |
 | 14/07/2024 03:31:32 | dmaga.xyz en ligne, mint affiché | A | 33 k$ | capture Wayback 03:31:32 UTC, evidence/web/wb_dmaga_xyz_* |
 | 14/07/2024 16:15:27 | @kikisknees promeut le token | B | 42 k$ | id 1812521301682069933, supprimé, texte Wayback.  « I heard @twicrates was going to buy 60% of the supply of this in revenge for what happened yesterday. I also heard that Dark Patriots are in control. » |
-| 16/07/2024 00:14:58 | @kanpai annonce des avatars rouges aux yeux bleus | A | 556 k$ | id 1813004360592552354, archivé.  « Wild PA on $DMAGA while I was asleep, but we're sending this much higher @DarkMagaCoin   Compare this to the various trending Trump coins from the pas » |
+| 15/07/2024 22:56:01 | @kanpai pousse le token : « sending this much higher » | A | 667 k$ | id 1812984492157771825, archivé via le repost 1813004360592552354. Original ; 1813004360592552354 (16/07 00:14:58) en est un repost. « Wild PA on $DMAGA while I was asleep, but we're sending this much higher @DarkMagaCoin   Compare this to the various trending Trump coins from the pas » |
+| 16/07/2024 05:40:46 | @kanpai annonce des avatars rouges aux yeux bleus | A | 950 k$ | id 1813086353741230327, archivé via le repost 1813220461867573395. Original ; 1813220461867573395 (16/07 14:33:40) en est un repost. « There’s a scenario in which $dmaga becomes *the* Trump coin on SOL at a 9 figure MC in the next few months   Everyone’s pfps will be red tinted with b » |
 | 17/07/2024 21:06:43 | @DarkMagaCoin présente @ChrisWinig comme créateur de l'équipe | A | 461 k$ | id 1813681762188345683, archivé.  « We have the best content creators on our team, like @ChrisWinig  You should follow him for more #DarkMAGA kino » |
-| 20/07/2024 21:47:23 | @pmarca publie une image rouge aux yeux laser | A | 504 k$ | id 1814779160377602331, archivé. Pas le visuel de Musk. « https://t.co/HQilnzynOc » |
-| 21/07/2024 12:43:30 | @pmarca, nouvelle image | A | 797 k$ | id 1815004677160776126, archivé.  « THAT'S RIGHT. » |
+| 20/07/2024 20:46:54 | @pmarca publie une image rouge aux yeux laser | A | 491 k$ | id 1814763940410499481, archivé via le repost 1814779160377602331. Pas le visuel de Musk. Original ; 1814779160377602331 (20/07 21:47:23) en est un repost, URL d'archive au nom de @DarkMagaCoin. « https://t.co/HQilnzynOc » |
+| 21/07/2024 07:08:26 | @pmarca, nouvelle image | A | 817 k$ | id 1814920352134537332, archivé via le repost 1815004677160776126. Original ; 1815004677160776126 (21/07 12:43:30) en est un repost, URL d'archive au nom de @DarkMagaCoin. « THAT'S RIGHT. » |
 | 21/07/2024 12:50:45 | @kikisknees sollicite publiquement @pmarca sur Elon | B | 735 k$ | id 1815006501896872388, supprimé, texte Wayback.  « @pmarca Is Elon mooning with us? https://t.co/AsWYl82uSz » |
 | 21/07/2024 13:38:12 | @kikisknees cite la capitalisation | B | 844 k$ | id 1815018442589663572, supprimé, texte Wayback. À comparer à la colonne capitalisation. « @basedkarbon It's at $850k right now though https://t.co/D1PywjtCSl » |
 | 21/07/2024 15:58:43 | Musk écrit « Whoa » sur un article du NY Post | A | 1,64 M$ | id 1815053805077086351, archivé.  « Whoa » |
@@ -29,9 +32,11 @@ indirecte ou une lecture à confirmer ; C, non revérifié dans un fichier du pr
 | 21/07/2024 18:55:15 | @kikisknees répond à @PragmaticPrim8 et Musk avec une image | B | 929 k$ | id 1815098229903839717, supprimé, texte Wayback. Média perdu. « @PragmaticPrim8 @elonmusk @DarkMagaCoin https://t.co/kBkWptN6Js » |
 | 21/07/2024 19:03:27 | Borne basse : Musk a encore son ancien avatar | A | 892 k$ | capture Wayback 19:03:27 UTC, evidence/web/wb_elonmusk/ |
 | 21/07/2024 19:23:20 | Envoi probable du nouvel avatar | B | 834 k$ | snowflake de profile_images/1815105297410666496 : 19:23:20,585 UTC. L'id date le téléversement ; lecture à confirmer |
-| 21/07/2024 19:30:13 | Borne haute : premier post qui montre le nouvel avatar | A | 1,26 M$ | id 1815107030606385507, archivé.  « 👀🫢 » |
+| 21/07/2024 19:25:23 | Borne haute : premier post qui montre le nouvel avatar (@realjohnnewburg) | A | 773 k$ | id 1815105812076904904, archivé. Capture de la page de profil @elonmusk ; l'heure est celle du post, pas du clic ni de la capture. Avatar recadré à pHash 2/64 du visuel (médiane 30 sur 704 médias), evidence/x_media. « Elon Musk just changed his profile pic » |
+| 21/07/2024 19:27:24 | @AutismCapital montre aussi le nouvel avatar | A | 871 k$ | id 1815106321810919673, archivé. Capture du profil, avatar à pHash 4/64 du visuel. « Elon put on the wartime PFP. » |
+| 21/07/2024 19:30:13 | @DavidFBailey montre aussi le nouvel avatar (ancienne borne haute) | A | 1,26 M$ | id 1815107030606385507, archivé.  « 👀🫢 » |
+| 21/07/2024 19:32:17 | @ChrisWinig réagit | A | 2,45 M$ | id 1815107549903135205, archivé via le repost 1815107774113587625. Original ; 1815107774113587625 (19:33:11) en est un repost, URL d'archive au nom de @DarkMagaCoin. « Elon just made this his profile picture!  DARK MAGA RISES!!! » |
 | 21/07/2024 19:33:05 | @DarkMagaCoin réagit | A | 2,31 M$ | id 1815107751745601643, archivé.  « Our resident genius @elonmusk has a DMAGA PFP and YOU'RE FADING??? LOL. » |
-| 21/07/2024 19:33:11 | @ChrisWinig réagit | A | 2,30 M$ | id 1815107774113587625, archivé.  « Elon just made this his profile picture!  DARK MAGA RISES!!! » |
 | 21/07/2024 20:06:46 | @kikisknees revendique le pfp | B | 3,80 M$ | id 1815116229117690314, supprimé, texte Wayback.  « @blknoiz06 $DMAGA pfp by me and @ChrisWinig https://t.co/RySUR5iblq » |
 | 21/07/2024 20:44:29 | @kikisknees : surprise et visuel « fait pour lui » | B | 4,60 M$ | id 1815125720785391758, supprimé, texte Wayback.  « I almost didn't believe my eyes when I looked and saw that @elonmusk  decided to use a wartime PFP that we made for him. But it's real, so no blackpil » |
 | 21/07/2024 20:56:20 | @Aristos_Revenge promeut l'outil de pfp et le token | B | 5,63 M$ | id 1815128699831796065, supprimé ; texte connu par le seul Daily Dot |

@@ -20,14 +20,17 @@ from dmaga.venues import load as load_venues
 EVENTS = [
     ("creation_mint", 1720922725, "A", "signature fePxr7ER…, slot 277417695"),
     ("migration_raydium", 1720923331, "A", "signature 2zmB9nbU…, slot 277419045"),
-    ("pmarca_image_rouge", 1721512043, "A", "post 1814779160377602331, 20/07 21:47:23 UTC"),
+    # 1814779160377602331 (21:47:23) est un repost : fxtwitter et le point d'intégration rendent l'original ci-dessous
+    ("pmarca_image_rouge", 1721508414, "A", "post 1814763940410499481 (original), 20/07 20:46:54 UTC ; 1814779160377602331 en est un repost"),
     ("kikisknees_elon_mooning", 1721566245, "B", "post 1815006501896872388, 21/07 12:50 UTC, supprimé, texte par la Wayback"),
     ("kikisknees_reponse_musk", 1721577608, "B", "post 1815054158367432804, 21/07 16:00:08 UTC, supprimé, média perdu"),
     ("winig_visuel", 1721577749, "A", "post 1815054750775173447, 21/07 16:02:29 UTC, plus ancienne image exacte archivée"),
-    ("annonce_biden", 1721583960, "C", "21/07 17:46 UTC, donnée de la mission, non revérifiée ici"),
+    ("annonce_biden", 1721583960, "C", "21/07 17:46 UTC, donnée de la mission ; au plus tard 17:59:47 UTC, post 1815084272098697611 de @DegenerateNews"),
     ("musk_borne_basse", 1721588607, "A", "capture Wayback 19:03:27 UTC, ancien avatar"),
     ("musk_envoi_image", 1721589800, "B", "snowflake de l'image 1815105297410666496, 19:23:20 UTC, lecture à confirmer"),
-    ("musk_borne_haute", 1721590213, "A", "post 1815107030606385507, 19:30:13 UTC, nouvel avatar visible"),
+    ("musk_borne_haute", 1721589923, "A", "post 1815105812076904904 de @realjohnnewburg, 19:25:23 UTC, capture du profil avec le nouvel avatar"),
+    ("musk_capture_autismcapital", 1721590044, "A", "post 1815106321810919673 de @AutismCapital, 19:27:24 UTC, deuxième capture du profil"),
+    ("musk_borne_haute_bailey", 1721590213, "A", "post 1815107030606385507, 19:30:13 UTC, ancienne borne haute, gardée pour la sensibilité"),
     ("darkmagacoin_dm", 1721635821, "A", "post 1815298322325811663, 22/07 08:10:21 UTC, déclaration"),
     ("musk_retrait_borne_haute", 1721745389, "A", "capture Wayback, 23/07 14:36:29 UTC"),
 ]
