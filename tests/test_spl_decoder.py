@@ -42,6 +42,19 @@ class SplDecoder(unittest.TestCase):
         close = [m for m in movements(tx("44Sd6xet31me1Hc1")) if m["kind"] == "close" and m["dst"] == W7GVC]
         self.assertEqual([m["amount"] for m in close], [189_653_006_599])  # WSOL reçu dans la transaction + loyer
 
+    def test_transient_wsol_close_refunds_creation_rent(self):
+        # Real 9Sxm swap: temporary account starts/ends at 0 lamports.
+        # createAccount funds rent; WSOL arrives then a fee is transferred out.
+        t = tx("2PHU4HTSGRJ6xKncBiVm")
+        close = [m for m in movements(t) if m["kind"] == "close" and m["dst"] == W9SXM]
+        rent = 2_039_280
+        wsol_in = 17_874_608_396
+        wsol_out = 211_782_429
+        self.assertEqual(len(close), 1)
+        self.assertEqual(close[0]["amount"], rent + wsol_in - wsol_out)
+        self.assertEqual(close[0]["amount"], 17_664_865_247)
+
+
     def test_failed_transaction_moves_nothing(self):
         t = tx("2CSs5czbzHTKmK52")
         self.assertTrue(t["meta"]["err"])
