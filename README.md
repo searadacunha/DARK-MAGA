@@ -6,7 +6,7 @@ On **July 21, 2024**, Elon Musk adopted a red-and-blue laser-eye “Dark MAGA”
 
 This investigation reconstructs their **trades, token transfers, early funding, exchange deposits and cross-chain orders**. It follows specific transactions rather than treating screenshots, influencer claims or shared service accounts as evidence of common ownership.
 
-**[Trading data](reports/TOP_TRADERS.md) · [Wallet network](reports/COORDINATION.md) · [Cross-chain evidence](investigations/2026-11-05_evm-recipient-deeptrace/FINDINGS.md) · [Historical X archive](docs/historical/pass2/README.md)**
+**[Trading data](reports/TOP_TRADERS.md) · [Wallet network](reports/COORDINATION.md) · [Cross-chain evidence](investigations/2026-11-05_evm-recipient-deeptrace/FINDINGS.md) · [Historical X archive](docs/historical/pass3/README.md)**
 
 ---
 
@@ -34,7 +34,7 @@ This wallet is **not** assigned to the creator or to the 33-wallet component bel
 
 ## 2. A second launch-day money trail: 7GVC → 9Sxm
 
-A separate, **transaction-receipt-backed replay** traces another set of early $DMAGA accounts. Its calculations are currently undergoing financial review in [PR #25](https://github.com/searadacunha/Dark-MAGA/pull/25).
+A separate, **transaction-receipt-backed replay** traces another set of early $DMAGA accounts. Its signed transfers and amounts are documented in the [published historical replay](investigations/2026-11-06_historical_replay/FINDINGS.md), with independently reproduced receipt tests.
 
 On **July 14, 2024**, `7GVCZAYG5NfiJsuqUdvc9hB2ts2W3tSrGdya4CyR1M5j` received **189.656069 SOL** as its own Jupiter Perpetuals position was closed, 33 minutes before the token's creation.
 
@@ -48,9 +48,9 @@ That replay also identifies **three distinct SOL funding paths** from 7GVC:
 | `6QFDe4yu9mVhv3cbbaMtkTnakz4bGJLAjLjhwrMn5jqD` | **60 SOL, in two transfers** | 15.39 million |
 | `H4mQu98TuxYTn3VSJone6jCTiDfXpuKcZbNZGHKUJU5y` | **16 SOL** | 3.77 million |
 
-Direct transfers, early trading and repeated interactions are stronger evidence of **financial relationships** than shared infrastructure or social posts. They do not identify a single human owner or show that anyone knew what Musk would do. These precise replay figures are documented with signatures, receipts and offline tests in the open PR, and are **not yet part of the finalized main-branch numerical analyses**.
+Direct transfers, early trading and repeated interactions are stronger evidence of **financial relationships** than shared infrastructure or social posts. They do not identify a single human owner or show that anyone knew what Musk would do. The amounts above are transaction-backed and now incorporated into the published research.
 
-[Receipt-based historical replay — PR #25](https://github.com/searadacunha/Dark-MAGA/pull/25) · [Third-pass primary-source leads](docs/historical/pass3/README.md)
+[Receipt-level financial replay](investigations/2026-11-06_historical_replay/FINDINGS.md) · [Third-pass primary-source leads](docs/historical/pass3/README.md)
 
 ## 3. Thirty-three wallets. Forty direct token transfers.
 
@@ -64,7 +64,7 @@ In the following 24 hours, the component's recorded swaps produced approximately
 
 The creator is **outside** this transfer-defined 33-wallet component. Its transactions establish a connected network; they do not establish one beneficial owner.
 
-[Direct-transfer component, signatures and thresholds](reports/COORDINATION.md) · [Case evidence](docs/CASE_REPORT.md)
+[Direct-transfer evidence](reports/COORDINATION.md) · [Updated component figures and reconstruction](docs/REBUILD_2026-11-07.md) · [Case evidence](docs/CASE_REPORT.md)
 
 ## 4. Follow the funding, then the exits.
 
@@ -107,7 +107,7 @@ An archived view of his profile at **19:03:27 UTC on July 21** still shows the o
 
 The investigation also preserves early public appearances of the artwork, repost/original relationships, dated analyst observations and the subsequent removal of the avatar as a **separate event**.
 
-[Original social chronology](docs/SOCIAL_FINDINGS.md) · [Historical sources and provenance](docs/historical/DMAGA_HISTORICAL_INTELLIGENCE_2026-11-06.md) · [Second-pass X findings](docs/historical/pass2/DMAGA_X_NEW_FINDINGS.md)
+[Original social chronology](docs/SOCIAL_FINDINGS.md) · [Historical sources and provenance](docs/historical/DMAGA_HISTORICAL_INTELLIGENCE_2026-11-06.md) · [Three passes of historical X evidence](docs/historical/pass3/README.md)
 
 ## Read the evidence
 
@@ -120,7 +120,8 @@ The investigation also preserves early public appearances of the artwork, repost
 | [Multichain forensic audit](investigations/2026-11-06_debridge_base_bsc_solana/FINDINGS.md) | Audited order IDs, Base/BSC flows and bounds |
 | [DMAGA × Kekius investigation](investigations/2026-11-06_dmaga_kekius_cross_token/FINDINGS.md) | Separate cross-token comparison with transaction-level tests |
 | [Historical X evidence, passes 1–3](docs/historical/pass3/README.md) | Archival source reconstruction, 316 additional X posts and wallet test leads |
-| [Current investigation status](docs/RESEARCH_STATUS_2026-11-06.md) | What is demonstrated, what is under review, and the next decisive financial tests |\n| [Statistical control study](etude_final/results.md) | Comparison against 211 tokens, with its stated testing scope |
+| [Current research status (7 November)](docs/RESEARCH_STATUS_2026-11-07.md) | Consolidated findings, refreshed financial figures and remaining questions |
+| [Statistical control study](etude_final/results.md) | Comparison against 211 tokens, with its stated testing scope |
 | [Reproduction guide](docs/REPRODUCTION.md) | Data availability, validation requirements and research versions |
 
 **Scope:** Solana token `7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump`. This is an evidence-led inquiry into early trading and financial flows, **not a claim that Elon Musk knowingly coordinated trades or that a named person controls the linked wallets**. Historical X testimony and unverified wallet leads are kept separately from confirmed chain transactions.
