@@ -26,7 +26,8 @@ Pour tout recalcul : `scripts/run_derive.sh`, puis `ana_60`, `ana_61`, `ana_62`,
 ## Faits établis (voir preuves dans les fichiers)
 - Création : signature fePxr7ER…, slot 277417695, 14/07/2024 02:05:25 UTC, créateur 8YLEuUtZ4eFMJbf46oNb1CeG6dYFWGyxnQSh9hrgzBzR,
   achat 0,2 SOL pour 7,1 M. Financé 33 min avant par Coinbase 3 (0,5 SOL). Migration Raydium 02:15:31 UTC, signature 2zmB9nbU…
-- Musk : fenêtre [19:03:27 ; 19:30:13] UTC le 21/07, id d'image 19:23:20,585 UTC. Chris Winig 16:02:29 UTC.
+- Musk : fenêtre documentaire [19:03:27 ; 19:25:23] UTC le 21/07, soit 21 min 56 s (borne haute 19:30:13 jusqu'à la PR #25, gardée
+  pour la sensibilité), id d'image 19:23:20,585 UTC. Chris Winig 16:02:29 UTC.
 - Wallets résolus par préfixe, suffixe et montants, sans complétion : H3QsBrrivimFJmSpTXuvig2n1Bh7JuYxrriRSEszT6cc (@ashrobinqt,
   coût recalculé 1 087 $ contre 1 086 $ sur la capture), 5QhJJcFZu2ashyKyWSTGHcsyo6ZBCbpVuJqeutvQHScd (@0xRamonos, achats DCA Jupiter
   17-19/07 par keepers DCAK…), GXZvXsD6hxaLeFvQisWpdAwsayJxga7w9EeafhFZG2Ra (@ai_9684xtpa, 48,5 SOL, 14,69 M).

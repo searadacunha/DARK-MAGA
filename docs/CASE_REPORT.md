@@ -20,7 +20,7 @@ Cette synthèse conserve les calculs et formulations du 3 novembre 2026. Pour le
 7. **Aucun lien documenté entre un wallet et @DarkMagaCoin, @kikisknees, @Aristos_Revenge ou @ChrisWinig.** Le DM à Musk reste revendiqué, non prouvé.
 
 ## Données et fiabilité
-- **Collecte :** 796 883 transactions distinctes (913 880 lignes) dans `trades.parquet`. 2 699 114 lues sur tous les historiques (pool, courbe, mint, 77 venues), doublons compris, dont 1 181 780 sans flux DMAGA et 118 échouées. 71 706 wallets. Signatures listées : 9 875 478 sur le pool, 6 624 533 sur le mint.
+- **Collecte :** 796 883 transactions distinctes (913 880 lignes) dans `trades.parquet`. 2 699 114 lues sur tous les historiques (pool, courbe, mint, 77 venues), doublons compris, dont 1 181 780 sans flux DMAGA et 118 échouées. 71 695 wallets. Signatures listées : 9 875 478 sur le pool, 6 624 533 sur le mint.
 - **Réconciliation :** chaîne de soldes des vaults Raydium : 0 rupture sur 681 308 transactions WSOL, 1 rupture sur 681 300 transactions DMAGA (0,39 jeton, poussière). Autres venues : 83 réserves, 215 309 transactions, 0 rupture.
 - **Validation externe :** coût recalculé de `H3QsBr…` 1 087 $ contre 1 086 $ sur la capture DexScreener de 2024 ; capitalisation recalculée 844 k$ quand @kikisknees écrit « $850k » ; `GXZvX…` 48,5 SOL et 14,69 M comme le post de @ai_9684xtpa.
 - **Trou détecté et comblé :** ce même contrôle a repéré 97 ruptures dues à un découpage trop court (23:36 à minuit le 23/07), comblées.
@@ -33,7 +33,7 @@ Cette synthèse conserve les calculs et formulations du 3 novembre 2026. Pour le
 
 **3. Qui a amplifié avant le changement de photo ?** @DarkMagaCoin, @kikisknees (réponses répétées à des comptes à forte audience, dont @pmarca à 12:50 UTC : « Is Elon mooning with us? », puis à Musk à 18:46:37 et 18:55:15 UTC, médias perdus), @koreanjewcrypto dès le 15/07, @kanpai dès le 16/07 (A pour les posts archivés). @pmarca publie des images rouges aux yeux laser sans mentionner DMAGA dans ses 2 posts archivés : il n'est pas compté comme amplificateur du token. Corpus partiel : pas de recherche X native. Graphe : `viz/index.html`, `data/social_links.parquet`.
 
-**4. Quels wallets ont acheté avant chaque publication ?** `reports/EARLY_BUYERS.md` donne les 1 000 premiers acheteurs, les plus gros acheteurs des heures précédant le visuel et Musk, et les achats de la fenêtre indécidable de 27 minutes. Les deux cohortes sont distinctes (A).
+**4. Quels wallets ont acheté avant chaque publication ?** `reports/EARLY_BUYERS.md` donne les 1 000 premiers acheteurs, les plus gros acheteurs des heures précédant le visuel et Musk, et les achats de la fenêtre indécidable de 21 min 56 s. Les deux cohortes sont distinctes (A).
 
 **5. Profits réellement réalisés ?** `reports/TOP_TRADERS.md`. Tête au coût connu : `H3QsBr…` 5 491 SOL (990 744 $), `GXZvX…` 2 540 SOL (458 663 $), `9PrmF8…` 1 748 SOL (317 215 $). `5QhJJc…`, malgré « 1,8 M$ » sur la capture, a réalisé 74 SOL en propre : ses jetons sont sortis vers d'autres wallets (A). La valorisation maximale n'est jamais comptée. Sommet du prix : 631 364 SOL de capitalisation le 22/07/2024 09:00 UTC. Parmi les wallets entrés après Musk, 18 319 sur 53 903 ont un réalisé positif.
 
@@ -49,7 +49,7 @@ Cette synthèse conserve les calculs et formulations du 3 novembre 2026. Pour le
 
 **11. Preuves manquantes ?** La conversation d'origine, le fichier d'origine du visuel, une communication datée entre un wallet identifié et un proche de Musk, ou une attribution vérifiable d'un wallet à un compte. Voir `reports/MISSING_EVIDENCE.md`.
 
-**12. Ce qui reste incertain ?** Le contenu de la réponse de 16:00:08 UTC ; le DM ; l'heure de la bascule à l'intérieur de 27 minutes ; un propriétaire unique ou non pour l'ensemble ; le sens des gestes du 21/07 avant le visuel (répartition 07:57-08:33 UTC, regroupement 14:22-14:25 UTC) ; la nature exacte de `9W9b3zgHH9mCEHDhsdbnbEPHStm9vvXS4aia4DWHBxpL` ; l'identité de tous les wallets.
+**12. Ce qui reste incertain ?** Le contenu de la réponse de 16:00:08 UTC ; le DM ; l'heure de la bascule à l'intérieur de ces 21 min 56 s (19:03:27 à 19:25:23 UTC, bornes documentaires) ; un propriétaire unique ou non pour l'ensemble ; le sens des gestes du 21/07 avant le visuel (répartition 07:57-08:33 UTC, regroupement 14:22-14:25 UTC) ; la nature exacte de `9W9b3zgHH9mCEHDhsdbnbEPHStm9vvXS4aia4DWHBxpL` ; l'identité de tous les wallets.
 
 ## Hypothèses
 | Hypothèse | Conclusion | Niveau | Ce qui va contre |

@@ -55,6 +55,17 @@ class SplDecoder(unittest.TestCase):
         self.assertEqual(close[0]["amount"], 17_664_865_247)
 
 
+    def test_router_pass_through_leg_is_netted_by_normalize(self):
+        # Real multi-hop route (WSOL → USDC → USDT → DMAGA, 11/11/2025): the router receives then forwards the same DMAGA.
+        # Both gtba edges exist on chain, but trades already holds the buyer's net: the router leg must never be re-added.
+        from dmaga.normalize import parse_tx
+        t = tx("YQMWMCwa9pmKi9tn")
+        pool, router, buyer = "4F6uLJwkvWhSkbkZnvBzaGhmDtFkzLA71jNYhfFrRznQ", "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn", "Bya5eBy9KgqaXfnLKuvFYBaqzYqxip3JVimhtToKRxLp"
+        mv = [(m["path"], m["src"], m["dst"], m["amount"]) for m in movements(t) if m["kind"] == "token" and m["mint"] == DMAGA]
+        self.assertEqual(mv, [("o4.11", pool, router, 8_453_336_089_924), ("o4.13", router, buyer, 8_453_336_089_924)])
+        rows = parse_tx(t, set(), set(), "mint", {pool})
+        self.assertEqual([(r["kind"], r["owner"], r["token_delta"]) for r in rows], [("swap", buyer, 8_453_336_089_924)])
+
     def test_failed_transaction_moves_nothing(self):
         t = tx("2CSs5czbzHTKmK52")
         self.assertTrue(t["meta"]["err"])

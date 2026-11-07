@@ -4,7 +4,7 @@ Généré par `scripts/rep_70_reports.py`. Ne prouve aucune connaissance préala
 
 Deux cohortes distinctes : avant le premier visuel public exact (21/07 16:02:29 UTC, @ChrisWinig, plus ancienne image identique dans le corpus archivé ;
 une réponse de @kikisknees à Musk à 16:00:08 UTC a un média perdu), et avant l'adoption par Musk (borne basse 21/07 19:03:27 UTC, borne haute 21/07 19:25:23 UTC,
-identifiant de l'image 21/07 19:23:20 UTC). Un achat dans cette fenêtre de 21 minutes n'est classé ni avant ni après.
+identifiant de l'image 21/07 19:23:20 UTC). Un achat dans cette fenêtre de 21 min 56 s n'est classé ni avant ni après.
 
 ## Activité par fenêtre
 | Fenêtre | Heures | SOL acheté | SOL vendu | Achats | Ventes | Wallets | Nouveaux acheteurs | Médiane achat/wallet | Part top 5 % |
@@ -54,8 +54,8 @@ identifiant de l'image 21/07 19:23:20 UTC). Un achat dans cette fenêtre de 21 m
 | `7UDfjuKyYddK7mYEQbPBNfzHPvehHhq7LkouQC9HQZrY` | 5,83 | 1,00 | 1 | 21/07 13:54:37 | 21/07 13:54:37 | 0,2 | 0,2 | 21/07 13:54:37 |
 | `9yxEQsmpYZWBhWXFUcpAMguUzNDxg3nUBQEcmNSrakDf` | 5,60 | 0,81 | 1 | 21/07 16:54:24 | 21/07 16:54:24 | 0,3 | 0,3 | 21/07 16:54:24 |
 | `FNuKXWBpx1dYeY81rzFUt317fk5TwB29kLFmKfLE1EoQ` | 5,33 | 0,76 | 12 | 21/07 14:15:44 | 21/07 17:39:30 | 3,7 | 1,7 | 15/07 19:38:46 |
-| `JARVhtcGADkszZb91SAHQzxh2KrW7aRtZ8CA2FHDj6jF` | 5,00 | 0,51 | 1 | 21/07 16:30:11 | 21/07 16:30:11 | 181,5 | 181,5 | 14/07 02:19:12 |
 | `A9CYDXm23UagDkbRnv2NYYuj8FvHQXn52WnFiXoA9woz` | 5,00 | 0,61 | 1 | 21/07 14:04:13 | 21/07 14:04:13 | 1,2 | 1,2 | 21/07 14:04:13 |
+| `JARVhtcGADkszZb91SAHQzxh2KrW7aRtZ8CA2FHDj6jF` | 5,00 | 0,51 | 1 | 21/07 16:30:11 | 21/07 16:30:11 | 181,5 | 181,5 | 14/07 02:19:12 |
 | `EUtWKDpegbbHjBPoyDhZj6AijRwAG1x8aF581Wfkeo3C` | 4,62 | 0,68 | 2 | 21/07 13:44:19 | 21/07 14:22:43 | 9,1 | 9,1 | 21/07 13:44:19 |
 | `AqPgP5mGnYCUizjPrNd8T8aPWQDFWYiyA2RKtcZbgNJX` | 4,35 | 0,60 | 5 | 21/07 12:32:30 | 21/07 17:24:25 | 37,4 | 13,4 | 15/07 17:38:35 |
 | `49YJ8q4EicnZwNnGjtERipEXnRUEwQACUcck2xMgPE5Y` | 4,10 | 0,59 | 17 | 21/07 13:19:43 | 21/07 17:39:24 | 1,4 | 1,4 | 14/07 19:31:29 |
@@ -90,8 +90,8 @@ identifiant de l'image 21/07 19:23:20 UTC). Un achat dans cette fenêtre de 21 m
 | `EKMKQaH5cAvG6phALpnNNx5bjLLnijZpd4FADtNANRyH` | 0,20 | 0,04 | 1 | 21/07 19:25:20 |
 | `3eW6W2d2PkQGM8Btjf3AbEKXYswBDt6mDntM9CEuNLXb` | 0,17 | 0,04 | 1 | 21/07 19:25:23 |
 | `3AwDdcrXRJpoWU5EQ9Dk7KR82jmQQK7ZAggay62aYZyG` | 0,11 | 0,03 | 1 | 21/07 19:25:23 |
-| `CvBkdpuu9Uj5275svNrbjh2cYXLByPUV7wnxCZ9T8PhC` | 0,10 | 0,02 | 1 | 21/07 19:25:20 |
 | `4ihSLYJYGCxQosiAyvfaTMR9WtakNGQs8CXEgC5gjJfS` | 0,10 | 0,02 | 1 | 21/07 19:25:20 |
+| `CvBkdpuu9Uj5275svNrbjh2cYXLByPUV7wnxCZ9T8PhC` | 0,10 | 0,02 | 1 | 21/07 19:25:20 |
 | `dc5cfqYJ312QL35fu9oZwrs5CxgQVh646TFPGTs3P6J` | 0,10 | 0,02 | 1 | 21/07 19:11:07 |
 | `HcnKk4wCCubjoSpH5GkMbDiCAsUbHTvAGunYbHMRVZvt` | 0,07 | 0,01 | 1 | 21/07 19:20:28 |
 | `FF3L3uqtddKNWR4vfLDvbh7ncLMQKsbtDA98k2F6aiK8` | 0,05 | 0,01 | 1 | 21/07 19:25:21 |

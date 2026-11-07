@@ -16,6 +16,10 @@ def hms(t):
     """Heure UTC d'un événement de data/events.json : aucune borne n'est écrite en dur dans le texte (issue #27)."""
     return __import__("datetime").datetime.fromtimestamp(t, __import__("datetime").timezone.utc).strftime("%H:%M:%S")
 
+
+def duree(s):
+    return f"{s // 60} min {s % 60} s"
+
 con = connect()
 W = f"read_parquet('{BIG}/wallets.parquet')"
 tests = json.loads(Path("etude_final/tables/tests.json").read_text())
@@ -121,7 +125,7 @@ Cette synthèse conserve les calculs et formulations du 3 novembre 2026. Pour le
 
 **3. Qui a amplifié avant le changement de photo ?** @DarkMagaCoin, @kikisknees (réponses répétées à des comptes à forte audience, dont @pmarca à 12:50 UTC : « Is Elon mooning with us? », puis à Musk à 18:46:37 et 18:55:15 UTC, médias perdus), @koreanjewcrypto dès le 15/07, @kanpai dès le 16/07 (A pour les posts archivés). @pmarca publie des images rouges aux yeux laser sans mentionner DMAGA dans ses 2 posts archivés : il n'est pas compté comme amplificateur du token. Corpus partiel : pas de recherche X native. Graphe : `viz/index.html`, `data/social_links.parquet`.
 
-**4. Quels wallets ont acheté avant chaque publication ?** `reports/EARLY_BUYERS.md` donne les 1 000 premiers acheteurs, les plus gros acheteurs des heures précédant le visuel et Musk, et les achats de la fenêtre indécidable de 27 minutes. Les deux cohortes sont distinctes (A).
+**4. Quels wallets ont acheté avant chaque publication ?** `reports/EARLY_BUYERS.md` donne les 1 000 premiers acheteurs, les plus gros acheteurs des heures précédant le visuel et Musk, et les achats de la fenêtre indécidable de {duree(EV['musk_borne_haute'] - EV['musk_borne_basse'])}. Les deux cohortes sont distinctes (A).
 
 **5. Profits réellement réalisés ?** `reports/TOP_TRADERS.md`. Tête au coût connu : `H3QsBr…` {vH[0]:,.0f} SOL ({vH[1]:,.0f} $), `GXZvX…` {vG[0]:,.0f} SOL ({vG[1]:,.0f} $), `9PrmF8…` {vP[0]:,.0f} SOL ({vP[1]:,.0f} $). `5QhJJc…`, malgré « 1,8 M$ » sur la capture, a réalisé {vQ[0]:,.0f} SOL en propre : ses jetons sont sortis vers d'autres wallets (A). La valorisation maximale n'est jamais comptée. Sommet du prix : {ath[1]:,.0f} SOL de capitalisation le {fmt(ath[0])}. Parmi les wallets entrés après Musk, {coh[0]:,} sur {coh[1]:,} ont un réalisé positif.
 
@@ -137,7 +141,7 @@ Cette synthèse conserve les calculs et formulations du 3 novembre 2026. Pour le
 
 **11. Preuves manquantes ?** La conversation d'origine, le fichier d'origine du visuel, une communication datée entre un wallet identifié et un proche de Musk, ou une attribution vérifiable d'un wallet à un compte. Voir `reports/MISSING_EVIDENCE.md`.
 
-**12. Ce qui reste incertain ?** Le contenu de la réponse de 16:00:08 UTC ; le DM ; l'heure de la bascule à l'intérieur de 27 minutes ; un propriétaire unique ou non pour l'ensemble ; le sens des gestes du 21/07 avant le visuel (répartition 07:57-08:33 UTC, regroupement 14:22-14:25 UTC) ; la nature exacte de `{COL['address']}` ; l'identité de tous les wallets.
+**12. Ce qui reste incertain ?** Le contenu de la réponse de 16:00:08 UTC ; le DM ; l'heure de la bascule à l'intérieur de ces {duree(EV['musk_borne_haute'] - EV['musk_borne_basse'])} ({hms(EV['musk_borne_basse'])} à {hms(EV['musk_borne_haute'])} UTC, bornes documentaires) ; un propriétaire unique ou non pour l'ensemble ; le sens des gestes du 21/07 avant le visuel (répartition 07:57-08:33 UTC, regroupement 14:22-14:25 UTC) ; la nature exacte de `{COL['address']}` ; l'identité de tous les wallets.
 
 ## Hypothèses
 | Hypothèse | Conclusion | Niveau | Ce qui va contre |
