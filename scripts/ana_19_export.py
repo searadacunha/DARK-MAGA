@@ -4,7 +4,8 @@ from dmaga.config import BIG
 from dmaga.db import connect
 
 # Preserve the previous materialized result until the rebuilt export has passed validation.
-con = connect(prefer_materialized=False)
+# Mémoire bornée (machine partagée, garde à 1,2 Go) : DuckDB déborde sur le disque USB plutôt que de gonfler le processus.
+con = connect(mem="500MB", threads=1, prefer_materialized=False)
 tmp = BIG / "trades.tmp.parquet"
 tmp.unlink(missing_ok=True)  # only an unfinished staging file, never the last good export
 con.execute(f"COPY (SELECT * FROM trades ORDER BY slot, tx_index) TO '{tmp}' (FORMAT parquet, COMPRESSION zstd)")

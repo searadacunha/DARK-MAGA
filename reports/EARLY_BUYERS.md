@@ -3,45 +3,45 @@
 Généré par `scripts/rep_70_reports.py`. Ne prouve aucune connaissance préalable : un achat antérieur à un événement est compatible avec un pari ordinaire.
 
 Deux cohortes distinctes : avant le premier visuel public exact (21/07 16:02:29 UTC, @ChrisWinig, plus ancienne image identique dans le corpus archivé ;
-une réponse de @kikisknees à Musk à 16:00:08 UTC a un média perdu), et avant l'adoption par Musk (borne basse 21/07 19:03:27 UTC, borne haute 21/07 19:30:13 UTC,
-identifiant de l'image 19:23:20 UTC). Un achat dans cette fenêtre de 27 minutes n'est classé ni avant ni après.
+une réponse de @kikisknees à Musk à 16:00:08 UTC a un média perdu), et avant l'adoption par Musk (borne basse 21/07 19:03:27 UTC, borne haute 21/07 19:25:23 UTC,
+identifiant de l'image 21/07 19:23:20 UTC). Un achat dans cette fenêtre de 21 minutes n'est classé ni avant ni après.
 
 ## Activité par fenêtre
 | Fenêtre | Heures | SOL acheté | SOL vendu | Achats | Ventes | Wallets | Nouveaux acheteurs | Médiane achat/wallet | Part top 5 % |
 |---|---|---|---|---|---|---|---|---|---|
-| avant_pmarca | 163,53 | 5330,66 | 5198,01 | 5433 | 4507 | 1542 | 1451 | 0,6683 | 8,6 |
-| pmarca_a_winig | 18,25 | 815,06 | 623,56 | 507 | 491 | 247 | 88 | 1,0 | 42,2 |
+| avant_pmarca | 162,52 | 5327,01 | 5197,05 | 5429 | 4505 | 1541 | 1450 | 0,6642 | 8,6 |
+| pmarca_a_winig | 19,26 | 818,71 | 624,53 | 511 | 493 | 250 | 89 | 1,0 | 42,0 |
 | winig_a_biden | 1,73 | 240,92 | 279,93 | 306 | 224 | 199 | 73 | 0,5 | 34,0 |
 | biden_a_musk_borne_basse | 1,29 | 13,18 | 84,94 | 42 | 78 | 74 | 3 | 0,2 | 55,3 |
-| fenetre_musk | 0,45 | 148,73 | 90,88 | 57 | 27 | 59 | 18 | 0,4556 | 59,7 |
-| musk_plus_1h | 1,0 | 5377,61 | 5195,35 | 1532 | 1053 | 771 | 484 | 1,0587 | 37,2 |
-| musk_1h_6h | 5,0 | 64525,98 | 62858,31 | 10133 | 7807 | 4019 | 3223 | 2,0 | 15,0 |
-| musk_6h_24h | 18,0 | 124493,38 | 122430,67 | 23166 | 16995 | 8493 | 5735 | 1,1033 | 12,2 |
-| jusqua_retrait | 19,1 | 74355,11 | 76855,22 | 16124 | 12804 | 6434 | 2800 | 1,2897 | 12,7 |
-| retrait_plus_7j | 168,0 | 106081,51 | 106234,09 | 48695 | 40973 | 10736 | 5730 | 1,0 | 18,1 |
-| butler_oct | 360,0 | 80905,37 | 79396,94 | 36944 | 38668 | 11393 | 5264 | 0,9915 | 12,4 |
+| fenetre_musk | 0,37 | 20,85 | 44,04 | 13 | 18 | 25 | 8 | 0,1 | 96,8 |
+| musk_plus_1h | 1,0 | 5347,29 | 4987,28 | 1443 | 989 | 749 | 476 | 1,1143 | 37,1 |
+| musk_1h_6h | 5,0 | 64318,19 | 62335,96 | 10123 | 7795 | 3995 | 3209 | 2,0 | 15,1 |
+| musk_6h_24h | 18,0 | 124379,39 | 122964,7 | 23238 | 16963 | 8490 | 5742 | 1,109 | 12,2 |
+| jusqua_retrait | 19,18 | 74835,09 | 77072,26 | 16195 | 12919 | 6455 | 2825 | 1,2964 | 12,6 |
+| retrait_plus_7j | 168,0 | 102944,34 | 102673,06 | 46923 | 39577 | 10736 | 5730 | 0,9983 | 18,0 |
+| butler_oct | 360,0 | 80900,76 | 79389,9 | 36880 | 38579 | 11393 | 5264 | 0,9915 | 12,4 |
 
 ## Plus gros acheteurs dans les 6 h avant le visuel et jusqu'à la borne basse du changement de photo
 21/07 10:02:29 à 21/07 19:03:27 UTC. Ce sont les achats à regarder en premier, et aussi ceux qui ont le plus d'explications ordinaires : la promotion publique du projet s'intensifie ce matin-là.
 
 | Wallet | SOL acheté | Jetons M | Achats | Premier | Dernier | Réalisé SOL total | Flux net SOL total | 1er achat du wallet |
 |---|---|---|---|---|---|---|---|---|
-| `5V97uEb4ZNuXFudphU5nwUapRmt7a2V51TbULQvPJwnx` | 111,49 | 16,73 | 6 | 21/07 13:40:29 | 21/07 17:33:49 | 489,7 | 489,7 | 15/07 15:17:33 |
+| `5V97uEb4ZNuXFudphU5nwUapRmt7a2V51TbULQvPJwnx` | 111,49 | 16,73 | 6 | 21/07 13:40:29 | 21/07 17:33:49 | 489,6 | 489,6 | 15/07 15:17:33 |
 | `JC5MLur7syXrMRvcdX2dFGNtChP9ZEn5ufnuEyj5QS2K` | 99,22 | 11,52 | 2 | 21/07 13:58:12 | 21/07 14:04:39 | -42.5 | -42.5 | 21/07 13:58:12 |
 | `BfkBxeDE29dnFP4ptpEHhQWGL9xMu9LYv7hbUAmzU667` | 45,65 | 6,54 | 11 | 21/07 13:54:42 | 21/07 17:40:42 | 451,7 | 431,5 | 21/07 13:54:42 |
-| `5xyUFj7a8sP9y7DS93MnVvAfBAW3Sq3hbcfyuhyawSD9` | 33,84 | 4,98 | 6 | 21/07 13:54:37 | 21/07 14:04:58 | 144,5 | -834.8 | 21/07 13:54:37 |
+| `5xyUFj7a8sP9y7DS93MnVvAfBAW3Sq3hbcfyuhyawSD9` | 33,84 | 4,98 | 6 | 21/07 13:54:37 | 21/07 14:04:58 | 145,9 | -808.3 | 21/07 13:54:37 |
 | `D12r2UMT4yEhQca9p5aJeKMZYoerpaXEPT4zNTxSQ5ir` | 33,28 | 3,76 | 9 | 21/07 14:20:33 | 21/07 15:24:29 | 830,2 | 162,0 | 15/07 15:44:04 |
 | `4GVoqTXYLRDyBZPVTeX6PeDsoJ4vJeP4gPdVPeqkeKXe` | 25,00 | 3,56 | 5 | 21/07 13:51:32 | 21/07 17:33:49 | 455,0 | 455,0 | 21/07 02:24:45 |
 | `7Mjg8z2FjLAvKGGZmAbz6z52z4K17Lb42QZxhhTtKBdE` | 21,00 | 2,47 | 1 | 21/07 15:08:34 | 21/07 15:08:34 | 42,6 | -36.7 | 21/07 15:08:34 |
 | `5cWjvqwYbdiWCNcWbV71nZsM4KyfEnB3Cw1s7UEaftvJ` | 20,00 | 4,20 | 2 | 21/07 12:09:58 | 21/07 13:19:37 | 173,5 | 247,7 | 21/07 12:09:58 |
-| `3eJkwFDZVB27emciij1oWUVodmFhFdnkpmzKHjDzH34o` | 18,15 | 2,84 | 4 | 21/07 12:48:22 | 21/07 18:10:12 | 32,1 | 32,1 | 15/07 18:12:19 |
+| `3eJkwFDZVB27emciij1oWUVodmFhFdnkpmzKHjDzH34o` | 18,15 | 2,84 | 4 | 21/07 12:48:22 | 21/07 18:10:12 | 31,9 | 31,9 | 15/07 18:12:19 |
 | `Ct6SP2E3ckCGUCDzjAfgVR5SRbwdG6vcAydNVdMXMi3Q` | 17,50 | 2,31 | 10 | 21/07 16:46:29 | 21/07 17:19:17 | 371,9 | -197.5 | 16/07 19:14:17 |
-| `EKDB7EyLPD7a2Mqo7Kh8Y4aR7gD26VErY3yj41eZjwCJ` | 15,12 | 3,40 | 1 | 21/07 13:14:44 | 21/07 13:14:44 | 23,0 | -710.7 | 21/07 01:30:27 |
+| `EKDB7EyLPD7a2Mqo7Kh8Y4aR7gD26VErY3yj41eZjwCJ` | 15,12 | 3,40 | 1 | 21/07 13:14:44 | 21/07 13:14:44 | 23,6 | -617.5 | 21/07 01:30:27 |
 | `85ToHSg65oSMaJU7znUpzKfYuBbScWSsyRMCZavnoPjc` | 13,27 | 1,83 | 2 | 21/07 14:03:50 | 21/07 17:32:40 | 0,1 | 0,1 | 21/07 14:03:50 |
-| `9Sxmf25WG5WVQ5p86ycWeo5hMEwxiWPkFtLdRdTrHSQS` | 12,60 | 1,53 | 13 | 21/07 14:15:38 | 21/07 16:59:58 | 1 434,7 | 1 231,6 | 15/07 17:07:21 |
+| `9Sxmf25WG5WVQ5p86ycWeo5hMEwxiWPkFtLdRdTrHSQS` | 12,60 | 1,53 | 13 | 21/07 14:15:38 | 21/07 16:59:58 | 1 435,9 | 1 234,6 | 15/07 17:07:21 |
 | `6bW7RAdNLWm3543VrmGFHtL47sAmMabgLBynS9mzRjFE` | 12,00 | 1,83 | 3 | 21/07 13:40:29 | 21/07 13:53:45 | 395,8 | 395,8 | 21/07 13:40:29 |
 | `FCYZ79sMfmPuC2KMfNEGBqT4wwiHCUf5dzjaoweLRrH1` | 11,90 | 1,56 | 2 | 21/07 15:45:16 | 21/07 17:18:13 | 9,7 | 9,7 | 21/07 15:45:16 |
-| `6LFVkW3aa5f7WzhXNVZxoLHycRGhQRZyA8HcWp1a87PL` | 10,00 | 1,08 | 2 | 21/07 15:23:40 | 21/07 15:24:03 | 110,3 | 110,3 | 21/07 15:23:40 |
+| `6LFVkW3aa5f7WzhXNVZxoLHycRGhQRZyA8HcWp1a87PL` | 10,00 | 1,08 | 2 | 21/07 15:23:40 | 21/07 15:24:03 | 96,4 | 96,4 | 21/07 15:23:40 |
 | `BDFMkurHjWM8HCibLRncxaSF8eQ3oJJztPSr4jUEo3nZ` | 9,16 | 1,15 | 1 | 21/07 16:45:55 | 21/07 16:45:55 | 21,3 | 21,3 | 16/07 01:58:59 |
 | `DtxTsytoa5qWzW82UrB7WJnDzUo1rtksVBQ4Mm1jRtJF` | 8,19 | 1,05 | 6 | 21/07 14:21:13 | 21/07 17:05:01 | 70,7 | 64,6 | 20/07 12:01:58 |
 | `AnkQY7kybDL1pGPM4e6P7HhdW6App4UXk97x2JKfBdU1` | 7,50 | 1,37 | 2 | 21/07 13:49:32 | 21/07 17:12:22 | 67,7 | 49,6 | 15/07 17:16:54 |
@@ -54,59 +54,49 @@ identifiant de l'image 19:23:20 UTC). Un achat dans cette fenêtre de 27 minutes
 | `7UDfjuKyYddK7mYEQbPBNfzHPvehHhq7LkouQC9HQZrY` | 5,83 | 1,00 | 1 | 21/07 13:54:37 | 21/07 13:54:37 | 0,2 | 0,2 | 21/07 13:54:37 |
 | `9yxEQsmpYZWBhWXFUcpAMguUzNDxg3nUBQEcmNSrakDf` | 5,60 | 0,81 | 1 | 21/07 16:54:24 | 21/07 16:54:24 | 0,3 | 0,3 | 21/07 16:54:24 |
 | `FNuKXWBpx1dYeY81rzFUt317fk5TwB29kLFmKfLE1EoQ` | 5,33 | 0,76 | 12 | 21/07 14:15:44 | 21/07 17:39:30 | 3,7 | 1,7 | 15/07 19:38:46 |
-| `A9CYDXm23UagDkbRnv2NYYuj8FvHQXn52WnFiXoA9woz` | 5,00 | 0,61 | 1 | 21/07 14:04:13 | 21/07 14:04:13 | 1,2 | 1,2 | 21/07 14:04:13 |
 | `JARVhtcGADkszZb91SAHQzxh2KrW7aRtZ8CA2FHDj6jF` | 5,00 | 0,51 | 1 | 21/07 16:30:11 | 21/07 16:30:11 | 181,5 | 181,5 | 14/07 02:19:12 |
+| `A9CYDXm23UagDkbRnv2NYYuj8FvHQXn52WnFiXoA9woz` | 5,00 | 0,61 | 1 | 21/07 14:04:13 | 21/07 14:04:13 | 1,2 | 1,2 | 21/07 14:04:13 |
 | `EUtWKDpegbbHjBPoyDhZj6AijRwAG1x8aF581Wfkeo3C` | 4,62 | 0,68 | 2 | 21/07 13:44:19 | 21/07 14:22:43 | 9,1 | 9,1 | 21/07 13:44:19 |
 | `AqPgP5mGnYCUizjPrNd8T8aPWQDFWYiyA2RKtcZbgNJX` | 4,35 | 0,60 | 5 | 21/07 12:32:30 | 21/07 17:24:25 | 37,4 | 13,4 | 15/07 17:38:35 |
-| `49YJ8q4EicnZwNnGjtERipEXnRUEwQACUcck2xMgPE5Y` | 4,10 | 0,59 | 17 | 21/07 13:19:43 | 21/07 17:39:24 | 1,8 | 1,8 | 14/07 19:31:29 |
+| `49YJ8q4EicnZwNnGjtERipEXnRUEwQACUcck2xMgPE5Y` | 4,10 | 0,59 | 17 | 21/07 13:19:43 | 21/07 17:39:24 | 1,4 | 1,4 | 14/07 19:31:29 |
 | `4HuspKhV9F5Qu9QrNbiJvbFwt9NYHqhYz1Q2RA5DBPth` | 4,01 | 0,53 | 3 | 21/07 11:49:51 | 21/07 14:10:12 | 26,4 | 26,4 | 21/07 11:49:51 |
 | `HqxWXj8VJsGAwJuesYSxfsehfgjeZhu5LKYgvvE4gm9Y` | 4,00 | 0,39 | 1 | 21/07 14:06:21 | 21/07 14:06:21 | 28,4 | 28,4 | 21/07 14:06:21 |
 | `BUCkjvR8aGMSLmDpnk5nabFkeijtsUdZ24bRxhTm2koK` | 4,00 | 0,43 | 1 | 21/07 16:19:57 | 21/07 16:19:57 | 72,5 | 72,5 | 21/07 16:19:57 |
-| `3eW6W2d2PkQGM8Btjf3AbEKXYswBDt6mDntM9CEuNLXb` | 3,78 | 0,54 | 17 | 21/07 12:10:04 | 21/07 17:39:25 | 3,1 | 3,1 | 14/07 03:27:19 |
+| `3eW6W2d2PkQGM8Btjf3AbEKXYswBDt6mDntM9CEuNLXb` | 3,78 | 0,54 | 17 | 21/07 12:10:04 | 21/07 17:39:25 | 1,8 | 1,8 | 14/07 03:27:19 |
 | `2GTxgLAsbHPGUWSuj7n2kb7JpW2xQhzfXv3ukqpEjdDi` | 3,75 | 0,57 | 1 | 21/07 17:23:15 | 21/07 17:23:15 | 6,2 | 6,2 | 21/07 17:23:15 |
-| `AHA6fNQYjut7TYQ7VsCCtWnGzZm9HEUbGomV5Jv9fKr3` | 3,68 | 0,65 | 2 | 21/07 13:54:05 | 21/07 13:54:11 | -1.3 | -7.0 | 15/07 23:30:51 |
+| `AHA6fNQYjut7TYQ7VsCCtWnGzZm9HEUbGomV5Jv9fKr3` | 3,68 | 0,65 | 2 | 21/07 13:54:05 | 21/07 13:54:11 | 1,1 | 1,1 | 15/07 23:30:51 |
 | `9qASz9iM8ZMmx5SWHwr67AJPdnYvYy95YFFmBgHz7UCj` | 3,46 | 0,50 | 11 | 21/07 14:55:36 | 21/07 18:51:38 | 2,6 | 2,6 | 15/07 17:21:37 |
-| `5qx8EmzhnxwPDzkNMdRLNFZ245pwpioeUN7EyzH4MhNh` | 3,35 | 0,45 | 12 | 21/07 13:49:39 | 21/07 17:39:25 | 2,4 | 1,8 | 14/07 03:27:19 |
-| `5HdmFajexban7WJkfP4QrGXXyt76Mwwp9nFeZDWEf3Hy` | 2,61 | 0,39 | 12 | 21/07 12:10:05 | 21/07 17:39:24 | 2,3 | 2,3 | 14/07 16:44:18 |
+| `5qx8EmzhnxwPDzkNMdRLNFZ245pwpioeUN7EyzH4MhNh` | 3,35 | 0,45 | 12 | 21/07 13:49:39 | 21/07 17:39:25 | 1,7 | 1,7 | 14/07 03:27:19 |
+| `5HdmFajexban7WJkfP4QrGXXyt76Mwwp9nFeZDWEf3Hy` | 2,61 | 0,39 | 12 | 21/07 12:10:05 | 21/07 17:39:24 | 1,7 | 1,7 | 14/07 16:44:18 |
 | `6uwqPxhsRwLTPLyhrppUi9YPvxKq5eHhDGXQ4GZ1gbyk` | 2,60 | 0,27 | 1 | 21/07 16:33:10 | 21/07 16:33:10 | 6,0 | 6,0 | 21/07 16:33:10 |
-| `HRGt3Yr7AZizMzwWcLQnnaUtwdRyqNWpbssqbDEsQAXz` | 2,54 | 0,34 | 13 | 21/07 13:49:37 | 21/07 17:32:45 | 2,7 | 2,6 | 14/07 03:27:43 |
+| `HRGt3Yr7AZizMzwWcLQnnaUtwdRyqNWpbssqbDEsQAXz` | 2,54 | 0,34 | 13 | 21/07 13:49:37 | 21/07 17:32:45 | 2,1 | 2,0 | 14/07 03:27:43 |
 | `Aq9yU6gGnNgJobVmxfhdeXSySarY7bp88sE6BhK6EBDA` | 2,41 | 0,30 | 1 | 21/07 14:55:22 | 21/07 14:55:22 | 131,3 | 74,7 | 15/07 16:30:33 |
 | `5fMp94GgJVgvva8ubsR6xRg3PuZL4x7j9cwhL4aWtPLN` | 2,41 | 0,26 | 1 | 21/07 15:43:34 | 21/07 15:43:34 | 12,6 | 12,6 | 21/07 15:43:34 |
 | `3AwDdcrXRJpoWU5EQ9Dk7KR82jmQQK7ZAggay62aYZyG` | 2,34 | 0,35 | 9 | 21/07 12:10:04 | 21/07 17:32:51 | 1,3 | 0,7 | 14/07 03:40:05 |
-| `7hARSicdYvWR9saun1F3JDQjnnHY3k6wvNH2XXp2EA6A` | 2,32 | 0,28 | 5 | 21/07 14:22:00 | 21/07 17:39:30 | 3,2 | 3,2 | 15/07 17:21:24 |
+| `7hARSicdYvWR9saun1F3JDQjnnHY3k6wvNH2XXp2EA6A` | 2,32 | 0,28 | 5 | 21/07 14:22:00 | 21/07 17:39:30 | 3,1 | 3,1 | 15/07 17:21:24 |
 | `GrQGNjLzyzf7dNAewFnCG7RGnsfekCbNeFkDfdHPJeL6` | 2,26 | 0,24 | 3 | 21/07 16:18:40 | 21/07 16:23:09 | 28,4 | 28,4 | 21/07 16:18:40 |
 | `BX3Q7av7AkLAhhEF2SPTJCihYdwSw83GBJYQixEsUk2X` | 2,24 | 0,29 | 3 | 21/07 14:15:53 | 21/07 17:32:58 | -0.0 | -0.2 | 21/07 14:15:53 |
 
 ## Plus gros acheteurs dans la fenêtre du changement de photo
-21/07 19:03:27 à 21/07 19:30:13 UTC : classement impossible avant ou après.
+21/07 19:03:27 à 21/07 19:25:23 UTC : classement impossible avant ou après.
 
 | Wallet | SOL acheté | Jetons M | Achats | Premier |
 |---|---|---|---|---|
-| `AD65fgYti96iSSzSPaNazV9Bs29m7JbNomGjG4Cp5WFS` | 37,59 | 5,33 | 1 | 21/07 19:29:52 |
-| `BgDAGd7Y2HknGGcKSyVb8S734pEMbLHLxMhuQG3zZjhH` | 20,00 | 4,01 | 2 | 21/07 19:27:12 |
-| `BBcYhznjGjWVNVhaVGC5oBdkipydkjmqsiNciadXBXbY` | 14,00 | 2,10 | 1 | 21/07 19:29:57 |
 | `4DdrfiDHpmx55i4SPssxVzS9ZaKLb8qr45NKY9Er9nNh` | 10,00 | 2,26 | 1 | 21/07 19:25:17 |
-| `F9HrC8S68AnnVpF26JGkxfMxw3EiG8PN23YQGpyzvR5t` | 7,24 | 1,31 | 1 | 21/07 19:28:33 |
-| `5V97uEb4ZNuXFudphU5nwUapRmt7a2V51TbULQvPJwnx` | 7,07 | 1,27 | 2 | 21/07 19:27:36 |
-| `6KJUU8WRh5XuiPDfcM5JvFGdVUwB23unQygqnjzurao9` | 6,93 | 1,07 | 2 | 21/07 19:28:09 |
-| `75fXGTvc8BHKBXwNfqriso6dzLe52qMUzvGPu9DV8fog` | 5,72 | 0,96 | 1 | 21/07 19:29:17 |
-| `7qtCjqmdn2XTpbH7QCkhGFqBWCYXa48RH3wfmCUvFenF` | 5,00 | 1,09 | 1 | 21/07 19:27:05 |
-| `go45QZrGXRB3nTo2d3fD9YfaikDPkaTba1xYr86XM9r` | 4,95 | 0,81 | 1 | 21/07 19:29:38 |
 | `BDFMkurHjWM8HCibLRncxaSF8eQ3oJJztPSr4jUEo3nZ` | 3,60 | 0,87 | 1 | 21/07 19:25:08 |
-| `2qyz7CvLhzBRW1VyKpYAk1D7YHZPW19shJSNYNw4TBj6` | 3,60 | 0,55 | 1 | 21/07 19:29:52 |
 | `9zri3mYF16MMznYoyyUFfLhxTf3DERRoxmfqpFzv9nZ4` | 3,08 | 0,60 | 1 | 21/07 19:10:08 |
-| `FCYZ79sMfmPuC2KMfNEGBqT4wwiHCUf5dzjaoweLRrH1` | 3,04 | 0,53 | 1 | 21/07 19:29:02 |
 | `3eJkwFDZVB27emciij1oWUVodmFhFdnkpmzKHjDzH34o` | 3,00 | 0,71 | 1 | 21/07 19:25:08 |
-| `7SKjPwa4hKvgS6tjLcRGBKCngLoApoxynCuLNmEJ5yyS` | 2,97 | 0,45 | 2 | 21/07 19:29:46 |
-| `2nYMLn73jSTbDBsQSzK4w9FFmYRmAaXH6UD1yPNpnySY` | 2,50 | 0,48 | 2 | 21/07 19:27:36 |
-| `JDMxEMcpiSZa21QR9JYeRqeVMJCLcJ4r9mj6fAPurnGF` | 1,19 | 0,17 | 1 | 21/07 19:30:05 |
-| `5tL8jqhxBxND81Z7F3HGS6wyJDuJABQt14CJVpHwYjkY` | 0,99 | 0,19 | 1 | 21/07 19:28:03 |
-| `6HUqdT1GHwT3YexzF7xbwjyhbm6YtjJ2SZho5wc2e9Yc` | 0,50 | 0,11 | 1 | 21/07 19:25:58 |
 | `ToeAtAps23qivv6qLJJwwSechVQqbRLvsGYfWxLNKiQ` | 0,50 | 0,11 | 1 | 21/07 19:25:18 |
-| `7DML2YogyUdfe4AVee1dweMhChxu1vs6VCPyZ9o9J9TU` | 0,50 | 0,11 | 1 | 21/07 19:25:24 |
-| `2U1mHQwsfRq1wzMXA2KPzfrHbNU1Mghq6jiqzUbH6JpY` | 0,50 | 0,11 | 1 | 21/07 19:26:26 |
-| `3eW6W2d2PkQGM8Btjf3AbEKXYswBDt6mDntM9CEuNLXb` | 0,47 | 0,09 | 2 | 21/07 19:25:23 |
-| `J1GxVu6C5amQVGXRPxpcmpxRoxiacx4xLBP8fkGffhhE` | 0,45 | 0,10 | 1 | 21/07 19:25:26 |
+| `EKMKQaH5cAvG6phALpnNNx5bjLLnijZpd4FADtNANRyH` | 0,20 | 0,04 | 1 | 21/07 19:25:20 |
+| `3eW6W2d2PkQGM8Btjf3AbEKXYswBDt6mDntM9CEuNLXb` | 0,17 | 0,04 | 1 | 21/07 19:25:23 |
+| `3AwDdcrXRJpoWU5EQ9Dk7KR82jmQQK7ZAggay62aYZyG` | 0,11 | 0,03 | 1 | 21/07 19:25:23 |
+| `CvBkdpuu9Uj5275svNrbjh2cYXLByPUV7wnxCZ9T8PhC` | 0,10 | 0,02 | 1 | 21/07 19:25:20 |
+| `4ihSLYJYGCxQosiAyvfaTMR9WtakNGQs8CXEgC5gjJfS` | 0,10 | 0,02 | 1 | 21/07 19:25:20 |
+| `dc5cfqYJ312QL35fu9oZwrs5CxgQVh646TFPGTs3P6J` | 0,10 | 0,02 | 1 | 21/07 19:11:07 |
+| `HcnKk4wCCubjoSpH5GkMbDiCAsUbHTvAGunYbHMRVZvt` | 0,07 | 0,01 | 1 | 21/07 19:20:28 |
+| `FF3L3uqtddKNWR4vfLDvbh7ncLMQKsbtDA98k2F6aiK8` | 0,05 | 0,01 | 1 | 21/07 19:25:21 |
+| `8vTEtGqXmA94F4Vqmg52qS9VcZ9Av8Z45QpRJUFiD6up` | 0,04 | 0,01 | 1 | 21/07 19:11:40 |
+| `DZBETeDYyywWwWpGki42VbdkhPqDYU2zLYhgP8eThwGX` | 0,01 | 0,00 | 1 | 21/07 19:25:20 |
 
 ## Les 1 000 premiers acheteurs, tous venues
 Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'historique du wallet sur DMAGA.
@@ -284,7 +274,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 169 | `8XkTJ7pza7ENCYk3iA8LmQR8MpTNVRa74mpDfhbRmmW6` | 277419190 | 14/07 02:16:41 | 7,000 | 16,226 | 7,00 | 4,3 | 0,00 |
 | 170 | `AEX7ScQuxPEvK6h9ppJvYJAeA1TMyuoVazAXW3Y26xoU` | 277419196 | 14/07 02:16:44 | 0,300 | 0,689 | 0,50 | 0,1 | 0,00 |
 | 171 | `HPTsBt2gTZM2T9NAwBpTFgvEABs8ju43aJxmrtNP82RA` | 277419198 | 14/07 02:16:44 | 0,081 | 0,204 | 0,08 | 0,0 | 0,00 |
-| 172 | `4ToQp55myvfpeprgKuqGbDqyji9Ezm7CZg7QbcTpL33S` | 277419202 | 14/07 02:16:47 | 3,624 | 8,682 | 10 095,83 | 283,5 | 0,27 |
+| 172 | `4ToQp55myvfpeprgKuqGbDqyji9Ezm7CZg7QbcTpL33S` | 277419202 | 14/07 02:16:47 | 3,624 | 8,682 | 9 986,81 | 268,4 | 0,00 |
 | 173 | `y8qoAFuiuWC7hGqeRFfNbisgL6xe7bAEujhQ1TpRq9X` | 277419202 | 14/07 02:16:47 | 1,000 | 2,266 | 1,00 | -0.5 | 0,00 |
 | 174 | `aifnEdBbPUH7c4rk6jWnBKrDYL1N4AnccEQe9RAcUKF` | 277419204 | 14/07 02:16:48 | 0,010 | 0,024 | 0,01 | 0,0 | 0,00 |
 | 175 | `2gx8cYv92EqXAdoSaLdPtvWoJY76PhohRS27XfmbVLbK` | 277419205 | 14/07 02:16:48 | 0,130 | 0,324 | 0,13 | 0,0 | 0,00 |
@@ -335,13 +325,13 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 220 | `9C9fuT1FA7FFi4euHamiaBZzqsbf9FHoAJTAq3DZ2QJf` | 277419366 | 14/07 02:18:02 | 0,205 | 0,439 | 0,21 | 0,1 | 0,00 |
 | 221 | `Ei5yGz8dPndr1aCeHZsfqJBcS3VBbz75VHEhxxJKLy3V` | 277419368 | 14/07 02:18:03 | 5,000 | 9,074 | 132,23 | 405,4 | 0,00 |
 | 222 | `5esrMxxrtyRVpw8g2xdZ8xV9RD7hBuE9eFLhoAb22rva` | 277419370 | 14/07 02:18:04 | 0,100 | 0,165 | 0,10 | 0,0 | 0,00 |
-| 223 | `8cTEbRM2feDhD68xC7BA9TXzGYsQZ5GvTZ3Wf8xqVPCD` | 277419374 | 14/07 02:18:06 | 0,010 | 0,017 | 0,17 | 0,1 | 0,00 |
+| 223 | `8cTEbRM2feDhD68xC7BA9TXzGYsQZ5GvTZ3Wf8xqVPCD` | 277419374 | 14/07 02:18:06 | 0,010 | 0,017 | 0,17 | 0,0 | 0,00 |
 | 224 | `FWRYqoPYSmN4B3aeX2NC1m84sGbeSCjmeKJ8mPmbog2H` | 277419380 | 14/07 02:18:10 | 0,120 | 0,229 | 0,12 | -0.1 | 0,00 |
 | 225 | `Az2zbEnGUqFnGrdP46LXRf89RHqRFckCfnBgaobWUo4h` | 277419380 | 14/07 02:18:10 | 0,500 | 0,950 | 0,50 | 0,4 | 0,00 |
 | 226 | `34Q4jfZa3EQsid3Cfw3VBDzAqoQd2CvdYmCjQM8BWZzu` | 277419381 | 14/07 02:18:10 | 0,100 | 0,189 | 0,10 | 0,0 | 0,00 |
 | 227 | `7fMtvzA3xjFexxMAzxKdFesrASeUrUQzgpSCAcoBwP6S` | 277419388 | 14/07 02:18:13 | 0,495 | 0,930 | 0,49 | 0,2 | 0,00 |
 | 228 | `HLMnFCHYLxhWLHmjcYLyUdAnv198xHUs3VSFsfdAuBXr` | 277419388 | 14/07 02:18:13 | 0,020 | 0,039 | 0,02 | 0,0 | 0,00 |
-| 229 | `AD65fgYti96iSSzSPaNazV9Bs29m7JbNomGjG4Cp5WFS` | 277419405 | 14/07 02:18:21 | 7,689 | 14,052 | 16 750,91 | 273,6 | 0,00 |
+| 229 | `AD65fgYti96iSSzSPaNazV9Bs29m7JbNomGjG4Cp5WFS` | 277419405 | 14/07 02:18:21 | 7,689 | 14,052 | 16 739,81 | 273,6 | 0,00 |
 | 230 | `J7VoHEyVxJ8vACAPHwqPMqmdSug7oMab7WPQUewvKaKA` | 277419405 | 14/07 02:18:21 | 1,500 | 2,490 | 2,50 | 0,9 | 0,00 |
 | 231 | `8z39KrQxgTBL8gtXtYgvY6NqTPzPwyVzbLX9uFGL5sf3` | 277419409 | 14/07 02:18:23 | 1,980 | 3,904 | 2,97 | 8,7 | 0,00 |
 | 232 | `FEiWNj9VJZwo3vVBAbfKvt4aEGfUTcyevNdvu4jFjhLj` | 277419417 | 14/07 02:18:27 | 0,050 | 0,096 | 0,05 | 0,0 | 0,00 |
@@ -482,7 +472,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 367 | `GgMLFST1Vu2CWA3hkJcRtLhWCeVwZ6r5iyMNGH1aVsX3` | 277420313 | 14/07 02:25:11 | 0,205 | 0,226 | 1,22 | 0,0 | 0,00 |
 | 368 | `Ea5nYiNKspnUdLLyXwuxXfvjNfe1mbZfQjdiiM8mRzBp` | 277420320 | 14/07 02:25:15 | 0,100 | 0,110 | 0,10 | -0.0 | 0,00 |
 | 369 | `5vLde7TcYj3xiXy31Ec2FZu17QBCeYzi9KoJrccQhVeP` | 277420328 | 14/07 02:25:18 | 0,050 | 0,056 | 0,05 | 0,0 | 0,00 |
-| 370 | `Hp2wiZ9k2uGrwyPWrhvXhDiV4yWk7Kjj7EVgmrf2Y7P8` | 277420354 | 14/07 02:25:30 | 0,100 | 0,117 | 84,34 | 22,2 | 0,00 |
+| 370 | `Hp2wiZ9k2uGrwyPWrhvXhDiV4yWk7Kjj7EVgmrf2Y7P8` | 277420354 | 14/07 02:25:30 | 0,100 | 0,117 | 82,74 | 21,2 | 0,00 |
 | 371 | `AtZjv3DuV9cLn3Jxm72TMSdTN4aM6CrBaGyxUC4c2wDk` | 277420361 | 14/07 02:25:33 | 0,139 | 0,162 | 0,14 | 327,3 | 0,00 |
 | 372 | `jhueu3HzbaUkzPztAZhjfsRjJ4osM5VZhpMY9C7Fm6Q` | 277420369 | 14/07 02:25:37 | 0,150 | 0,174 | 0,15 | 0,0 | 0,00 |
 | 373 | `9RAPaAEy3Tf3jkpL7JEGH7qDe6ch95epJoseErUU7Mxw` | 277420402 | 14/07 02:25:51 | 3,000 | 3,410 | 3,00 | 1,0 | 0,00 |
@@ -559,7 +549,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 444 | `53Rk9vHqHDYN9sf6g4CnMqCcm1B4nhkY9wc3oaXP46NP` | 277420948 | 14/07 02:29:54 | 2,300 | 1,731 | 2,30 | -1.1 | 0,00 |
 | 445 | `6iDRWu5MvJP8EcyFqBDqpC1SkGW1PtzRnhe4MrzCigJ1` | 277420951 | 14/07 02:29:55 | 0,035 | 0,026 | 0,17 | -0.1 | 0,00 |
 | 446 | `BHQeqgnbgmx2T4mD3BZjNmxArKABRjXsjCuhYC5wJeBe` | 277420960 | 14/07 02:29:59 | 0,200 | 0,147 | 0,40 | 3,4 | 0,01 |
-| 447 | `dc5cfqYJ312QL35fu9oZwrs5CxgQVh646TFPGTs3P6J` | 277420994 | 14/07 02:30:13 | 0,100 | 0,074 | 696,07 | 1,3 | 0,00 |
+| 447 | `dc5cfqYJ312QL35fu9oZwrs5CxgQVh646TFPGTs3P6J` | 277420994 | 14/07 02:30:13 | 0,100 | 0,074 | 694,57 | 1,3 | 0,00 |
 | 448 | `4Mcyd8HKz92VJQ1VUPSnSbGUcPax8Pay71pArzrFUvHn` | 277421009 | 14/07 02:30:19 | 0,050 | 0,037 | 0,13 | -0.0 | 0,00 |
 | 449 | `HSReKCXSztVWqT8SbPFSw3fCw1iDwZPAh1C4vigXsJD2` | 277421029 | 14/07 02:30:28 | 0,010 | 0,007 | 0,75 | -0.1 | 0,00 |
 | 450 | `9ShDwsTK2e8sC6dVwNFH9fvco7fbLrRMT7tY8WJvKpZQ` | 277421029 | 14/07 02:30:28 | 0,076 | 0,056 | 0,14 | -0.1 | 0,00 |
@@ -615,7 +605,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 500 | `BzWERBEwhDC93ZPAT1GmGN7CK7CMzymW4PxgSTdqh6rf` | 277421572 | 14/07 02:34:40 | 0,247 | 0,361 | 0,25 | 0,1 | 0,00 |
 | 501 | `Gjeufiib8f6LeeMT7JQ3zjmq9MGRPqHiakB35syfSp1A` | 277421572 | 14/07 02:34:40 | 0,050 | 0,073 | 0,24 | -0.1 | 0,00 |
 | 502 | `F2kcbXTMKcZZ9ufCarAo4FmCf9M184sDD12TGiKMgYfQ` | 277421581 | 14/07 02:34:43 | 3,000 | 4,400 | 88,42 | 705,8 | 1,10 |
-| 503 | `61zL6bXggckHyyPxP13Xi9hUEBFD3SfL1enx1dE5hhfT` | 277421592 | 14/07 02:34:49 | 5,000 | 6,531 | 174,00 | -3.2 | 0,07 |
+| 503 | `61zL6bXggckHyyPxP13Xi9hUEBFD3SfL1enx1dE5hhfT` | 277421592 | 14/07 02:34:49 | 5,000 | 6,531 | 170,00 | -2.6 | 0,00 |
 | 504 | `3cACjXwjnGzfQq3GvN3ThzC9M8maH1ZuSDjKUMn1gaoV` | 277421613 | 14/07 02:34:59 | 0,010 | 0,013 | 0,01 | 0,0 | 0,00 |
 | 505 | `E23s7RPXSm84DDhzuzBMU2ATctYoenv9TSvYZ9k7jNQ3` | 277421640 | 14/07 02:35:12 | 0,150 | 0,200 | 0,15 | 0,0 | 0,00 |
 | 506 | `3MGR1WrnnLCV9yCeWX7uZicBqciWqa4MAmiro4q56dX8` | 277421653 | 14/07 02:35:17 | 0,310 | 0,410 | 0,31 | 0,0 | 0,00 |
@@ -654,8 +644,8 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 539 | `5zNVkMnCYT7QU7CWxUbxDraxNtdFpynBrNWKW75myu4z` | 277422612 | 14/07 02:42:26 | 1,000 | 0,936 | 4,00 | 16,5 | 0,00 |
 | 540 | `7ZY7p8VjgutzqZWJvGNDYyGXiE5XcBy5sPj5wTwpV95b` | 277422614 | 14/07 02:42:27 | 0,191 | 0,185 | 0,19 | -0.0 | 0,00 |
 | 541 | `7UY8W5dpRvNXkKkibNr2YzgFZDAUvnL4am9QgH4XMBkV` | 277422637 | 14/07 02:42:37 | 4,950 | 4,818 | 4,95 | -1.0 | 0,00 |
-| 542 | `3xJnng7EtrALKS6ufRSbqsRK2y4jnMANykrXeiH2Ebj7` | 277422668 | 14/07 02:42:51 | 0,193 | 0,232 | 33,52 | 0,5 | 0,00 |
-| 543 | `J1GxVu6C5amQVGXRPxpcmpxRoxiacx4xLBP8fkGffhhE` | 277422709 | 14/07 02:43:08 | 0,538 | 0,870 | 116,08 | 0,8 | 0,00 |
+| 542 | `3xJnng7EtrALKS6ufRSbqsRK2y4jnMANykrXeiH2Ebj7` | 277422668 | 14/07 02:42:51 | 0,193 | 0,232 | 32,59 | -0.3 | 0,00 |
+| 543 | `J1GxVu6C5amQVGXRPxpcmpxRoxiacx4xLBP8fkGffhhE` | 277422709 | 14/07 02:43:08 | 0,538 | 0,870 | 114,68 | 0,8 | 0,00 |
 | 544 | `CxYPnnNtPLWk7786J8d3Rurk6dgbcgZV1fT17V4Ry1D9` | 277422709 | 14/07 02:43:08 | 0,236 | 0,379 | 8,28 | 0,4 | 0,00 |
 | 545 | `5jiqmf6wCFEm2YgdvXd9MywbTHb58TJxXSgQkAvMRRzq` | 277422716 | 14/07 02:43:12 | 0,990 | 1,516 | 0,99 | 0,2 | 0,00 |
 | 546 | `GxBdupQ6A6FguULAyckreu8yF1tsJR3ep9YBEFqweTdn` | 277422757 | 14/07 02:43:29 | 0,100 | 0,131 | 0,10 | -0.1 | 0,00 |
@@ -690,9 +680,9 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 575 | `ArrE1ddaN2dYWEoHgcJmmYH2mhYgvKhkmcMo8yk52jes` | 277423725 | 14/07 02:50:49 | 0,247 | 0,589 | 0,25 | 0,1 | 0,00 |
 | 576 | `DdTYjbnZLRgC1UGc4FjVqh8vnsh6NH7CAVSqeB1qdyat` | 277423745 | 14/07 02:50:57 | 0,099 | 0,191 | 0,20 | 13,3 | 0,00 |
 | 577 | `EbkMR4XW9YNQScFPkwmzbc6VyuGZcPfqzut5YvNAkJXi` | 277423747 | 14/07 02:50:58 | 0,500 | 0,957 | 1,00 | 0,0 | 0,00 |
-| 578 | `7Gt57NfrPD82K8YpTsSijPB2tfdob7Hy1nU7C67P1J52` | 277423752 | 14/07 02:51:00 | 0,149 | 0,305 | 111,87 | 1,5 | 0,02 |
+| 578 | `7Gt57NfrPD82K8YpTsSijPB2tfdob7Hy1nU7C67P1J52` | 277423752 | 14/07 02:51:00 | 0,149 | 0,305 | 110,30 | 1,8 | 0,00 |
 | 579 | `7nc3X7MpAqCmw636uYZSgUBYdsDmaszvTPJ8y5JMdm9T` | 277423789 | 14/07 02:51:17 | 0,203 | 0,412 | 2,15 | -0.0 | 0,00 |
-| 580 | `4uZbWYcAk3Wuw2cyFXK2Cw7Mo38khTz9phC3VD1KXTbX` | 277423796 | 14/07 02:51:20 | 0,172 | 0,340 | 127,96 | 1,6 | 0,03 |
+| 580 | `4uZbWYcAk3Wuw2cyFXK2Cw7Mo38khTz9phC3VD1KXTbX` | 277423796 | 14/07 02:51:20 | 0,172 | 0,340 | 125,96 | 1,9 | 0,00 |
 | 581 | `14hHLPAQax9vwpYMpeLnNqnW5mKt2F9uikBTJo3aFZQC` | 277423828 | 14/07 02:51:34 | 0,050 | 0,096 | 0,05 | -0.0 | 0,00 |
 | 582 | `8qeUp8YW4GNHasCWUZXhY2ywh4GgK5b4xsaVoVJydNtw` | 277423867 | 14/07 02:51:52 | 0,007 | 0,013 | 0,01 | 0,1 | 0,00 |
 | 583 | `aVag5MtkBbnwFSekoqsgEmXAFUuVGYVqcLFQEY9c1Gr` | 277424051 | 14/07 02:53:16 | 0,480 | 0,911 | 0,48 | -0.2 | 0,00 |
@@ -711,7 +701,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 596 | `HNX2Cn2nXYsJiGTNnPaHj3K3vkLWSvYRChCVRzfUmmGu` | 277424763 | 14/07 02:58:43 | 1,000 | 2,527 | 70,53 | 44,0 | 0,00 |
 | 597 | `BUp1egG4oXUNDt5zHJiiPxL62Wh99uEQ3ZvoB7YigFYy` | 277424764 | 14/07 02:58:44 | 0,600 | 1,492 | 1,68 | -0.2 | 0,00 |
 | 598 | `F3ubkMVaPxTQNWejaEvipBHXqbaqXq3eSeDTgLXsyC7j` | 277424892 | 14/07 02:59:43 | 1,000 | 2,409 | 1,00 | -0.2 | 0,00 |
-| 599 | `EDQDTR11HnHs47Gimurm8pjNZFXEtXKBYQNEtabemF6k` | 277424952 | 14/07 03:00:10 | 0,696 | 1,659 | 137,84 | -56.4 | 0,38 |
+| 599 | `EDQDTR11HnHs47Gimurm8pjNZFXEtXKBYQNEtabemF6k` | 277424952 | 14/07 03:00:10 | 0,696 | 1,659 | 114,61 | -56.0 | 0,00 |
 | 600 | `49oRRdxqj6TTZijAFsjG6YGCeiQAgJDMbiy9mFocT1ST` | 277425045 | 14/07 03:00:53 | 2,200 | 5,022 | 2,20 | -0.3 | 0,00 |
 | 601 | `69ztZMzmiqx1ExLy5rzDpddWUeM5Fqor3JiGKWLM72kD` | 277425054 | 14/07 03:00:56 | 0,279 | 0,622 | 0,28 | -0.1 | 0,00 |
 | 602 | `HpbGQurKZdpX4ZeWcJa8ZFmM1uSLtVutBiZ12bonxtos` | 277425216 | 14/07 03:02:11 | 0,050 | 0,110 | 2,42 | -0.3 | 0,00 |
@@ -726,18 +716,18 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 611 | `A2x4D3jf6qc4Wggh1x5trtsP7ByaDG6MTxFad558z6qE` | 277426072 | 14/07 03:08:50 | 0,200 | 0,721 | 0,20 | -0.0 | 0,00 |
 | 612 | `EQa8GCoqLbRK7TBDBARPZFXvMkQk4697rWLvFfMXa3jC` | 277427166 | 14/07 03:17:14 | 0,400 | 1,821 | 26,13 | 42,8 | 0,00 |
 | 613 | `GEzhU2NqwFtzWkc4tNNpW2heF5VZL9jZQeaW5BKzdRR6` | 277427941 | 14/07 03:23:11 | 0,500 | 2,394 | 2,50 | 0,6 | 0,00 |
-| 614 | `5qx8EmzhnxwPDzkNMdRLNFZ245pwpioeUN7EyzH4MhNh` | 277428476 | 14/07 03:27:19 | 0,106 | 0,471 | 186,05 | 2,4 | 0,01 |
-| 615 | `3eW6W2d2PkQGM8Btjf3AbEKXYswBDt6mDntM9CEuNLXb` | 277428476 | 14/07 03:27:19 | 0,174 | 0,768 | 224,08 | 3,1 | 0,00 |
-| 616 | `3mUGxxHAte6SL6siUNJ4H7PnY7GryhAeRKEYJ9ZLEgdd` | 277428480 | 14/07 03:27:20 | 0,212 | 0,933 | 200,09 | 2,5 | 0,02 |
-| 617 | `7TFy4p7CfojssdiatBcdPg1bAyBZNCcy6uZCiYKyFR5E` | 277428480 | 14/07 03:27:20 | 0,056 | 0,245 | 71,29 | 1,7 | 0,02 |
-| 618 | `CDNWUknR7i1PAhJkap2cxRASp4ttfPFai9B3SE1iFcvK` | 277428522 | 14/07 03:27:40 | 0,056 | 0,241 | 140,93 | 0,9 | 0,00 |
+| 614 | `5qx8EmzhnxwPDzkNMdRLNFZ245pwpioeUN7EyzH4MhNh` | 277428476 | 14/07 03:27:19 | 0,106 | 0,471 | 178,80 | 1,7 | 0,00 |
+| 615 | `3eW6W2d2PkQGM8Btjf3AbEKXYswBDt6mDntM9CEuNLXb` | 277428476 | 14/07 03:27:19 | 0,174 | 0,768 | 221,08 | 1,8 | 0,00 |
+| 616 | `3mUGxxHAte6SL6siUNJ4H7PnY7GryhAeRKEYJ9ZLEgdd` | 277428480 | 14/07 03:27:20 | 0,212 | 0,933 | 193,61 | 1,0 | 0,00 |
+| 617 | `7TFy4p7CfojssdiatBcdPg1bAyBZNCcy6uZCiYKyFR5E` | 277428480 | 14/07 03:27:20 | 0,056 | 0,245 | 67,56 | 1,4 | 0,00 |
+| 618 | `CDNWUknR7i1PAhJkap2cxRASp4ttfPFai9B3SE1iFcvK` | 277428522 | 14/07 03:27:40 | 0,056 | 0,241 | 138,34 | 0,7 | 0,00 |
 | 619 | `PKt5x4i2JRHYbPcuEsTELyCfkn1EEMYhDKBC6n6Ya4g` | 277428529 | 14/07 03:27:43 | 1,829 | 7,655 | 264,70 | 0,4 | 0,00 |
-| 620 | `HRGt3Yr7AZizMzwWcLQnnaUtwdRyqNWpbssqbDEsQAXz` | 277428529 | 14/07 03:27:43 | 0,174 | 0,707 | 118,89 | 2,7 | 0,00 |
+| 620 | `HRGt3Yr7AZizMzwWcLQnnaUtwdRyqNWpbssqbDEsQAXz` | 277428529 | 14/07 03:27:43 | 0,174 | 0,707 | 115,34 | 2,1 | 0,00 |
 | 621 | `8nR9ztLLKj5DvtHo3ubJ5DuFn3x3SYhCxoPxrdmm7rzn` | 277429654 | 14/07 03:36:20 | 0,090 | 0,391 | 0,74 | 0,5 | 0,00 |
 | 622 | `LqNsHTzZprVjJ3X439PqsSdRAi6PQTDJoJWgaC8e5YW` | 277429757 | 14/07 03:37:08 | 0,500 | 2,012 | 0,50 | 0,1 | 0,00 |
-| 623 | `3AwDdcrXRJpoWU5EQ9Dk7KR82jmQQK7ZAggay62aYZyG` | 277430148 | 14/07 03:40:05 | 0,179 | 0,631 | 153,81 | 1,3 | 0,00 |
+| 623 | `3AwDdcrXRJpoWU5EQ9Dk7KR82jmQQK7ZAggay62aYZyG` | 277430148 | 14/07 03:40:05 | 0,179 | 0,631 | 151,69 | 1,3 | 0,00 |
 | 624 | `8K4TPixLEoxZX2MEXkGuBeFTZPbTqRPEtrt63o3QSxYm` | 277430225 | 14/07 03:40:40 | 0,100 | 0,349 | 0,10 | 0,0 | 0,00 |
-| 625 | `C9Wxwm81vc5vZ2KdkGAeC4PprDxyNsiLqPvccfu175qh` | 277430326 | 14/07 03:41:28 | 0,347 | 1,220 | 296,30 | 1,5 | 0,00 |
+| 625 | `C9Wxwm81vc5vZ2KdkGAeC4PprDxyNsiLqPvccfu175qh` | 277430326 | 14/07 03:41:28 | 0,347 | 1,220 | 287,99 | 1,5 | 0,00 |
 | 626 | `5aQ6dDXoqgeeLVWF7PLf6zPSLTF1Hw8bhNyweci8herC` | 277430326 | 14/07 03:41:28 | 1,000 | 3,451 | 4,48 | 5,0 | 8,69 |
 | 627 | `7xY2NMmeqTo4i6qJSbx5qivfDBX5s4DVerFeb7aaLvLU` | 277430523 | 14/07 03:42:56 | 0,009 | 0,028 | 0,01 | -0.0 | 0,00 |
 | 628 | `Fbrwz4t4AX7YLwnz1pMdgFgcw883d4iJAnocKaq7Vwf2` | 277430523 | 14/07 03:42:56 | 0,280 | 0,869 | 0,84 | 0,2 | 0,00 |
@@ -749,9 +739,9 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 634 | `2hgnb68Qd4Rs4Fd59jiK6ooKQfBAtTsTLAq6F9U2yPxU` | 277432200 | 14/07 03:55:49 | 0,100 | 0,265 | 2,02 | 0,1 | 0,00 |
 | 635 | `4tg39jDpd3DhuEyeZz4ELbsR3AU4Y8kdZiPpN6iu8eN8` | 277432263 | 14/07 03:56:19 | 0,610 | 1,619 | 106,73 | 312,0 | 0,00 |
 | 636 | `AFC73btpLXVaMSjUWYCN6PbbKEKkFm5DFJaWLTQ6xWVV` | 277432599 | 14/07 03:58:58 | 0,088 | 0,230 | 0,09 | -0.0 | 0,00 |
-| 637 | `77x4hjEqvSbQvW9LQqbqZqAL4gZLbGdPhSDUQMcWjoVa` | 277433357 | 14/07 04:04:54 | 0,201 | 0,494 | 140,65 | 0,9 | 0,00 |
-| 638 | `FknP8WQWdkmWp1KPNoaeU9xk3aM3KD2L8XsGtE2dta8A` | 277433361 | 14/07 04:04:56 | 0,201 | 0,489 | 62,74 | 0,7 | 0,01 |
-| 639 | `HJzbESXk7pXaeBnJVCr2PYNEjovo7XS7YhmMSLVT9TWx` | 277433387 | 14/07 04:05:07 | 0,065 | 0,150 | 80,69 | 1,2 | 0,01 |
+| 637 | `77x4hjEqvSbQvW9LQqbqZqAL4gZLbGdPhSDUQMcWjoVa` | 277433357 | 14/07 04:04:54 | 0,201 | 0,494 | 140,15 | 0,8 | 0,00 |
+| 638 | `FknP8WQWdkmWp1KPNoaeU9xk3aM3KD2L8XsGtE2dta8A` | 277433361 | 14/07 04:04:56 | 0,201 | 0,489 | 62,14 | 0,9 | 0,00 |
+| 639 | `HJzbESXk7pXaeBnJVCr2PYNEjovo7XS7YhmMSLVT9TWx` | 277433387 | 14/07 04:05:07 | 0,065 | 0,150 | 77,41 | 0,9 | 0,00 |
 | 640 | `8g6LpJRc3aAw5JNXSD4f6NQgcjrG2U83jaNiwk6M4a4n` | 277433619 | 14/07 04:06:55 | 0,100 | 0,233 | 0,15 | 0,0 | 0,00 |
 | 641 | `4fX2uKeSrkQpzZoadS16pWZQbEj4qoFJYuqVkU652eys` | 277434234 | 14/07 04:11:39 | 0,020 | 0,061 | 0,02 | -0.0 | 0,00 |
 | 642 | `8cvLTPcb5JbkCHgXEJBzkVVhNo1mqQArXtBGhDajt1pW` | 277434506 | 14/07 04:13:47 | 0,100 | 0,327 | 3,70 | 24,7 | 0,00 |
@@ -765,7 +755,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 650 | `FSzufLkuimD28LwfoWajtr3Cq2FZvGP89QCtsCdAnfWR` | 277439288 | 14/07 04:50:13 | 0,629 | 2,716 | 24,20 | 0,0 | 0,00 |
 | 651 | `3YpaY5wSQUmW8z9xW2uXXoF2ieSW5USTJQeEfmVsgXTq` | 277439874 | 14/07 04:54:37 | 0,250 | 1,068 | 6,13 | 0,4 | 0,00 |
 | 652 | `9D8MFu7Ay3Txz8n5XybZzBoU7bJ8cfA9dXz7S5d88SoC` | 277440041 | 14/07 04:55:53 | 0,500 | 2,110 | 40,33 | 8,8 | 0,00 |
-| 653 | `7i6p15vfxKiXVo5Ai1TV7yzLz6z5xMmzrfSgpobteycx` | 277442379 | 14/07 05:13:32 | 0,063 | 0,253 | 182,86 | 1,3 | 0,00 |
+| 653 | `7i6p15vfxKiXVo5Ai1TV7yzLz6z5xMmzrfSgpobteycx` | 277442379 | 14/07 05:13:32 | 0,063 | 0,253 | 181,84 | 1,2 | 0,00 |
 | 654 | `A3cgkzkkyPzaLeje3YXn114nwTgeQVbt4o9ovp1wcwNt` | 277445300 | 14/07 05:35:36 | 0,010 | 0,043 | 0,01 | -0.0 | 0,00 |
 | 655 | `AFDkwJXJPCkZUjGo4mrrRZY53xU1vMSvXsyQiKdEZN93` | 277450182 | 14/07 06:12:56 | 0,050 | 0,261 | 0,47 | 79,0 | 0,00 |
 | 656 | `CJGc1RFrViUV7atc2vksLGvhGJePUkZcDj8gYCdogFGG` | 277451038 | 14/07 06:19:30 | 0,110 | 0,560 | 0,11 | 0,0 | 0,00 |
@@ -798,7 +788,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 683 | `FeZg6AEeXRn8Qa9qSJzV43CaNRLPSGwZ7rSssJTuVnoT` | 277490492 | 14/07 11:22:13 | 0,366 | 1,125 | 4,54 | 0,1 | 0,00 |
 | 684 | `4PFdhMPP9vPPN4wY7w3LDW1Qqzb1wtnRTZQxEArbCMZB` | 277490493 | 14/07 11:22:13 | 0,276 | 0,841 | 6,48 | 0,1 | 0,00 |
 | 685 | `FfQkDYXQBZfqAxCg12hgaN2aFKsim9iAxTre6XpxmWpS` | 277490493 | 14/07 11:22:13 | 0,220 | 0,666 | 40,00 | 0,4 | 0,00 |
-| 686 | `HhbvRD7BBHXxW3wa68HLGRBYYABa4JDaMvoKbyyW8Mn7` | 277490496 | 14/07 11:22:14 | 0,180 | 0,543 | 314,34 | 3,6 | 0,00 |
+| 686 | `HhbvRD7BBHXxW3wa68HLGRBYYABa4JDaMvoKbyyW8Mn7` | 277490496 | 14/07 11:22:14 | 0,180 | 0,543 | 307,72 | 2,7 | 0,00 |
 | 687 | `5VwagjrkToKwJTiLRC7B6tuSteBxc9WzBUTnNbS6UTx5` | 277493528 | 14/07 11:45:16 | 0,080 | 0,251 | 4,21 | 93,9 | 0,00 |
 | 688 | `2UNhNgHpypVB8DgJGTPkn17Jsc3NcTGY5sA5pAJFT9W7` | 277498279 | 14/07 12:21:25 | 0,500 | 3,512 | 0,50 | 0,5 | 0,00 |
 | 689 | `9cfRU5RKRjUKGumdVRAehiu9PtEY8vDd4wejkpdUP7vw` | 277503232 | 14/07 12:59:49 | 2,970 | 16,642 | 231,16 | 729,2 | 0,00 |
@@ -812,7 +802,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 697 | `KMG98hz7PTCuX6erXB7JAdibYVRH2xE8Kk4MV7p63DS` | 277509817 | 14/07 13:50:51 | 0,735 | 2,500 | 6,40 | 4,5 | 0,00 |
 | 698 | `D967cejV8fCEyov6Mt2gyhjfUcT93pARoEVnypQXpvUA` | 277509877 | 14/07 13:51:19 | 0,126 | 0,411 | 0,52 | -0.2 | 0,00 |
 | 699 | `9qVEXF45JGaRkA8voddVSLYbt5wzxcWr7ZdYMwAH2Exy` | 277509877 | 14/07 13:51:19 | 0,112 | 0,367 | 0,67 | 0,0 | 0,00 |
-| 700 | `6r8CqiPG63qFwHoPyUhrnz2DtMNyiKrkFQC6BZ2V4Xe8` | 277509880 | 14/07 13:51:21 | 0,122 | 0,392 | 336,99 | 0,3 | 0,00 |
+| 700 | `6r8CqiPG63qFwHoPyUhrnz2DtMNyiKrkFQC6BZ2V4Xe8` | 277509880 | 14/07 13:51:21 | 0,122 | 0,392 | 330,74 | 0,3 | 0,00 |
 | 701 | `FXYKNueTUkCvKAofjYxkj1NLeMdeHTRpfuJ13WTipfLf` | 277509885 | 14/07 13:51:23 | 0,148 | 0,471 | 0,61 | 0,0 | 0,00 |
 | 702 | `GsjuXdLzE8wQh6RTNkq36VdSRKvp8LbtmkxZgEBboR4s` | 277511152 | 14/07 14:01:25 | 0,397 | 1,233 | 0,40 | 0,4 | 0,00 |
 | 703 | `8LCVMEQaJ8LSdgXtcWHmrqVjcypAdx2VpHo9if9x4xrM` | 277512894 | 14/07 14:14:54 | 5,000 | 14,012 | 144,16 | 429,3 | 0,00 |
@@ -831,15 +821,15 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 716 | `AuebSMSpCW7Fzo2DY1nQCwBPwpCZw4mtfnQiswNbzt4A` | 277526160 | 14/07 15:57:10 | 0,120 | 0,411 | 1,31 | 2,7 | 0,00 |
 | 717 | `H3QsBrrivimFJmSpTXuvig2n1Bh7JuYxrriRSEszT6cc` | 277532233 | 14/07 16:43:58 | 3,025 | 10,048 | 7,27 | 5 490,9 | 0,00 |
 | 718 | `CBGwseFBDm2hSdqYUecSFsjfSmjAZtPmNGRpN6kWjt3r` | 277532262 | 14/07 16:44:11 | 2,604 | 7,984 | 2,60 | 0,0 | 0,00 |
-| 719 | `5HdmFajexban7WJkfP4QrGXXyt76Mwwp9nFeZDWEf3Hy` | 277532275 | 14/07 16:44:18 | 0,103 | 0,325 | 87,60 | 2,3 | 0,00 |
+| 719 | `5HdmFajexban7WJkfP4QrGXXyt76Mwwp9nFeZDWEf3Hy` | 277532275 | 14/07 16:44:18 | 0,103 | 0,325 | 85,65 | 1,7 | 0,00 |
 | 720 | `4DFczd9SY8vkFJjiRWpUVWgcWiwrpu15Bpaq4EDXy7Cg` | 277545382 | 14/07 18:25:47 | 1,000 | 2,980 | 1,00 | 94,0 | 0,00 |
 | 721 | `A1UDMqcUC8RkZ8YENAktdueSQ6jxUUBickBK2y61vQ8J` | 277545574 | 14/07 18:27:15 | 0,750 | 2,184 | 4,50 | 0,0 | 0,00 |
 | 722 | `BMn5hm3sJ6zumPM4GFxHsKkRm9RRvu45FUMeqvVUywgA` | 277549224 | 14/07 18:54:59 | 0,050 | 0,116 | 0,05 | -0.0 | 0,00 |
 | 723 | `BGc1RN7U3BSh6DAsdkRuv71KG5peFK9Pxb9yKDDP18iu` | 277549852 | 14/07 18:59:53 | 0,100 | 0,230 | 11,63 | 5,0 | 0,00 |
 | 724 | `FiBYMoxDE4iCCAAYKZVGSFr7UqEhSj142FuNZAfLhBfT` | 277550253 | 14/07 19:03:05 | 0,500 | 1,145 | 1,50 | 0,7 | 0,00 |
-| 725 | `9Js15JmZyNutFyRyBNMVwo3JhVUXzFeXJQNhZKzDuTum` | 277551380 | 14/07 19:11:41 | 0,197 | 0,415 | 105,08 | 6,0 | 0,00 |
+| 725 | `9Js15JmZyNutFyRyBNMVwo3JhVUXzFeXJQNhZKzDuTum` | 277551380 | 14/07 19:11:41 | 0,197 | 0,415 | 104,22 | 5,6 | 0,00 |
 | 726 | `9Rzuu3iWG2TFKB4H7sM6jNmDTtSRn22FqWiHEp4q4UqF` | 277551384 | 14/07 19:11:43 | 0,043 | 0,091 | 6,52 | -0.1 | 0,00 |
-| 727 | `49YJ8q4EicnZwNnGjtERipEXnRUEwQACUcck2xMgPE5Y` | 277553962 | 14/07 19:31:29 | 0,099 | 0,222 | 90,71 | 1,8 | 0,00 |
+| 727 | `49YJ8q4EicnZwNnGjtERipEXnRUEwQACUcck2xMgPE5Y` | 277553962 | 14/07 19:31:29 | 0,099 | 0,222 | 88,55 | 1,4 | 0,00 |
 | 728 | `CwXGXQuMjDPytRdS2Eh1zSQ7SAgwgRaMUtqbYGazMY9q` | 277555763 | 14/07 19:45:31 | 0,002 | 0,005 | 34,43 | 5,5 | 0,00 |
 | 729 | `4PUi4nHwhjkRYJs7PzNXFpMWAXcmhzgfH9osparmJwV7` | 277559501 | 14/07 20:14:31 | 0,500 | 1,189 | 0,67 | 5,1 | 0,00 |
 | 730 | `B252jsFK2BKMfHRFzrHcxyVayPvC32h4ZXU8jmsm4Gsp` | 277571716 | 14/07 21:48:19 | 0,800 | 1,895 | 19,19 | 24,9 | 0,00 |
@@ -862,21 +852,21 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 747 | `Ejh8nKp4PyjGqrmPkrX9SpfwtNnD2yRMWRvAFsdUDVCF` | 277690936 | 15/07 13:03:09 | 0,346 | 0,525 | 0,56 | -0.0 | 0,00 |
 | 748 | `B5fC3Dg42BRT8GffXg8nPy6ktQtgQ1UL5pHTZ7rnsmmR` | 277693161 | 15/07 13:20:29 | 0,500 | 0,778 | 2,50 | 2,4 | 0,00 |
 | 749 | `5wAN1pX3ttnJ2piSPpXsAx2J2rv7tPbHA4bHfFP5R7ij` | 277693806 | 15/07 13:25:24 | 0,100 | 0,155 | 0,10 | 0,7 | 0,00 |
-| 750 | `JCDpQ6m7mb5n2bUSQ3GQpVLxVsZtRUHhmvRXeE2Gg1rn` | 277698336 | 15/07 14:00:22 | 3,000 | 4,504 | 204,01 | 712,5 | 0,61 |
-| 751 | `ApNso5pym1xLic1RXE7vkXn6H5QA5oHp6i5pnQKZnoxV` | 277698372 | 15/07 14:00:38 | 0,271 | 0,388 | 107,45 | 1,5 | 0,00 |
+| 750 | `JCDpQ6m7mb5n2bUSQ3GQpVLxVsZtRUHhmvRXeE2Gg1rn` | 277698336 | 15/07 14:00:22 | 3,000 | 4,504 | 202,01 | 704,6 | 0,90 |
+| 751 | `ApNso5pym1xLic1RXE7vkXn6H5QA5oHp6i5pnQKZnoxV` | 277698372 | 15/07 14:00:38 | 0,271 | 0,388 | 106,67 | 1,5 | 0,00 |
 | 752 | `7vdw3tSLyTTJRcYoCCeK2LJ3CyfDtYvTRJsGbDSUQJHp` | 277700101 | 15/07 14:14:08 | 0,500 | 0,714 | 0,50 | 5,2 | 0,00 |
 | 753 | `cAMHzvfwJoSyYUH8aFfKjb195QtUEjhLonkRHaDkuYA` | 277700101 | 15/07 14:14:08 | 0,500 | 0,707 | 0,50 | 5,2 | 0,00 |
 | 754 | `Ge6tSATHdMCGoQztf7u7W4mRWTyiLC1MHqDnZyDGeLei` | 277701505 | 15/07 14:25:11 | 0,100 | 0,149 | 2,17 | 0,6 | 0,00 |
 | 755 | `GMVm9BWUVEuSSzvBbChcyAGD3iXRcSFQEqaAJCv3zs5c` | 277702967 | 15/07 14:36:30 | 0,827 | 1,168 | 13,08 | 5,9 | 0,00 |
 | 756 | `pmmgQLHq6ZZrcDez6V2pfRwAwctRBvgEGzJLDbPYqBQ` | 277703697 | 15/07 14:42:10 | 0,247 | 0,360 | 0,74 | 3,4 | 0,00 |
-| 757 | `EgqRdhJXivFeHt73Y3VXyoMaNxU8CtonyA1FX673mdKr` | 277703789 | 15/07 14:42:54 | 0,001 | 0,001 | 177,29 | 14,3 | 0,00 |
+| 757 | `EgqRdhJXivFeHt73Y3VXyoMaNxU8CtonyA1FX673mdKr` | 277703789 | 15/07 14:42:54 | 0,001 | 0,001 | 166,49 | 14,1 | 0,00 |
 | 758 | `2bUqHhkdryVMR88q3BNxYzuvUxvgzJEMjNgFW5zujZjF` | 277704893 | 15/07 14:51:22 | 3,500 | 4,762 | 667,83 | 545,4 | 0,00 |
 | 759 | `8z2MvtcKDxfrexPgMzREgGs3auavduvZSXrKd7adngRz` | 277708055 | 15/07 15:15:58 | 3,000 | 3,907 | 24,51 | 49,3 | 0,00 |
-| 760 | `5ZTLzj4spvB4VsU6Qe48iGFGA2Lb7FRpyKXWbq48MjVS` | 277708160 | 15/07 15:16:49 | 0,290 | 0,365 | 185,90 | 4,1 | 0,00 |
-| 761 | `HD8YggbjQ5b3qFmhizf2zySZR3zHC8CR3cgQW7Bj3Lqk` | 277708177 | 15/07 15:16:56 | 0,182 | 0,226 | 118,68 | 6,6 | 0,00 |
-| 762 | `5V97uEb4ZNuXFudphU5nwUapRmt7a2V51TbULQvPJwnx` | 277708259 | 15/07 15:17:33 | 0,248 | 0,303 | 32 923,95 | 489,7 | 0,00 |
+| 760 | `5ZTLzj4spvB4VsU6Qe48iGFGA2Lb7FRpyKXWbq48MjVS` | 277708160 | 15/07 15:16:49 | 0,290 | 0,365 | 184,25 | 3,7 | 0,00 |
+| 761 | `HD8YggbjQ5b3qFmhizf2zySZR3zHC8CR3cgQW7Bj3Lqk` | 277708177 | 15/07 15:16:56 | 0,182 | 0,226 | 118,68 | 5,9 | 0,00 |
+| 762 | `5V97uEb4ZNuXFudphU5nwUapRmt7a2V51TbULQvPJwnx` | 277708259 | 15/07 15:17:33 | 0,248 | 0,303 | 32 832,72 | 489,6 | 0,00 |
 | 763 | `5prcrnXbd1TSjxxRqXmHY44vCYKJgBJychNGvCuhSkGi` | 277708259 | 15/07 15:17:33 | 1,307 | 1,561 | 54,10 | 8,4 | 0,00 |
-| 764 | `AzU4r8PErWXPqrUN6mpLh1zWVf1ve2rhPzkxscUsfvA8` | 277709443 | 15/07 15:26:47 | 0,340 | 0,431 | 10,24 | 79,4 | 0,00 |
+| 764 | `AzU4r8PErWXPqrUN6mpLh1zWVf1ve2rhPzkxscUsfvA8` | 277709443 | 15/07 15:26:47 | 0,340 | 0,431 | 10,24 | 79,0 | 0,00 |
 | 765 | `BdTBb9CtwifSncdXcrwENNS4yNC5wnF5X2kBwcgKj7si` | 277709565 | 15/07 15:27:44 | 0,200 | 0,253 | 2,38 | -0.6 | 0,00 |
 | 766 | `tdNaNGqbKpxgVdSHri6BevbD11ncnjR8GtFMagF2FGV` | 277709677 | 15/07 15:28:37 | 1,500 | 1,771 | 12,50 | 2,0 | 0,00 |
 | 767 | `9mRn9Zp1WhmV1hEJZFiPkjC4wp5neX1uuiYc5KxoNF72` | 277709844 | 15/07 15:29:56 | 0,500 | 0,585 | 6,28 | -0.7 | 0,00 |
@@ -885,7 +875,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 770 | `FHiX5WwpWa8iX43cusYojR3WfiMLFAWL29yVpWKaha6K` | 277710582 | 15/07 15:35:44 | 0,500 | 0,526 | 0,50 | 0,4 | 0,00 |
 | 771 | `4QpLx9URPJTk59szL5KgoLYyVH7EWeYub8y4GMwDPTtQ` | 277710793 | 15/07 15:37:21 | 1,000 | 1,058 | 1,00 | 0,0 | 0,00 |
 | 772 | `HRRq3jAZ2jeWEudg9scS1n42NYAkqEiTygjsMBGn9CqU` | 277711336 | 15/07 15:41:38 | 0,990 | 1,027 | 439,92 | 715,1 | 0,00 |
-| 773 | `dQyiUnrBuhhbpRfkkBVhvoNnJXHwkx3axAtmxYLzc8i` | 277711441 | 15/07 15:42:27 | 0,330 | 0,335 | 192,04 | 268,2 | 0,01 |
+| 773 | `dQyiUnrBuhhbpRfkkBVhvoNnJXHwkx3axAtmxYLzc8i` | 277711441 | 15/07 15:42:27 | 0,330 | 0,335 | 191,53 | 268,8 | 0,00 |
 | 774 | `Mw9DA84QcNhgbS78wsAtj1NSzDMmTFThNXsLuTRqLQW` | 277711622 | 15/07 15:43:51 | 0,250 | 0,256 | 4,97 | 1,4 | 0,00 |
 | 775 | `D12r2UMT4yEhQca9p5aJeKMZYoerpaXEPT4zNTxSQ5ir` | 277711649 | 15/07 15:44:04 | 0,500 | 0,503 | 1 081,55 | 830,2 | 0,00 |
 | 776 | `GVjmBfuuPRRcmpZWx3id4a5v3FhGASDxcmyhzxpm7Niu` | 277711677 | 15/07 15:44:17 | 0,278 | 0,263 | 2,65 | -0.1 | 0,00 |
@@ -1033,7 +1023,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 918 | `AgPsPtpAiQqMtcmSsGEGvje1dXTco3NGi1gAF7gvYC7L` | 277721234 | 15/07 16:57:38 | 0,250 | 0,027 | 6,83 | 0,2 | 0,00 |
 | 919 | `8GtQhiyph4cuc6fvQMXNXA9egUBou3zGFHaaDWk47QpX` | 277721235 | 15/07 16:57:38 | 5,000 | 0,538 | 6,00 | 3,5 | 0,00 |
 | 920 | `8A1HLL8PhK9yeofuj2BRvAFvQUzsMk6oZvVngeCoHJ9M` | 277721242 | 15/07 16:57:41 | 3,000 | 0,317 | 37,50 | -15.4 | 0,00 |
-| 921 | `6bKNmmyckNZNtcgPbxZU9arsQwGEFosvZtLGsXixhxED` | 277721244 | 15/07 16:57:43 | 30,000 | 2,928 | 3 373,50 | -714.7 | 0,00 |
+| 921 | `6bKNmmyckNZNtcgPbxZU9arsQwGEFosvZtLGsXixhxED` | 277721244 | 15/07 16:57:43 | 30,000 | 2,928 | 3 341,50 | -808.2 | 0,00 |
 | 922 | `DydnZica7gYa4PuhSdnwWujoh12prHoBHi9cB9cQFEuN` | 277721245 | 15/07 16:57:43 | 0,200 | 0,018 | 0,20 | 0,1 | 0,00 |
 | 923 | `9Pei378iQbg5VjvwTPXw8hhkfaDRU4Jo9ofCigRvSxWm` | 277721254 | 15/07 16:57:48 | 5,000 | 0,468 | 55,00 | -2.4 | 0,00 |
 | 924 | `24QgyAUJeLWLwZfapyLY22x56xvXfc9tYedrkJaFuEM8` | 277721254 | 15/07 16:57:48 | 0,050 | 0,005 | 0,08 | -0.0 | 0,00 |
@@ -1085,7 +1075,7 @@ Ordre (slot, index de transaction). `Acheté` et `Réalisé` couvrent tout l'his
 | 970 | `5ECJRxtixX8exysTBoAHAhXr5gWTmvxs1eg3vfSztekn` | 277721349 | 15/07 16:58:31 | 0,099 | 0,006 | 0,20 | -0.0 | 0,00 |
 | 971 | `En9k2qRCb9qwrWxE1rqrGYVC5qJfDdGs4H2nyaAZhbdL` | 277721352 | 15/07 16:58:33 | 10,000 | 0,575 | 20,00 | -11.8 | 0,00 |
 | 972 | `EEbhYqSd4PQbjw6M2AQG8mqvfswB2wixv6EVHvTz8x4r` | 277721352 | 15/07 16:58:33 | 4,950 | 0,277 | 4,95 | 0,5 | 0,00 |
-| 973 | `CY6S8UB3sEgUbHR5r5knPk1zp8fgguFwt5rRkRTNajVb` | 277721353 | 15/07 16:58:33 | 1,000 | 0,055 | 2,30 | -1.1 | 0,00 |
+| 973 | `CY6S8UB3sEgUbHR5r5knPk1zp8fgguFwt5rRkRTNajVb` | 277721353 | 15/07 16:58:33 | 1,000 | 0,055 | 2,30 | -1.3 | 0,00 |
 | 974 | `7WNou8DqaWTnveECZoboV8o2jCyQJ2ebLW554q76yctL` | 277721354 | 15/07 16:58:33 | 9,900 | 0,541 | 218,80 | -33.6 | 0,00 |
 | 975 | `JBib9Ahy67QfXH74viXkQwrUV5hdd8k8KXmxZL8Qkavz` | 277721354 | 15/07 16:58:33 | 20,000 | 1,036 | 20,00 | -4.7 | 0,00 |
 | 976 | `ASUyichxo66odQhpSFxeEzEM4ofmenRLqavAVqA3HAQk` | 277721364 | 15/07 16:58:38 | 3,000 | 0,143 | 3,00 | -1.6 | 0,00 |

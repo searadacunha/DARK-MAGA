@@ -366,7 +366,7 @@ Sources : `h53_h3qs.py`, `data/h3qs_by_mint.csv` et `data/h3qs_rotations.csv`. L
 - Tout solde calculé en sommant `trades` seul : 6t2dz4jm y garde 26,65 M, AtZj y descend à −84,5 M.
 - Les corrections de position de `ana_61` et `ana_64` ne réinjectent que les arêtes d'au moins 1 M de jetons entre membres d'un groupe.
 - Les virements entre deux wallets non suivis restent invisibles partout.
-- Mesure exhaustive, correctif et recalcul : issue #27, PR dédiée.
+- Mesure exhaustive, correctif et recalcul : issue #27, `docs/REBUILD_2026-11-07.md`. Sur les 57 828 arêtes, 22 853 n'ont aucune jambe dans `trades` et sont réinjectées ; les 22 641 arêtes à une jambe sont des jambes de swap, de frais ou de passage. Le chiffre de 217,0 M ne change pas ; le réexport dédoublonné de `trades.parquet` corrige le PnL de 765 wallets.
 
 **Première version de ce paragraphe**
 - Elle parlait de « 22 152 arêtes manquantes » et de « soldes faux » sans distinguer ces cas.
@@ -403,7 +403,7 @@ Sources : `h53_h3qs.py`, `data/h3qs_by_mint.csv` et `data/h3qs_rotations.csv`. L
 - **`Cr8oGfjw…`** : destination USDC commune à 10 wallets DMAGA, à lire en entier (`h33_counterparty.py`).
 - **`7rSZBE2S…`** : destinataire de 23 M KLLARY de 7GVC.
 - **Pipeline** : correction du trou `Transfer` (§8) et recalcul des soldes publiés.
-- **Rapports en aval** : `rep_70`, `rep_72`, `rep_80`, `rep_90` et `ana_64` lisent `events.json`. Ils n'ont pas été régénérés ici, car le swap de la machine bloquait les calculs gardés. `docs/CASE_REPORT.md`, `reports/EARLY_BUYERS.md` et `reports/TOP_TRADERS.md` citent encore la borne 19:30:13.
+- **Rapports en aval** : régénérés avec la borne 19:25:23 dans la branche de l'issue #27 (`docs/REBUILD_2026-11-07.md`). Restent hérités, faute de Helius : `reports/COORDINATION.md`, `reports/ATTRIBUTION.md` (`rep_72`) et `data/collector.json` (`ana_65`).
 
 ## 11. Sources de la passe 3 (issue #27) : trois tests
 
