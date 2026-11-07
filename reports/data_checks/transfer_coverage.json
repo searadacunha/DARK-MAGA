@@ -5,9 +5,9 @@
  },
  "gtba_par_jambes": [
   {
-   "jambes_dans_trades": "aucune",
-   "aretes": 22853,
-   "jetons_M": 2175.739
+   "jambes_dans_trades": "aucune, transaction absente de trades",
+   "aretes": 22152,
+   "jetons_M": 2126.308
   },
   {
    "jambes_dans_trades": "destination seule",
@@ -23,47 +23,52 @@
    "jambes_dans_trades": "source seule",
    "aretes": 6255,
    "jetons_M": 1398.613
+  },
+  {
+   "jambes_dans_trades": "aucune, transaction lue",
+   "aretes": 701,
+   "jetons_M": 49.431
   }
  ],
  "gtba_par_jambes_et_bouts": [
   {
-   "jambes_dans_trades": "aucune",
+   "jambes_dans_trades": "aucune, transaction absente de trades",
    "bouts": "wallet/wallet",
    "aretes": 8648,
    "jetons_M": 363.869
   },
   {
-   "jambes_dans_trades": "aucune",
+   "jambes_dans_trades": "aucune, transaction absente de trades",
    "bouts": "wallet/hub",
    "aretes": 8512,
    "jetons_M": 900.733
   },
   {
-   "jambes_dans_trades": "aucune",
+   "jambes_dans_trades": "aucune, transaction absente de trades",
    "bouts": "hub/wallet",
    "aretes": 4992,
    "jetons_M": 861.706
   },
   {
-   "jambes_dans_trades": "aucune",
+   "jambes_dans_trades": "aucune, transaction lue",
    "bouts": "router/venue",
    "aretes": 259,
    "jetons_M": 2.302
   },
   {
-   "jambes_dans_trades": "aucune",
+   "jambes_dans_trades": "aucune, transaction lue",
    "bouts": "wallet/venue",
    "aretes": 167,
    "jetons_M": 1.347
   },
   {
-   "jambes_dans_trades": "aucune",
+   "jambes_dans_trades": "aucune, transaction lue",
    "bouts": "venue/wallet",
    "aretes": 160,
    "jetons_M": 1.576
   },
   {
-   "jambes_dans_trades": "aucune",
+   "jambes_dans_trades": "aucune, transaction lue",
    "bouts": "venue/router",
    "aretes": 115,
    "jetons_M": 44.206
@@ -409,8 +414,8 @@
  },
  "doublons_tx_balances_et_gtba": 52,
  "aretes_ajoutees_par_ana20_et_positions": {
-  "n": 22853,
-  "jetons_M": 2175.739
+  "n": 22152,
+  "jetons_M": 2126.308
  },
  "positions_a_la_borne_basse": {
   "proprietaires_changes_de_plus_d_1_jeton": 6,
@@ -438,17 +443,17 @@
     "membre": true
    },
    {
-    "owner": "2mQMeQufu56A5joWHvC5fegQrTmh5cozBiEAxFmCjMZK",
-    "ecart_M": -0.134272,
-    "ancien_M": 0.134272,
-    "nouveau_M": 0.0,
-    "membre": false
-   },
-   {
     "owner": "HCLibUwr9JYtrpt5QgZY2eWfJbphTM7w9t69mGjayC7f",
     "ecart_M": 0.134272,
     "ancien_M": 0.0,
     "nouveau_M": 0.134272,
+    "membre": false
+   },
+   {
+    "owner": "2mQMeQufu56A5joWHvC5fegQrTmh5cozBiEAxFmCjMZK",
+    "ecart_M": -0.134272,
+    "ancien_M": 0.134272,
+    "nouveau_M": 0.0,
     "membre": false
    },
    {
@@ -467,7 +472,7 @@
    }
   ]
  },
- "garantie_une_jambe": "dmaga/normalize.py écrit une ligne pour chaque propriétaire hors venue dont le solde net DMAGA change dans une transaction lue : une arête à une seule jambe a donc pour autre bout une venue ou un intermédiaire à solde net nul",
+ "garantie_une_jambe": "dmaga/normalize.py écrit une ligne pour chaque propriétaire hors venue dont le solde net DMAGA change dans une transaction lue : une arête d'une transaction lue, à une jambe ou sans jambe, a pour bouts absents une venue ou un intermédiaire à solde net nul ; elle n'est jamais ajoutée",
  "historiques_suivis": {
   "wallets": 1219,
   "tronques": 20,

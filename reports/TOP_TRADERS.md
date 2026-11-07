@@ -2,7 +2,7 @@
 
 Généré par `scripts/rep_70_reports.py`, ne pas éditer à la main.
 
-Population : 71 682 wallets, hors réserves de pools, routeurs et échanges. SOL acheté 786 902, SOL vendu 782 178, réalisé cumulé 98 124
+Population : 71 673 wallets, hors réserves de pools, routeurs et échanges. SOL acheté 786 902, SOL vendu 782 178, réalisé cumulé 98 124
 (le cumul ne s'annule pas : les frais de plateforme, les positions de liquidité et les jetons reçus sans coût en sortent).
 
 ## Comment lire
@@ -20,7 +20,7 @@ Population : 71 682 wallets, hors réserves de pools, routeurs et échanges. S
 | avant Musk | 76 | 1 845 | 2 240 | 470 | 1,308 | 62 (82 %) |
 | fenêtre Musk | 8 | 50 | 202 | 176 | 0,508 | 8 (100 %) |
 | après Musk | 53899 | 662 662 | 572 536 | 4 492 | -0.001 | 18319 (34 %) |
-| aucun achat | 16054 | 0 | 48 906 | 48 906 | 0,000 | 7339 (46 %) |
+| aucun achat | 16045 | 0 | 48 906 | 48 906 | 0,000 | 7339 (46 %) |
 
 ## 100 plus gros réalisés, coût connu
 Retenu si moins de 5 % des ventes sont sans quantité connue et moins de 5 % du stock vient de transferts sans coût.

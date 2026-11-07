@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Couverture des virements DMAGA : chaque arête de token_edges confrontée à trades.parquet (issue #27). Hors ligne.
 
-1. Arêtes `gtba` (API de transferts) classées selon les jambes présentes dans trades : aucune, source seule, destination seule,
-   les deux ; et selon la nature des deux bouts (venue de dmaga/venues.py et autorités, puis `kind` de nodes.parquet).
-   Attendu : une arête sans jambe dans trades est un virement `Transfer` hors historique du mint, ajouté par ana_20 et
-   dmaga.positions ; une arête à une seule jambe est une jambe de swap ou de frais, déjà comptée par la ligne swap du wallet.
+1. Arêtes `gtba` (API de transferts) classées selon les jambes présentes dans trades : aucune (transaction absente de trades,
+   ou transaction lue), source seule, destination seule, les deux ; et selon la nature des deux bouts (venue de dmaga/venues.py
+   et autorités, puis `kind` de nodes.parquet).
+   Attendu : seule une arête dont la transaction est absente de trades est un virement `Transfer` hors historique du mint, ajouté
+   par ana_20 et dmaga.positions ; une arête d'une transaction lue est déjà dans le solde net de chaque propriétaire (jambe de
+   swap, de frais ou de passage par un routeur).
    Toute arête à une jambe dont la jambe présente n'est pas un swap, des frais ou un mouvement de liquidité est listée.
 2. Doublons : même (signature, source, destination) vue à la fois par les soldes de transaction et par l'API.
 3. Positions juste avant la borne basse (19:03:27) : ancienne règle de ana_61 (arêtes token_direct d'au moins 1 M seulement)
@@ -46,12 +48,12 @@ def main():
     con.execute(f"CREATE TEMP TABLE nd AS SELECT address, kind FROM read_parquet('{BIG}/nodes.parquet')")
     con.execute("CREATE TEMP TABLE tl AS SELECT signature, owner, string_agg(DISTINCT kind, '+' ORDER BY kind) kinds FROM trades WHERE owner IS NOT NULL GROUP BY 1, 2")
     con.execute(f"""CREATE TEMP TABLE g AS SELECT e.signature, e.src, e.dst, e.qty, e.block_time,
-        s.kinds sk, d.kinds dk,
+        s.kinds sk, d.kinds dk, e.signature IN (SELECT DISTINCT signature FROM trades) tx_lue,
         CASE WHEN e.src IN (SELECT a FROM v) THEN 'venue' ELSE coalesce((SELECT kind FROM nd WHERE address=e.src), 'inconnu') END sc,
         CASE WHEN e.dst IN (SELECT a FROM v) THEN 'venue' ELSE coalesce((SELECT kind FROM nd WHERE address=e.dst), 'inconnu') END dc
         FROM read_parquet('{E}') e LEFT JOIN tl s ON s.signature=e.signature AND s.owner=e.src LEFT JOIN tl d ON d.signature=e.signature AND d.owner=e.dst
         WHERE e.how='gtba' AND e.dst<>'(multiple)'""")
-    legs = "CASE WHEN sk IS NULL AND dk IS NULL THEN 'aucune' WHEN dk IS NULL THEN 'source seule' WHEN sk IS NULL THEN 'destination seule' ELSE 'les deux' END"
+    legs = "CASE WHEN sk IS NULL AND dk IS NULL AND NOT tx_lue THEN 'aucune, transaction absente de trades' WHEN sk IS NULL AND dk IS NULL THEN 'aucune, transaction lue' WHEN dk IS NULL THEN 'source seule' WHEN sk IS NULL THEN 'destination seule' ELSE 'les deux' END"
     by_legs = [dict(zip(("jambes_dans_trades", "aretes", "jetons_M"), r)) for r in con.execute(
         f"SELECT {legs} l, count(*), round(sum(qty)/1e6, 3) FROM g GROUP BY 1 ORDER BY 2 DESC").fetchall()]
     by_class = [dict(zip(("jambes_dans_trades", "bouts", "aretes", "jetons_M"), r)) for r in con.execute(
@@ -95,7 +97,8 @@ def main():
             "plus_grands_ecarts": [{"owner": o, "ecart_M": round(v / 1e12, 6), "ancien_M": round(old.get(o, 0) / 1e12, 6), "nouveau_M": round(new.get(o, 0) / 1e12, 6),
                                     "membre": o in members} for o, v in sorted(diff.items(), key=lambda x: -abs(x[1]))[:25]]},
         "garantie_une_jambe": ("dmaga/normalize.py écrit une ligne pour chaque propriétaire hors venue dont le solde net DMAGA change dans une "
-                               "transaction lue : une arête à une seule jambe a donc pour autre bout une venue ou un intermédiaire à solde net nul"),
+                               "transaction lue : une arête d'une transaction lue, à une jambe ou sans jambe, a pour bouts absents une venue "
+                               "ou un intermédiaire à solde net nul ; elle n'est jamais ajoutée"),
         "historiques_suivis": flows_coverage(),
         "limite": "les virements entre deux wallets non suivis, ou au-delà du plafond de pages d'un historique, ne sont vus ni par trades ni par token_edges",
     }

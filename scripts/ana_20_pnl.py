@@ -16,6 +16,7 @@ import pyarrow.parquet as pq
 from dmaga.config import BIG, RAW
 from dmaga.db import connect
 from dmaga.pnl import Wallet
+from dmaga.positions import gtba_only_edges_sql
 from dmaga.venues import load as load_venues
 
 VD = "5HuEsLbebeuottMsFW3hHcXTrKVsu3WUNSQnSr6aX4eL"
@@ -58,9 +59,7 @@ def main():
     edges = BIG / "token_edges.parquet"
     extra = ""
     if edges.exists():
-        con.execute(f"""CREATE TEMP TABLE x AS SELECT e.signature, e.slot, e.block_time, e.src, e.dst, CAST(round(e.qty*1e6) AS BIGINT) q
-            FROM read_parquet('{edges}') e WHERE e.how='gtba' AND e.dst <> '(multiple)' AND NOT EXISTS
-            (SELECT 1 FROM trades t WHERE t.signature=e.signature AND (t.owner=e.src OR t.owner=e.dst))""")
+        con.execute(f"CREATE TEMP TABLE x AS {gtba_only_edges_sql(str(edges), 2**62)}")
         cut = f"AND block_time < {cutoff}" if cutoff else ""
         extra = f"""UNION ALL SELECT src, 'transfer', -q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}
                     UNION ALL SELECT dst, 'transfer', q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}"""

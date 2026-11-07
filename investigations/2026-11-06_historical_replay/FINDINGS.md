@@ -372,6 +372,11 @@ Sources : `h53_h3qs.py`, `data/h3qs_by_mint.csv` et `data/h3qs_rotations.csv`. L
 - Elle parlait de « 22 152 arêtes manquantes » et de « soldes faux » sans distinguer ces cas.
 - Elle surestimait l'effet sur les chiffres publiés.
 
+**Correction du 07/11/2026, après la fusion de la PR #28**
+- Sur les 22 853 arêtes sans jambe, 701 (49,4 M) appartiennent à une transaction déjà lue dans `trades` : ce sont des jambes de passage (réserve → routeur → acheteur), à net nul ou venue aux deux bouts dans le brut, 701 sur 701. Les réinjecter les comptait deux fois.
+- Seules les 22 152 arêtes dont la transaction est absente de `trades` sont désormais réinjectées, le chiffre de la première version.
+- Réalisé, groupe des 33 et 217,0 M inchangés ; résiduel −44,2 M, 11 wallets fictifs retirés. Détail : `docs/REBUILD_2026-11-07.md` §8.
+
 ## 9. Couverture et limites
 
 **Grands livres décodés**
