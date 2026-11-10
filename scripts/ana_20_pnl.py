@@ -3,9 +3,11 @@
 
 Prix du pool : réserve WSOL / réserve DMAGA après chaque transaction. Prix USD : clôture SOLUSDT 1 min.
 Valorisation résiduelle : quantité restante × prix du pool à la date de coupure, indiquée en clair.
+Un prix SOL/USD nécessaire absent ou invalide arrête le calcul avant l'écriture de l'export.
 """
 import csv
 import io
+import math
 import sys
 import zipfile
 from pathlib import Path
@@ -16,7 +18,7 @@ import pyarrow.parquet as pq
 from dmaga.config import BIG, RAW
 from dmaga.db import connect
 from dmaga.pnl import Wallet
-from dmaga.positions import gtba_only_edges_sql
+from dmaga.positions import gtba_only_transfers_sql
 from dmaga.venues import load as load_venues
 
 VD = "5HuEsLbebeuottMsFW3hHcXTrKVsu3WUNSQnSr6aX4eL"
@@ -53,17 +55,15 @@ def main():
     wallets: dict[str, Wallet] = {}
     usd_cost: dict[str, float] = {}
     usd_proceeds: dict[str, float] = {}
-    missing_px = 0
     n = 0
-    # transferts vus seulement par getTransfersByAddress (SPL sans référence au mint) : deux lignes par arête, sans double compte
+    # SPL sans référence au mint : une ligne nette par transaction et propriétaire,
+    # pour ne pas retirer le coût des jetons qui ne font que passer dans le même tx.
     edges = BIG / "token_edges.parquet"
     extra = ""
     if edges.exists():
-        con.execute(f"CREATE TEMP TABLE x AS {gtba_only_edges_sql(str(edges), 2**62)}")
-        cut = f"AND block_time < {cutoff}" if cutoff else ""
-        extra = f"""UNION ALL SELECT src, 'transfer', -q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}
-                    UNION ALL SELECT dst, 'transfer', q, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x WHERE 1=1 {cut}"""
-        print("transferts ajoutés depuis les flux", con.execute("SELECT count(*) FROM x").fetchone()[0])
+        con.execute(f"CREATE TEMP TABLE x AS {gtba_only_transfers_sql(str(edges), cutoff if cutoff is not None else 2**62)}")
+        extra = """UNION ALL SELECT owner, 'transfer', token_delta, 0, block_time, signature, slot, 2147483647, NULL, 0 FROM x"""
+        print("deltas nets de transfert ajoutés depuis les flux", con.execute("SELECT count(*) FROM x").fetchone()[0])
     cur = con.execute(f"""SELECT owner, kind, token_delta, sol_lamports, block_time, signature, slot, tx_index, venue, usdc_raw
                           FROM trades WHERE kind IN ('swap','transfer','lp_add','lp_remove','fee_share','swap_other') AND owner IS NOT NULL {where}
                           {extra}
@@ -76,19 +76,17 @@ def main():
             n += 1
             if owner in EXCLUDE or owner in VENUES:
                 continue
-            if usdc:  # part du swap passée par un pool USDC, convertie en SOL à la minute du trade
+            if usdc or kind == "swap":
+                # Le cours sert aussi aux colonnes USD des swaps SOL. Un trou de
+                # prix ne doit jamais devenir un coût nul ou un PnL dit complet.
                 p = px.get(t // 60)
-                if p is None:
-                    missing_px += 1
-                else:
-                    sol += int(usdc / 1e6 / p * 1e9)
+                if p is None or not math.isfinite(p) or p <= 0:
+                    raise RuntimeError(f"prix SOL/USD absent ou invalide pour {sig} à t={t}: {p!r}")
+            if usdc:  # part du swap passée par un pool USDC, convertie en SOL à la minute du trade
+                sol += int(usdc / 1e6 / p * 1e9)
             w = wallets.setdefault(owner, Wallet(owner))
             w.apply(kind, td, sol, t, sig, slot, idx, venue)
             if kind == "swap":
-                p = px.get(t // 60)
-                if p is None:
-                    missing_px += 1
-                    continue
                 if td > 0:
                     usd_cost[owner] = usd_cost.get(owner, 0) + (-sol / 1e9) * p
                 else:
@@ -122,7 +120,7 @@ def main():
     table = pa.Table.from_pylist(rows)
     BIG.mkdir(parents=True, exist_ok=True)
     pq.write_table(table, BIG / "wallets.parquet", compression="zstd")
-    print(f"lignes={n} wallets={len(rows)} sans_prix_usd={missing_px} prix_ref={price_sol:.10f} SOL à t={ref_t} usd_sol={ref_usd}")
+    print(f"lignes={n} wallets={len(rows)} prix_ref={price_sol:.10f} SOL à t={ref_t} usd_sol={ref_usd}")
 
 
 if __name__ == "__main__":

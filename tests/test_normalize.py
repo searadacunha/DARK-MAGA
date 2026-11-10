@@ -1,5 +1,7 @@
 """Tests du parseur sur des cas synthétiques minimaux. Les vraies transactions sont testées par
 tests/test_real_txs.py, qui a besoin du réseau ou du cache brut."""
+import pytest
+
 from dmaga.config import BONDING_CURVE, MINT, WSOL
 from dmaga.normalize import RAYDIUM_AUTH as AUTH, parse_tx
 
@@ -98,6 +100,49 @@ def test_fee_collector_is_not_a_buyer():
     rows = parse_tx(tx(pre, post, keys, (0,) * 5, (0,) * 5), {VD}, {VS}, "t")
     got = {r["owner"]: (r["kind"], r["sol_lamports"]) for r in rows}
     assert got["trader"] == ("swap", -100) and got["fee"] == ("fee_share", 0)
+
+
+@pytest.mark.parametrize("kind,owner_delta,quote_direction", [
+    ("swap", 1, 1), ("swap", -1, -1),
+    ("lp_add", -1, 1), ("lp_remove", 1, -1),
+])
+@pytest.mark.parametrize("quote_mint,quote_field", [(WSOL, "sol_lamports"),
+                                                  ("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "usdc_raw")])
+def test_multi_owner_quotes_conserve_raw_units(kind, owner_delta, quote_direction, quote_mint, quote_field):
+    # Three equal shares of two raw quote units used to round to three units.
+    keys = ("payer", VD, VS, "ata_c", "ata_a", "ata_b")
+    pre = [bal(1, MINT, AUTH, 100), bal(2, quote_mint, AUTH, 100)]
+    post = [bal(1, MINT, AUTH, 100 - 3 * owner_delta),
+            bal(2, quote_mint, AUTH, 100 + 2 * quote_direction)]
+    for i, owner in enumerate(("c", "a", "b"), 3):
+        pre.append(bal(i, MINT, owner, 10))
+        post.append(bal(i, MINT, owner, 10 + owner_delta))
+    rows = parse_tx(tx(pre, post, keys, (0,) * 6, (0,) * 6), {VD}, {VS}, "t")
+    assert {r["kind"] for r in rows} == {kind}
+    assert sum(r[quote_field] for r in rows) == -2 * quote_direction
+    assert sorted(abs(r[quote_field]) for r in rows) == [0, 1, 1]
+    # Equal remainders have a stable owner tie-break, independent of account order.
+    assert {r["owner"]: r[quote_field] for r in rows} == {
+        "a": -quote_direction, "b": -quote_direction, "c": 0,
+    }
+
+
+def test_single_owner_quote_above_float_precision_stays_exact():
+    quote = 2**53 + 1
+    pre = [bal(1, MINT, AUTH, 100), bal(2, WSOL, AUTH, 0, 9), bal(3, MINT, "trader", 0)]
+    post = [bal(1, MINT, AUTH, 0), bal(2, WSOL, AUTH, quote, 9), bal(3, MINT, "trader", 100)]
+    rows = parse_tx(tx(pre, post, KEYS, (0,) * 5, (0,) * 5), {VD}, {VS}, "t")
+    assert rows[0]["sol_lamports"] == -quote
+
+
+def test_curve_creation_multiple_buyers_split_cost_once():
+    keys = ("payer", "curveAta", BONDING_CURVE, "ata_b", "ata_a")
+    post = [bal(1, MINT, BONDING_CURVE, 900), bal(3, MINT, "b", 30), bal(4, MINT, "a", 70)]
+    rows = parse_tx(tx([], post, keys, (0,) * 5, (0, 0, 100, 0, 0)), {VD}, {VS}, "t")
+    assert rows[0]["kind"] == "mint_supply" and rows[0]["token_delta"] == 1000
+    buys = [r for r in rows if r["kind"] == "swap"]
+    assert {r["owner"]: r["sol_lamports"] for r in buys} == {"b": -30, "a": -70}
+    assert sum(r["sol_lamports"] for r in buys) == -100
 
 
 def test_study_parser_matches_expected_on_real_shape():

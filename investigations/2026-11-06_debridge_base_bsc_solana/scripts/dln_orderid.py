@@ -61,23 +61,12 @@ def encode_order(o: dict, external_call_is_hash=False) -> bytes:
 def order_id(o: dict) -> str:
     return "0x" + keccak256(encode_order(o)).hex()
 
-FIELDS = ["makerOrderNonce", "makerSrc", "giveChainId", "giveTokenAddress", "giveAmount", "takeChainId", "takeTokenAddress",
-          "takeAmount", "receiverDst", "givePatchAuthoritySrc", "orderAuthorityAddressDst", "allowedTakerDst",
-          "allowedCancelBeneficiarySrc", "externalCall"]
-INT = {"makerOrderNonce", "giveChainId", "giveAmount", "takeChainId", "takeAmount"}
-
 def raw_order(data_hex: str) -> tuple:
     """Champs bruts de l'Order d'un journal CreatedOrder ou FulfilledOrder (même tête : offset de l'Order, puis orderId)."""
-    d = bytes.fromhex(data_hex[2:] if data_hex.startswith("0x") else data_hex)
-    w = lambda i: int.from_bytes(d[i:i + 32], "big")
-    t = w(0); out = {}
-    for k, f in enumerate(FIELDS):
-        v = w(t + 32 * k)
-        if f in INT:
-            out[f] = v
-        else:
-            off = t + v; n = w(off); out[f] = d[off + 32: off + 32 + n]
-    return out, "0x" + d[32:64].hex()
+    # nt_lib exposes the preceding investigation's decoder. Reuse its bounds
+    # checks so a truncated bytes tail cannot silently produce a different order.
+    import dln
+    return dln.raw_order(data_hex)
 
 def _selftest():
     assert keccak256(b"").hex() == "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"

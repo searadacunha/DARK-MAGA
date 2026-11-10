@@ -1,6 +1,7 @@
 """Tests hors ligne du dossier, depuis un clone neuf : seules les fixtures publiées (evidence/fixtures/) sont lues.
 Le réseau est coupé pendant les tests. Usage : python -m unittest discover -s <ce dossier> -v"""
-import csv, gzip, hashlib, json, os, socket, subprocess, sys, tempfile, unittest
+import contextlib, copy, csv, gzip, hashlib, io, json, os, socket, subprocess, sys, tempfile, unittest
+from unittest import mock
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -57,21 +58,132 @@ class Fixtures(unittest.TestCase):
 
 
 class OrderId(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.receipts = C.receipts()
+        cls.events = [event for receipt in cls.receipts.values() for event in C.check(receipt)]
+        cls.links = C.read_csv(ROOT / "CROSSCHAIN_LINKS.csv")
+        cls.solana = C.solana_receipts()
+        cls.index = C.read_csv(N.DEB_RECEIVERS)
+
+    def validate(self, links=None, events=None, solana=None, index=None):
+        return C.validate_links(self.links if links is None else links,
+                                self.events if events is None else events,
+                                self.solana if solana is None else solana,
+                                self.index if index is None else index)
+
     def test_keccak(self):
         self.assertEqual(O.keccak256(b"").hex(), "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470")
         self.assertEqual(O.keccak256(b"abc").hex(), "4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45")
 
     def test_links_authenticated_by_orderid(self):
-        rows = [e for rc in C.receipts().values() for e in C.check(rc)]
-        self.assertTrue(rows and all(r["recomputed_ok"] for r in rows), "un orderId émis n'est pas recalculé")
-        by = {}
-        for r in rows: by.setdefault(int(r["orderId"], 16), []).append(r)
-        links = rd(ROOT / "CROSSCHAIN_LINKS.csv")
-        self.assertEqual(len(links), 88)
-        for k in links:
-            ok = [e for e in by.get(int(k["orderId"], 16), []) if e["makerSrc"].lower() == k["maker"].lower()
-                  and e["receiverDst"].lower() == k["receiver"].lower() and str(e["takeAmount"]) == k["take_amount_raw"]]
-            self.assertTrue(ok, k["orderId"])
+        self.assertEqual(len(self.events), 123)
+        self.assertEqual(self.validate(), dict(links=88, src_evm_receipts=78, dst_evm_receipts=45,
+                         src_solana_receipts=9, dst_solana_receipts=43, src_solana_index_only=1))
+
+    def test_each_order_field_is_bound_to_the_receipt(self):
+        for field, value in (("src_chain", "bsc"), ("dst_chain", "bsc"),
+                             ("maker", "0x" + "1" * 40), ("receiver", "0x" + "1" * 40),
+                             ("give_token", "0x" + "1" * 40), ("take_token", "0x" + "1" * 40),
+                             ("give_amount_raw", "1"), ("take_amount_raw", "1")):
+            link = dict(self.links[0], **{field: value})
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, "fields mismatch"):
+                self.validate(links=[link])
+
+    def test_both_evm_transaction_hashes_are_bound(self):
+        for side in ("src", "dst"):
+            link = dict(self.links[0], **{side + "_tx": "0x" + "1" * 64})
+            with self.subTest(side=side), self.assertRaisesRegex(ValueError, "EVM event"):
+                self.validate(links=[link])
+
+    def test_solana_address_case_is_significant(self):
+        for side, field in (("src", "maker"), ("dst", "receiver")):
+            link = next(dict(k) for k in self.links if k[side + "_chain"] == "solana")
+            link[field] = link[field].swapcase()
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, "fields mismatch"):
+                self.validate(links=[link])
+
+    def test_evm_hex_address_case_is_not_significant(self):
+        link = dict(self.links[0])
+        for field in ("maker", "receiver", "give_token", "take_token"):
+            link[field] = "0x" + link[field][2:].upper()
+        self.assertEqual(self.validate(links=[link])["links"], 1)
+
+    def test_unknown_topic_or_failed_receipt_cannot_authenticate_order(self):
+        receipt = next(rc for rc in self.receipts.values() if C.check(rc))
+        for kind in ("failed", "topic", "topic_prefix"):
+            bad = copy.deepcopy(receipt)
+            if kind == "failed":
+                bad["status"] = "0x0"
+            else:
+                for log in bad["logs"]:
+                    prefix = log["topics"][0][:10] if kind == "topic_prefix" and log.get("topics") else "0x12345678"
+                    log["topics"] = [prefix + "0" * 56]
+            with self.subTest(kind=kind):
+                self.assertEqual(C.check(bad), [])
+                with self.assertRaises(ValueError):
+                    self.validate(events=C.check(bad))
+
+    def test_duplicate_order_and_event_are_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Duplicate cross-chain"):
+            self.validate(links=self.links + [self.links[0]])
+        with self.assertRaisesRegex(ValueError, "Duplicate EVM event"):
+            self.validate(events=self.events + [self.events[0]])
+        with self.assertRaisesRegex(ValueError, "Empty"):
+            self.validate(links=[])
+
+    def test_receipt_chain_must_match_recorded_rpc_provenance(self):
+        receipt = next(copy.deepcopy(rc) for rc in self.receipts.values() if C.check(rc))
+        receipt["_evidence_chain_id"] = 56 if receipt["_evidence_chain_id"] != 56 else 1
+        with self.assertRaisesRegex(ValueError, "chain provenance"):
+            C.check(receipt)
+        with self.assertRaisesRegex(ValueError, "chain provenance"):
+            C.request_chain("unknown eth_getTransactionReceipt []")
+
+    def test_missing_raw_solana_receipt_is_not_silently_downgraded(self):
+        link = next(k for k in self.links if k["src_chain"] == "solana" and k["src_tx"] in self.solana)
+        solana = {key: tx for key, tx in self.solana.items() if key != link["src_tx"]}
+        with self.assertRaisesRegex(ValueError, "Missing src Solana evidence"):
+            self.validate(solana=solana)
+
+    def test_index_only_source_requires_exact_index_match(self):
+        link = next(k for k in self.links if k["orderId"] in C.INDEX_ONLY_SOURCES)
+        with self.assertRaisesRegex(ValueError, "Missing src Solana evidence"):
+            self.validate(links=[link], index=[])
+        bad = dict(link, src_tx="invented")
+        with self.assertRaisesRegex(ValueError, "Missing src Solana evidence"):
+            self.validate(links=[bad])
+
+    def test_failed_solana_fill_cannot_prove_destination(self):
+        link = next(k for k in self.links if k["dst_chain"] == "solana")
+        receipt = copy.deepcopy(self.solana[link["dst_tx"]])
+        receipt["meta"]["err"] = {"InstructionError": [0, "Custom"]}
+        with self.assertRaisesRegex(ValueError, "successful dst Solana"):
+            self.validate(links=[link], solana={link["dst_tx"]: receipt})
+
+    def test_wrong_solana_signature_or_amount_is_rejected(self):
+        link = next(k for k in self.links if k["dst_chain"] == "solana")
+        receipt = copy.deepcopy(self.solana[link["dst_tx"]])
+        receipt["transaction"]["signatures"][0] = "invented"
+        with self.assertRaisesRegex(ValueError, "Wrong dst Solana receipt"):
+            self.validate(links=[link], solana={link["dst_tx"]: receipt})
+        receipt = copy.deepcopy(self.solana[link["dst_tx"]])
+        key = keys_of(receipt).index(link["receiver"])
+        receipt["meta"]["postBalances"][key] += 1
+        with self.assertRaisesRegex(ValueError, "amount mismatch"):
+            self.validate(links=[link], solana={link["dst_tx"]: receipt})
+
+    def test_cli_is_read_only_by_default_and_fails_nonzero(self):
+        with mock.patch.object(sys, "argv", ["s13_orderid_check.py"]), \
+                mock.patch.object(N, "write_csv") as write, contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(C.main(), 0)
+            write.assert_not_called()
+        bad = dict(self.links[0], dst_tx="0x" + "1" * 64)
+        with mock.patch.object(sys, "argv", ["s13_orderid_check.py"]), \
+                mock.patch.object(C, "read_csv", return_value=[bad]), \
+                contextlib.redirect_stderr(io.StringIO()) as error:
+            self.assertEqual(C.main(), 1)
+            self.assertIn("Validation failed", error.getvalue())
 
 
 class Positions(unittest.TestCase):

@@ -19,16 +19,7 @@ def fills(rcpt):
     return D.fills_in_receipt(rcpt)
 
 def created(rcpt, chain_id):
-    out = []
-    for l in rcpt["logs"]:
-        if (l["address"].lower() != N.DLN_SRC or not l.get("topics")
-                or l["topics"][0].lower() != D.CREATED_ORDER or len(l["data"]) < 2 + 64 * 20): continue
-        try: o = D.decode_fulfilled(l["data"])
-        except Exception: continue
-        if o["giveChainId"] != chain_id: continue
-        o.pop("sender"); o.pop("unlockAuthority")
-        out.append(dict(o, tx=rcpt["transactionHash"], logIndex=int(l["logIndex"], 16), event="CreatedOrder"))
-    return out
+    return [dict(o, event="CreatedOrder") for o in D.created_in_receipt(rcpt, chain_id)]
 
 def run(chain, ledgers):
     txs = {}

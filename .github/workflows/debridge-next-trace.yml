@@ -35,6 +35,8 @@ jobs:
           python-version: "3.12"
       - name: Offline tests on published fixtures (network blocked)
         run: python -m unittest discover -s investigations/2026-11-06_debridge_base_bsc_solana/tests -v
+      - name: Reconcile every cross-chain assertion without rewriting evidence
+        run: python -I investigations/2026-11-06_debridge_base_bsc_solana/scripts/s13_orderid_check.py
       - name: Report self-check (31 assertions)
         run: python -I investigations/2026-11-06_debridge_base_bsc_solana/scripts/s99_selfcheck.py
       - name: Previous EVM deep-trace self-check

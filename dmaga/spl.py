@@ -11,10 +11,19 @@ Les instructions internes sont lues comme les externes ; chaque mouvement garde 
 Classer un mouvement (virement personnel, jambe de swap, service) n'est pas le rôle de ce module."""
 
 import base64
+import binascii
+import re
 import struct
 
 WSOL = "So11111111111111111111111111111111111111112"
 SYSTEM, TOKEN, TOKEN22 = "11111111111111111111111111111111", "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+# Programme et discriminateur CreateEvent : IDL officielle, préfixe historique conservé.
+# https://github.com/pump-fun/pump-public-docs/blob/639b87fb45c3adeffa6f7c4a1bf0cb85e392bf22/idl/pump.json
+PUMP = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+CREATE_EVENT = bytes([27, 114, 169, 77, 222, 235, 99, 118])
+# Format runtime : https://github.com/anza-xyz/agave/blob/master/program-runtime/src/stable_log.rs
+_INVOKE = re.compile(r"Program ([1-9A-HJ-NP-Za-km-z]{32,44}) invoke \[(\d+)\]")
+_RESULT = re.compile(r"Program ([1-9A-HJ-NP-Za-km-z]{32,44}) (success|failed:.*)")
 
 
 def keys(tx):
@@ -128,21 +137,64 @@ def b58e(b):
 
 
 def bstr(b, i):
-    """Chaîne Borsh : longueur u32 little-endian puis octets UTF-8."""
+    """Chaîne Borsh bornée : longueur u32 little-endian puis UTF-8 strict."""
+    if i < 0 or i + 4 > len(b):
+        raise ValueError("longueur Borsh tronquée")
     n = struct.unpack_from("<I", b, i)[0]
-    return b[i + 4:i + 4 + n].decode("utf-8", "replace").rstrip("\0"), i + 4 + n
+    end = i + 4 + n
+    if end > len(b):
+        raise ValueError("chaîne Borsh tronquée")
+    return b[i + 4:end].decode("utf-8").rstrip("\0"), end
 
 
 def pump_create_event(tx):
-    """CreateEvent de Pump.fun (journal « Program data: ») : nom, symbole, URI, mint, courbe, créateur. Immuable une fois émis."""
-    for line in tx["meta"].get("logMessages") or []:
-        if line.startswith("Program data: "):
-            b = base64.b64decode(line[14:])
+    """Préfixe historique de CreateEvent, émis par un appel Pump réussi.
+
+    Les journaux doivent établir l'émetteur et le succès de ses appels parents :
+    un CPI échoué peut laisser des logs même si la transaction réussit ensuite.
+    Les champs ajoutés après les trois clés historiques ne sont pas interprétés.
+    Un contexte d'invocation absent ou tronqué ne suffit pas à retenir un événement.
+    """
+    meta = tx.get("meta")
+    if meta is None or "err" not in meta or meta["err"] is not None:
+        return None
+    stack = []  # (programme, événements en attente du succès de cet appel et de ses parents)
+    for line in meta.get("logMessages") or []:
+        invoke = _INVOKE.fullmatch(line)
+        if invoke:
+            program, depth = invoke.groups()
+            if int(depth) != len(stack) + 1:
+                stack.clear()
+                if int(depth) != 1:
+                    continue
+            stack.append((program, []))
+            continue
+        result = _RESULT.fullmatch(line)
+        if result:
+            program, status = result.groups()
+            if not stack or stack[-1][0] != program:
+                stack.clear()
+                continue
+            _, events = stack.pop()
+            if status == "success":
+                if stack:
+                    stack[-1][1].extend(events)
+                elif events:
+                    return events[0]
+            continue
+        if line.startswith("Program data: ") and stack and stack[-1][0] == PUMP:
             try:
+                b = base64.b64decode(line[14:], validate=True)
+                if b[:8] != CREATE_EVENT:
+                    continue
                 name, i = bstr(b, 8)
                 sym, i = bstr(b, i)
                 uri, i = bstr(b, i)
-                return {"name": name, "symbol": sym, "uri": uri, "mint": b58e(b[i:i + 32]), "bonding_curve": b58e(b[i + 32:i + 64]), "user": b58e(b[i + 64:i + 96])}
-            except (struct.error, UnicodeDecodeError, IndexError):
+                if len(b) - i < 96:
+                    continue
+                event = {"name": name, "symbol": sym, "uri": uri, "mint": b58e(b[i:i + 32]),
+                         "bonding_curve": b58e(b[i + 32:i + 64]), "user": b58e(b[i + 64:i + 96])}
+            except (binascii.Error, ValueError, struct.error):
                 continue
+            stack[-1][1].append(event)
     return None

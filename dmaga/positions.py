@@ -17,12 +17,26 @@ def gtba_only_edges_sql(edges_path: str, t_cut: int) -> str:
                AND NOT EXISTS (SELECT 1 FROM trades t WHERE t.signature = e.signature)"""
 
 
+def gtba_only_transfers_sql(edges_path: str, t_cut: int) -> str:
+    """Un delta net par transaction et propriétaire, hors passages et auto-transferts.
+
+    Appliquer les jambes séparément au coût moyen retirerait le coût du stock
+    préexistant d'un intermédiaire, avant de lui réattribuer une entrée sans coût.
+    Le net suit la même convention par transaction que normalize.parse_tx.
+    """
+    return f"""WITH edges AS ({gtba_only_edges_sql(edges_path, t_cut)})
+               SELECT signature, slot, block_time, owner, sum(d) AS token_delta FROM (
+                   SELECT signature, slot, block_time, src AS owner, -q AS d FROM edges
+                   UNION ALL
+                   SELECT signature, slot, block_time, dst AS owner, q AS d FROM edges
+               ) GROUP BY signature, slot, block_time, owner HAVING sum(d) <> 0"""
+
+
 def positions(con, t_cut: int, edges_path: str) -> dict[str, int]:
     """{propriétaire: solde brut} juste avant t_cut."""
-    x = gtba_only_edges_sql(edges_path, t_cut)
+    x = gtba_only_transfers_sql(edges_path, t_cut)
     return dict(con.execute(f"""
         WITH x AS ({x})
         SELECT owner, sum(d) FROM (
             SELECT owner, token_delta d FROM trades WHERE block_time < {t_cut} AND kind IN {KINDS} AND owner IS NOT NULL
-            UNION ALL SELECT src, -q FROM x
-            UNION ALL SELECT dst, q FROM x) GROUP BY 1""").fetchall())
+            UNION ALL SELECT owner, token_delta FROM x) GROUP BY 1""").fetchall())

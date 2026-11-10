@@ -38,9 +38,12 @@ Suite du dossier `../2026-11-05_evm-recipient-deeptrace/` (PR #15) : où vont, a
 Python 3.12 ou 3.14, bibliothèque standard seulement.
 
 ```
-python -m unittest discover -s investigations/2026-11-06_debridge_base_bsc_solana/tests -v   # 12 tests, réseau coupé, fixtures seules
+python -m unittest discover -s investigations/2026-11-06_debridge_base_bsc_solana/tests -v   # réseau coupé, fixtures seules
+python -I investigations/2026-11-06_debridge_base_bsc_solana/scripts/s13_orderid_check.py  # vérification des 88 liens, lecture seule
 python -I investigations/2026-11-06_debridge_base_bsc_solana/scripts/s99_selfcheck.py      # 31 assertions, réseau coupé
-python -I investigations/2026-11-05_evm-recipient-deeptrace/scripts/s99_selfcheck.py        # 31 contrôles du dossier précédent
+(cd investigations/2026-11-05_evm-recipient-deeptrace/scripts && python -I s99_selfcheck.py) # contrôles du dossier précédent
 ```
+
+Le vérificateur des liens contrôle les chaînes, actifs, montants entiers, maker, receveur et transactions des deux côtés. Il rejette les événements dupliqués ou non exécutés et distingue la casse des adresses Solana de celle des adresses EVM. Sur les fixtures publiées, les 88 liens utilisent 123 événements EVM, 43 reçus de destination Solana et 9 reçus de création Solana. La création de l'ordre `0xd7d6f9b4b6645aa063fb5578abda7eeb1b696c2ae93bac7d6e5dfc4b54b678b3` reste vérifiée par l'extrait d'index deBridge : son reçu Solana brut n'est pas publié. Cette limite est signalée séparément ; les autres reçus manquants font échouer le contrôle. Aucun export historique n'est réécrit par défaut ; `--output chemin.csv` permet un export explicite des événements recalculés.
 
 Les collectes et les reconstructions complètes, qui relisent les grands caches locaux non publiés, sont décrites dans `REPRISE.md`.

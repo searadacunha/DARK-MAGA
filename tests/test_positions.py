@@ -6,7 +6,7 @@ from pathlib import Path
 
 import duckdb
 
-from dmaga.positions import positions
+from dmaga.positions import gtba_only_transfers_sql, positions
 
 
 class Positions(unittest.TestCase):
@@ -42,6 +42,29 @@ class Positions(unittest.TestCase):
         # transaction déjà lue : le routeur ne reçoit aucun solde fantôme, l'acheteur n'est pas compté deux fois
         self.assertNotIn("ROUTER", p)
         self.assertEqual(p.get("D"), 8_000_000)
+
+    def test_gtba_netting_stays_inside_each_transaction(self):
+        edges = Path(self.tmp.name) / "netted.parquet"
+        self.con.execute(f"""COPY (SELECT * FROM (VALUES
+            ('pass', 1, 'A', 'R', 6.0, 120, 'gtba'),
+            ('pass', 1, 'R', 'B', 6.0, 120, 'gtba'),
+            ('self', 2, 'A', 'A', 4.0, 125, 'gtba'),
+            ('one', 3, 'A', 'R', 2.0, 130, 'gtba'),
+            ('two', 4, 'R', 'B', 2.0, 140, 'gtba'),
+            ('buy', 5, 'A', 'B', 2.0, 150, 'gtba'),
+            ('after_cut', 6, 'A', 'B', 1.0, 500, 'gtba')
+            ) t(signature, slot, src, dst, qty, block_time, how)) TO '{edges}' (FORMAT parquet)""")
+        query = gtba_only_transfers_sql(str(edges), 500)
+        rows = self.con.execute(f"SELECT signature, owner, token_delta FROM ({query}) ORDER BY signature, owner").fetchall()
+        self.assertEqual(rows, [
+            ("one", "A", -2_000_000), ("one", "R", 2_000_000),
+            ("pass", "A", -6_000_000), ("pass", "B", 6_000_000),
+            ("two", "B", 2_000_000), ("two", "R", -2_000_000),
+        ])
+        p = positions(self.con, 500, str(edges))
+        self.assertEqual(p["A"], 2_000_000)
+        self.assertEqual(p["B"], 8_000_000)
+        self.assertEqual(p["R"], 0)
 
 
 if __name__ == "__main__":

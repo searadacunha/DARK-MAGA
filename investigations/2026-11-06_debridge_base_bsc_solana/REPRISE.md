@@ -23,7 +23,7 @@ export DMAGA_NT_RAW_RO=<raw de la collecte d'origine>:<raw du dossier précéden
 
 ## Commandes (depuis `scripts/`)
 ```
-python3 -I s13_orderid_check.py                 # orderId recalculés sur tous les reçus en cache, contrôle des liens
+python3 -I s13_orderid_check.py                 # contrôle des liens, lecture seule ; --output chemin.csv pour exporter
 python3 -I s15_relay_bounds.py                  # s51 rejoué, relais tracé, borne commune
 python3 -I s16_mexc_chain_bound.py              # chaîne MEXC, sous H et au pire cas
 python3 -I s17_joint_destinations.py            # frontière Coinbase / MEXC, seuils de nullité

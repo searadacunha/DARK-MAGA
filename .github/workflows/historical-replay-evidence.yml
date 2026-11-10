@@ -5,12 +5,16 @@ on:
     branches: [main]
     paths:
       - 'investigations/2026-11-06_historical_replay/**'
+      - 'dmaga/spl.py'
+      - 'dmaga/xposts.py'
       - 'docs/TIMELINE.md'
       - '.github/workflows/historical-replay-evidence.yml'
   push:
     branches: [main]
     paths:
       - 'investigations/2026-11-06_historical_replay/**'
+      - 'dmaga/spl.py'
+      - 'dmaga/xposts.py'
       - 'docs/TIMELINE.md'
       - '.github/workflows/historical-replay-evidence.yml'
 
