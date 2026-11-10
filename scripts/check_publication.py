@@ -10,6 +10,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+POLICY_PATH = "state/publication_baselines.json"
 
 
 def git(*args):
@@ -46,7 +47,8 @@ def preserved(path, baseline, expected_blob=None):
     if len(staged) != 4 or staged[:3] != [original[0], original[2], "0"]:
         raise ValueError(f"Index file changed, deleted or conflicted: {path}")
     file = ROOT / path
-    if file.is_symlink() or not file.is_file():
+    components = [file, *file.parents]
+    if any(part.is_symlink() for part in components if part != ROOT) or not file.is_file():
         raise ValueError(f"Missing or substituted working file: {path}")
     data = file.read_bytes()
     blob = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
@@ -65,24 +67,30 @@ def main():
     try:
         if Path(git("rev-parse", "--show-toplevel")).resolve() != ROOT:
             raise ValueError("The guard must be inside the repository being checked")
-        policy = json.loads((ROOT / "state/publication_baselines.json").read_text())
+        target = commit(args.target_ref or f"refs/remotes/origin/{args.target}")
+        head = commit("HEAD")
+        require_ancestor(target, head, "Fetched target")
+        # The candidate cannot approve its own README or remove a protocol lock.
+        # Read the policy accepted at the destination and preserve it in HEAD,
+        # the index and the working tree, just like the files it protects.
+        policy = json.loads(preserved(POLICY_PATH, target))
         if policy["version"] != 1:
             raise ValueError("Unsupported publication policy version")
         rule = policy["targets"][args.target]
         for key in ("baseline_commit", "readme_blob"):
             if not re.fullmatch(r"[0-9a-f]{40}", rule[key]):
                 raise ValueError(f"{key} must be a pinned full Git SHA-1")
-        if not rule["protocol_locks"]:
+        locks = rule["protocol_locks"]
+        if (not isinstance(locks, list) or not locks
+                or any(not isinstance(name, str) for name in locks)):
             raise ValueError("A frozen-protocol list is required")
         baseline = commit(rule["baseline_commit"])
-        target = commit(args.target_ref or f"refs/remotes/origin/{args.target}")
-        head = commit("HEAD")
+        require_ancestor(baseline, target, "Required correction")
         require_ancestor(baseline, head, "Required correction")
-        require_ancestor(target, head, "Fetched target")
         preserved("README.md", baseline, rule["readme_blob"])
 
         frozen_count = 0
-        for name in rule["protocol_locks"]:
+        for name in locks:
             lock = json.loads(preserved(name, baseline))
             if not lock["fichiers"]:
                 raise ValueError(f"Empty frozen-file list: {name}")

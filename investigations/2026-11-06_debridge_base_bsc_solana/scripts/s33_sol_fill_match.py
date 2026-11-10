@@ -1,11 +1,11 @@
 """Rapproche chaque tx Solana du programme DLN (destination ou source) d'un wallet à un ordre EVM par l'orderId lu dans les
 logs Solana (« Order Id: », hex en 2024, décimal ensuite : comparaison en entiers). Aucun rapprochement par montant.
 Sortie : evidence/s33_sol_dln_<w8>.csv"""
-import sys, os, re, csv, gzip, json
+import sys, os, csv, gzip, json
 sys.path.insert(0, os.path.dirname(__file__))
 import nt_lib as N
 import s31_sol_ledger as L
-OID = re.compile(r"Order Id:\s*(0x[0-9a-fA-F]+|[0-9]+)")
+import sol_dln as S
 
 def evm_orders():
     out = {}
@@ -19,11 +19,13 @@ def evm_orders():
 if __name__ == "__main__":
     w = sys.argv[1]; E = evm_orders(); rows = []
     for t in L.load(w):
-        logs = t["meta"].get("logMessages") or []
+        if "err" not in t["meta"] or t["meta"]["err"] is not None:
+            continue
         progs = {L.PROG.get(ix.get("programId") or "", "") for ix in L.all_ix(t)}
         if not ({"dln_dst", "dln_src"} & progs): continue
         r, _ = L.parse(t, w)
-        ids = {int(m.group(1), 0) for l in logs for m in [OID.search(l)] if m}
+        program = S.DESTINATION if "dln_dst" in progs else S.SOURCE
+        ids = {int(oid, 16) for oid in S.order_ids(t, program)}
         for oid in ids or {None}:
             e = E.get(oid) if oid is not None else None
             rows.append(dict(sig=r["sig"], ts=r["ts"], program="dln_dst" if "dln_dst" in progs else "dln_src", sol_delta=r["sol"], tok=r["tok"],

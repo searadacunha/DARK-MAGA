@@ -10,6 +10,7 @@ import networkx as nx
 
 from dmaga.config import BIG, DATA
 from dmaga.db import connect
+from dmaga.group_split import window_purchases
 from dmaga.positions import positions
 from dmaga.helius import Helius, RpcError
 from dmaga.labels import label
@@ -151,8 +152,7 @@ oth = con.execute(f"""SELECT sum(q), (SELECT sum(h) FROM o WHERE a NOT IN (SELEC
      FROM o WHERE o.a NOT IN (SELECT unnest(?)))""", [list(venue), list(venue)]).fetchone()
 first60 = con.execute(f"""SELECT count(DISTINCT owner), sum(token_delta)/1e12, sum(-sol_lamports)/1e9 FROM trades WHERE kind='swap' AND token_delta>0 AND block_time<{T0 + 60}""").fetchone()
 seq = con.execute(f"""SELECT owner, slot, sum(token_delta)/1e12, sum(-sol_lamports)/1e9 FROM trades WHERE kind='swap' AND token_delta>0 AND slot<=277417696 GROUP BY 1,2 ORDER BY 2""").fetchall()
-buys = {k: con.execute(f"SELECT coalesce(sum(-sol_lamports),0)/1e9, count(DISTINCT owner) FROM trades WHERE kind='swap' AND token_delta>0 AND block_time>={a} AND block_time<{b}").fetchone()
-        for k, a, b in (("borne_basse_a_envoi", T_LOW, EV["musk_envoi_image"]), ("envoi_a_borne_haute", EV["musk_envoi_image"], T_HIGH + 1))}
+buys = window_purchases(con, EV)
 first_funder = con.execute(f"""SELECT wallet, arg_min(src, block_time) FROM read_parquet('{BIG}/funding_edges.parquet') WHERE wallet IN (SELECT a FROM g0) AND NOT is_pool GROUP BY 1""").fetchall()
 in_group = sum(1 for w, f in first_funder if f in members)
 by_g41 = sum(1 for w, f in first_funder if f == G41)

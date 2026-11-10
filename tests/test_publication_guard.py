@@ -31,8 +31,6 @@ class PublicationGuardTests(unittest.TestCase):
         self.audit_base = self.record("reviewed audit")
         self.audit_blob = self.git("rev-parse", "HEAD:README.md")
         self.git("checkout", "--quiet", "main")
-        self.git("update-ref", "refs/remotes/origin/main", self.main_base)
-        self.git("update-ref", "refs/remotes/origin/audit-2026-11-03", self.audit_base)
         (self.repo / "scripts").mkdir(exist_ok=True)
         shutil.copyfile(GUARD, self.repo / "scripts/check_publication.py")
         self.policy = {"version": 1, "targets": {
@@ -42,6 +40,13 @@ class PublicationGuardTests(unittest.TestCase):
                      "readme_blob": self.audit_blob,
                      "protocol_locks": ["etude_final/PROTOCOL.lock", "etude_groupe/PROTOCOL.lock"]}}}
         self.save_policy()
+        self.main_tip = self.record("accept publication policy on main")
+        self.git("checkout", "--quiet", "audit-2026-11-03")
+        self.git("merge", "--quiet", "--no-edit", "main")
+        self.audit_tip = self.git("rev-parse", "HEAD")
+        self.git("checkout", "--quiet", "main")
+        self.git("update-ref", "refs/remotes/origin/main", self.main_tip)
+        self.git("update-ref", "refs/remotes/origin/audit-2026-11-03", self.audit_tip)
 
     def git(self, *args):
         return subprocess.run(["git", "-C", str(self.repo), *args], check=True,
@@ -65,6 +70,12 @@ class PublicationGuardTests(unittest.TestCase):
 
     def save_policy(self):
         self.write("state/publication_baselines.json", json.dumps(self.policy))
+
+    def accept_test_policy(self):
+        """Model a destination policy, including invalid policies in negative tests."""
+        self.save_policy()
+        tip = self.record("accept test policy at destination")
+        self.git("update-ref", "refs/remotes/origin/main", tip)
 
     def check(self, target="main", extra=()):
         return subprocess.run([sys.executable, str(self.repo / "scripts/check_publication.py"),
@@ -112,14 +123,14 @@ class PublicationGuardTests(unittest.TestCase):
 
     def test_absent_correction_commit_fails(self):
         self.policy["targets"]["main"]["baseline_commit"] = "1" * 40
-        self.save_policy()
+        self.accept_test_policy()
         self.rejected(text="rev-parse")
 
     def test_present_but_unrelated_correction_commit_fails(self):
         orphan = self.git("commit-tree", self.git("rev-parse", "HEAD^{tree}"),
                           "-m", "unrelated correction")
         self.policy["targets"]["main"]["baseline_commit"] = orphan
-        self.save_policy()
+        self.accept_test_policy()
         self.rejected(text="Required correction")
 
     def test_missing_target_ref_fails(self):
@@ -138,9 +149,51 @@ class PublicationGuardTests(unittest.TestCase):
         self.rejected(text="Fetched target")
 
     def test_explicit_ci_event_base_is_checked(self):
-        result = self.check(extra=("--target-ref", self.main_base))
+        result = self.check(extra=("--target-ref", self.main_tip))
         self.assertEqual(result.returncode, 0, result.stderr)
         self.rejected(extra=("--target-ref", "2" * 40), text="rev-parse")
+
+    def test_target_without_an_accepted_policy_fails_closed(self):
+        self.rejected(extra=("--target-ref", self.main_base), text="Missing baseline file")
+
+    def repin_to_changed_readme(self):
+        self.write("README.md", "Unreviewed replacement\n")
+        changed = self.record("replace overview")
+        self.policy["targets"]["main"]["baseline_commit"] = changed
+        self.policy["targets"]["main"]["readme_blob"] = self.git("rev-parse", "HEAD:README.md")
+        self.save_policy()
+
+    def test_working_policy_cannot_approve_a_changed_readme(self):
+        self.repin_to_changed_readme()
+        self.rejected(text="Working file changed: state/publication_baselines.json")
+
+    def test_committed_policy_cannot_approve_a_changed_readme(self):
+        self.repin_to_changed_readme()
+        self.record("self-approve replacement")
+        self.rejected(text="Committed file changed or deleted: state/publication_baselines.json")
+
+    def test_index_policy_cannot_hide_behind_restored_working_policy(self):
+        original = (self.repo / "state/publication_baselines.json").read_text()
+        self.policy["targets"]["main"]["protocol_locks"] = []
+        self.save_policy()
+        self.git("add", "state/publication_baselines.json")
+        self.write("state/publication_baselines.json", original)
+        self.rejected(text="Index file changed, deleted or conflicted: state/publication_baselines.json")
+
+    def test_candidate_cannot_drop_an_audit_protocol_lock(self):
+        self.git("checkout", "--quiet", "audit-2026-11-03")
+        self.policy["targets"]["audit-2026-11-03"]["protocol_locks"] = ["etude_final/PROTOCOL.lock"]
+        self.save_policy()
+        self.write("etude_groupe/frozen.txt", "Changed study result\n")
+        self.record("remove lock and rewrite study")
+        self.rejected("audit-2026-11-03", "Committed file changed or deleted: state/publication_baselines.json")
+
+    def test_working_policy_symlink_is_rejected_even_with_identical_bytes(self):
+        policy = self.repo / "state/publication_baselines.json"
+        self.write("policy-copy.json", policy.read_text())
+        policy.unlink()
+        policy.symlink_to("../policy-copy.json")
+        self.rejected(text="Missing or substituted working file: state/publication_baselines.json")
 
     def test_frozen_content_and_lock_cannot_be_rewritten_together(self):
         self.write("etude_final/frozen.txt", "Changed result\n")
@@ -156,6 +209,12 @@ class PublicationGuardTests(unittest.TestCase):
         frozen.symlink_to("../etude_groupe/frozen.txt")
         self.record("substitute frozen file with a link to identical content")
         self.rejected("audit-2026-11-03", "Committed file changed")
+
+    def test_working_parent_directory_cannot_redirect_frozen_files(self):
+        study = self.repo / "etude_final"
+        study.rename(self.repo / "study-copy")
+        study.symlink_to("study-copy", target_is_directory=True)
+        self.rejected(text="Missing or substituted working file: etude_final/PROTOCOL.lock")
 
     def test_target_argument_is_required(self):
         result = subprocess.run([sys.executable, str(self.repo / "scripts/check_publication.py")],

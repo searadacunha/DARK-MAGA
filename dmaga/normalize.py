@@ -24,6 +24,25 @@ FEE_SHARE = 0.05  # mesuré : médiane 0,85 %, p90 1 %, 3 adresses sur 1 931 swa
 RAYDIUM_AUTH = "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"
 
 
+def _apportion(amount: int, quantities: dict[str | None, int]) -> dict[str | None, int]:
+    """Répartit des unités brutes sans flottant, en conservant exactement leur somme.
+
+    Les restes les plus grands reçoivent l'unité restante ; les ex aequo sont
+    départagés par propriétaire, indépendamment de l'ordre des comptes du RPC.
+    """
+    if not quantities:
+        return {}
+    total = sum(abs(q) for q in quantities.values())
+    shares, remainders = {}, {}
+    for owner, qty in quantities.items():
+        shares[owner], remainders[owner] = divmod(abs(amount) * abs(qty), total)
+    remaining = abs(amount) - sum(shares.values())
+    for owner in sorted(quantities, key=lambda o: (-remainders[o], o or ""))[:remaining]:
+        shares[owner] += 1
+    sign = -1 if amount < 0 else 1
+    return {owner: sign * share for owner, share in shares.items()}
+
+
 def _keys(tx: dict) -> list[str]:
     keys = tx["transaction"]["message"]["accountKeys"]
     return [k["pubkey"] if isinstance(k, dict) else k for k in keys]
@@ -123,8 +142,9 @@ def parse_tx(row: dict, ray_dmaga: set, ray_wsol: set, source: str, venues: set 
         # création de la courbe : l'offre arrive et le créateur achète dans la même transaction.
         # shortcut: le coût inclut le loyer du compte de courbe (environ 0,0015 SOL), négligeable ici.
         rows = [make("mint_supply", "pumpfun", BONDING_CURVE, curve_d + sum(others.values()))]
+        costs = _apportion(-venue_s, others)
         for o, v in others.items():
-            rows.append(make("swap", "pumpfun", o, v, sol=-venue_s, pool_token=curve_d, pool_sol=venue_s, n=len(others)))
+            rows.append(make("swap", "pumpfun", o, v, sol=costs[o], pool_token=curve_d, pool_sol=venue_s, n=len(others)))
         return rows
 
     if not venue_d and not touched:
@@ -148,10 +168,9 @@ def parse_tx(row: dict, ray_dmaga: set, ray_wsol: set, source: str, venues: set 
         kind = "lp_add" if venue_d > 0 else "lp_remove"
         same = {o: v for o, v in others.items() if (v > 0) == (venue_d < 0)}
         rows = []
-        total = sum(same.values())
+        sol_shares, usdc_shares = _apportion(-venue_s, same), _apportion(-venue_u, same)
         for o, v in same.items():
-            share = v / total if total else 0
-            rows.append(make(kind, venue, o, v, sol=int(round(-venue_s * share)), usdc=int(round(-venue_u * share)),
+            rows.append(make(kind, venue, o, v, sol=sol_shares[o], usdc=usdc_shares[o],
                              pool_token=venue_d, pool_sol=venue_s, n=len(same)))
         if not same:
             rows.append(make(kind, venue, keys[0], -venue_d, sol=-venue_s, usdc=-venue_u, pool_token=venue_d,
@@ -168,13 +187,12 @@ def parse_tx(row: dict, ray_dmaga: set, ray_wsol: set, source: str, venues: set 
     full = sum(same.values())
     fees = {o: v for o, v in same.items() if full and abs(v) < FEE_SHARE * abs(full)}
     same = {o: v for o, v in same.items() if o not in fees}
-    total = sum(same.values())
+    sol_shares, usdc_shares = _apportion(-venue_s, same), _apportion(-venue_u, same)
     for o, v in fees.items():
         rows.append(make("fee_share", venue, o, v, n=len(same)))
     for o, v in sorted(same.items(), key=lambda kv: -abs(kv[1])):
         # plusieurs bénéficiaires : répartition à la quantité (cas routeur, frais de référent)
-        share = v / total if total else 0
-        rows.append(make("swap", venue, o, v, sol=int(round(-venue_s * share)), usdc=int(round(-venue_u * share)),
+        rows.append(make("swap", venue, o, v, sol=sol_shares[o], usdc=usdc_shares[o],
                          pool_token=venue_d, pool_sol=venue_s, n=len(same)))
     for o, v in others.items():
         if o not in same and o not in fees:

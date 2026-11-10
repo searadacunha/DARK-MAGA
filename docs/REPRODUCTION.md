@@ -2,11 +2,40 @@
 
 ## Choose the research version
 
-`main` is the landing page and preserves its own research snapshot. `audit-2026-11-03` contains subsequent audits, accounting corrections and offline pipeline tests. The two branches are not interchangeable.
+`main` contains the landing page, the active pipeline, its offline tests and dated research snapshots. `audit-2026-11-03` contains a separate set of audits, accounting corrections and offline pipeline tests. The two branches are not interchangeable.
 
 The root README links its research claims to the audit snapshot `6e839acc022a38427fdb1f4f3b221488db454a78`. Read the H numerical review and the later I transaction review with the older generated reports. The README evidence ledger is `docs/README_REVIEW_2026-11-05.md`.
 
 The narrative update does not merge the two research trees. It does not imply that `d01-correction` has been integrated.
+
+## Offline tests on main
+
+Use Python 3.12 and a separate checkout of `main`. The pinned dependencies match the CI environment verified on 10 November 2026:
+
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements-test.txt
+.venv/bin/python -m pytest -q tests --ignore=tests/test_publication_guard.py
+.venv/bin/python -m unittest discover -s tests -p test_publication_guard.py -v
+```
+
+The first command suite discovers all core tests, including window boundaries, integer quote conservation, transfer cost basis and missing-price failures. Publication tests use disposable local Git repositories. Neither suite needs API credentials or the original external drive.
+
+The investigation suites use the standard library and their published fixtures:
+
+```bash
+.venv/bin/python investigations/2026-11-05_debridge_winners/validate.py
+.venv/bin/python -m unittest discover -s investigations/2026-11-05_debridge_winners -p 'test_*.py' -v
+.venv/bin/python -I -m unittest discover -s investigations/2026-11-05_evm-recipient-deeptrace/tests -v
+(cd investigations/2026-11-05_evm-recipient-deeptrace/scripts && ../../../.venv/bin/python -I s99_selfcheck.py)
+.venv/bin/python -I -m unittest discover -s investigations/2026-11-06_debridge_base_bsc_solana/tests -v
+.venv/bin/python -I investigations/2026-11-06_debridge_base_bsc_solana/scripts/s13_orderid_check.py
+.venv/bin/python -I investigations/2026-11-06_debridge_base_bsc_solana/scripts/s99_selfcheck.py
+.venv/bin/python -I -m unittest discover -s investigations/2026-11-06_historical_replay/tests -v
+.venv/bin/python -I -m unittest discover -s investigations/2026-11-06_dmaga_kekius_cross_token/tests -v
+```
+
+These checks validate stored evidence and reject malformed or contradictory inputs. Their scope is described in the [10 November audit](AUDIT_2026-11-10.md); passing them does not reconstruct the complete historical PnL.
 
 ## Offline tests on the audit branch
 
@@ -28,6 +57,8 @@ python3 scripts/check_publication.py --target audit-2026-11-03
 
 Use `--target main` only for a candidate based on `main`. The guard reads local Git refs; it does not fetch them. Passing it is not server-side branch protection.
 
+The policy is read from the destination commit and must remain identical in the candidate commit, index and working tree. A candidate cannot approve its own README by changing `state/publication_baselines.json`, or silently remove a study lock. In CI, pull requests use the event's base SHA; pushes use the destination SHA **before** the push. An absent destination or policy fails the check. An explicitly authorized future baseline migration needs a separately reviewed publication procedure; changing the candidate policy alone cannot validate it.
+
 ## Forensic pipeline integrity (merged 6 November 2026, PR #19)
 
 The pipeline must rebuild `token_edges.parquet` **before** running `ana_20_pnl.py`, because cost basis consumes transfers that are missing from the standard trade normalization. Stale transfer files must not be reused in a fresh PnL calculation.
@@ -35,6 +66,8 @@ The pipeline must rebuild `token_edges.parquet` **before** running `ana_20_pnl.p
 The merged `dmaga/db.py` deduplicates overlapping source slices using transaction, event type, owner, venue and token delta, while retaining the preferred raw-history source. `ana_19_export.py` reads the fresh shards, validates a staging Parquet and only then replaces the previously validated export. The normalizer retains the last materialized export if shard rebuilding fails. Failed batch commands now stop the driver.
 
 The `Forensic pipeline regression checks` workflow runs offline parser, PnL and deduplication tests on `main` pull requests. These tests do **not** independently validate the historical July 2024 PnL, full token-transfer coverage, source-provider labels or the conclusions in the root README.
+
+Since the 10 November audit, GTBA-only transfer legs are netted by transaction and owner before costing. Quote amounts are allocated in integer units with an exact conserved sum. Every SOL/USD minute price used for a swap or stablecoin conversion must be finite and positive; a missing or invalid required price stops the export and preserves the previous `wallets.parquet`. Documentary windows use `[start, end)` consistently, so a trade at the first capture belongs to the following window.
 
 Before treating regenerated numerical claims as independently reproduced, rerun the complete derivation with the archived raw data on an isolated external volume, check the physical `trades.parquet` for duplicate keys, run the report self-check, and reconcile affected wallet-level and cohort results against the audit branch. Do not rewrite any frozen protocol or source archive.
 
