@@ -15,6 +15,8 @@ Piste d'origine : `investigations/2026-11-05_debridge_winners/REPRISE.md` (point
 - Méthode : `scripts/dm_debridge_ol07.py` : ordres par créateur et détail de chaque ordre (`stats-api.dln.trade`), puis `eth_getTransactionReceipt` sur `bsc-rpc.publicnode.com` : statut 1, identifiant de l'ordre présent dans les journaux, destinataire de l'ordre égal à `0xfb2ec4e51680198f4d0351d67702d4eebdfa625f`. État DLN : `ClaimedUnlock` (livré puis débloqué côté source).
 - Limites : le preneur `0x663dc15d3c1ac63ff12e45ab68fea3f0a883c251` est un solveur DLN, service partagé : il ne relie personne. Ce constat confirme un paiement déjà attribué par le dossier d'origine ; il n'ajoute aucune entité.
 
+- **Portée du contrôle** : le script exige maintenant le reçu BSC réussi, le hash et le bloc correspondants, l'adresse destinataire exacte, la paire BNB/chaîne 56 et un journal émis par le contrat `DlnDestination` contenant l'identifiant de l'ordre. Les reçus et l'état `ClaimedUnlock` corroborent le fulfilment. Ils ne mesurent pas, à eux seuls, la variation du solde BNB du bénéficiaire : une trace interne ou une différence d'état est encore nécessaire pour cette vérification distincte.
+
 ## C2 | D | Continuité des soldes de 8YSi5yNR entre juillet 2024 et mars 2025
 
 Non relue : les 2 840 SOL reçus de `H3QsBrrivimFJmSpTXuvig2n1Bh7JuYxrriRSEszT6cc` (adresse citée par `README.md` et `data/exit_summary.json` du dépôt) du 24 au 31/07/2024 ont-ils financé ces ordres huit mois plus tard ? Reste ouvert.
