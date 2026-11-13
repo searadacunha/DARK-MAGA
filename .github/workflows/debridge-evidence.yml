@@ -5,11 +5,13 @@ on:
     branches: [main]
     paths:
       - 'investigations/2026-11-05_debridge_winners/**'
+      - 'investigations/2026-11-13_debridge_bsc_delivery/**'
       - '.github/workflows/debridge-evidence.yml'
   push:
     branches: [main]
     paths:
       - 'investigations/2026-11-05_debridge_winners/**'
+      - 'investigations/2026-11-13_debridge_bsc_delivery/**'
       - '.github/workflows/debridge-evidence.yml'
 
 permissions:
@@ -35,3 +37,5 @@ jobs:
         run: python investigations/2026-11-05_debridge_winners/validate.py
       - name: Run deBridge regression tests
         run: python -m unittest discover -s investigations/2026-11-05_debridge_winners -p 'test_*.py' -v
+      - name: Verify BSC delivery against archived receipts
+        run: python -m unittest discover -s investigations/2026-11-13_debridge_bsc_delivery/tests -p 'test_*.py' -v
