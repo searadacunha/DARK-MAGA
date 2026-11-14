@@ -177,7 +177,7 @@ The source archive includes earlier public versions of the artwork, posts aimed 
 
 ---
 
-## Development credits
+## Contributors and AI assistance
 
 **Benjamin Da Cunha:** original investigation, hypotheses, research direction, evidence review and final conclusions.
 
