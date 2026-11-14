@@ -1,6 +1,6 @@
 # Dark MAGA: Did Musk Know?
 
-![Dark MAGA investigation banner, illustrating the July 14 launch and July 21 documented avatar change](assets/dark-maga-investigation-banner.svg)
+![Dark MAGA — Did Musk Know? Investigation montage featuring Donald Trump, blockchain tracing, and token market graphics](assets/dark-maga-trump-banner.webp)
 
 *One profile picture. Seven days of trading before it changed. A money trail spanning thousands of transactions, dozens of wallets and multiple blockchains.*
 
