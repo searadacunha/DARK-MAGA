@@ -174,3 +174,15 @@ The source archive includes earlier public versions of the artwork, posts aimed 
 | [Reproduce the investigation](docs/REPRODUCTION.md) | Datasets, source boundaries, scripts and test instructions |
 
 **Research scope:** $DMAGA on Solana, mint `7D7BRcBYepfi77vxySapmeqRNN1wsBBxnFPJGbH5pump`. All times are UTC. Wallets, exchange services and public X accounts are distinct evidence categories. Trading PnL, token holdings, bridge commitments and exchange-facing transfers use different accounting definitions. This repository records their observable histories and the limits of what each record establishes.
+
+---
+
+## Development credits
+
+**Benjamin Da Cunha:** original investigation, hypotheses, research direction, evidence review and final conclusions.
+
+**Claude Code (Anthropic):** AI-assisted investigation and code/documentation work.
+
+**ChatGPT (OpenAI):** README and research-documentation editing, cross-chain investigation review and presentation of evidence and limitations.
+
+These credits disclose AI assistance; they do not assign human authorship, independently verify research findings or imply that an AI tool is a GitHub account contributor.
