@@ -1,5 +1,7 @@
 # Dark MAGA: Did Musk Know?
 
+![Dark MAGA investigation banner, illustrating the July 14 launch and July 21 documented avatar change](assets/dark-maga-investigation-banner.svg)
+
 *One profile picture. Seven days of trading before it changed. A money trail spanning thousands of transactions, dozens of wallets and multiple blockchains.*
 
 On **July 21, 2024**, Elon Musk appeared on X with a red-and-blue laser-eye “Dark MAGA” profile picture. The Solana token **$DMAGA** had been launched on **July 14**.
