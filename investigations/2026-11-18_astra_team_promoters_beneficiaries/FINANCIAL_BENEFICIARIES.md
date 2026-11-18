@@ -30,6 +30,7 @@ Dataset : `data/beneficiaries_top30.csv`.
 | 10 | `FHXYk1…` | 762,0 | 762,0 | 21/07 | après Musk | — | — | non établi |
 | 11 | `9cfRU5…` | 729,2 | 729,2 | 14/07 12:59:49 | Choupette hors groupe | `7Gw3gL…` 4 SOL (02:18) | **1 471,1 renvoyés à `7Gw3gL…`** (aller-retour avec son financeur) | non établi |
 | 12 | `F2kcbX…` | 705,8 | 722,9 | 14/07 02:34:43 | avant le visuel | — | — | non établi |
+| 13 | `7Fa8XG…` | 646,2 | 646,2 | 21/07 22:08:04 | après Musk | non examiné | service non nommé 11 779 ; pool 10 990,7 ; Bybit 2 8 523,4 | non établi |
 | 14 | `EEdq9C…` | 618,8 | 617,8 | 14/07 06:48:34 | Choupette hors groupe | `2qyz7C…` | `6nMpK4…` 607,7 | non établi |
 
 ## 2. Agrégats par ensemble
