@@ -7,6 +7,8 @@
 
 > **Bottom line.** Public Solana transactions document early trading gains, direct token transfers, funding relationships and cross-chain exits. The best available avatar-change window is 21 July 2024 **19:03:27–19:25:23 UTC**; DMAGA and related imagery had already been promoted publicly. The frozen comparison against **211** other tokens detects **no significant anomaly** on seven predefined metrics after Holm correction. Neither privileged knowledge of Musk's decision nor a profitable prospective trading signal has been demonstrated.
 
+> **18 November 2026 source update:** A newly supplied [launch-network and public-attribution report](../investigations/2026-11-18_launch_network_public_attribution/README.md) documents an earlier deleted project announcement, two failed G41v buy attempts, matching launch metadata/profile imagery, and a contemporary buyer list. Its **underlying raw API/RPC/media response files were not submitted for independent re-collection**. The report's grades and the limits of each claim are preserved in the [evidence register](EVIDENCE_INDEX_2026-11-18.md). None of this changes the frozen negative statistical verdict or identifies a person behind a wallet.
+
 ### Start here (a 15-minute evidence review)
 
 1. **Chronology:** [timestamped timeline](TIMELINE.md) and [historical X / transaction replay](../investigations/2026-11-06_historical_replay/FINDINGS.md) distinguish public information, observed profile states and trades.
@@ -16,6 +18,7 @@
 5. **Attempt to falsify the narrative:** [frozen statistical plan](../etude_final/analysis_plan.md), [derived metric table](../etude_final/derived/metrics.csv), [test output](../etude_final/tables/tests.json), [verdict](../etude_final/results.md) and [post-freeze amendments](../etude_final/amendements/).
 6. **Cross-event recurrence:** [DMAGA × Kekius findings](../investigations/2026-11-06_dmaga_kekius_cross_token/FINDINGS.md) and [unresolved paths](../investigations/2026-11-06_dmaga_kekius_cross_token/UNRESOLVED.md).
 7. **How to reproduce:** [reproduction guide](REPRODUCTION.md), [10 November technical audit](AUDIT_2026-11-10.md), and [claim-by-claim evidence index](EVIDENCE_INDEX_2026-11-18.md).
+8. **New launch evidence:** [source report, claim-level uncertainty and replay tasks](../investigations/2026-11-18_launch_network_public_attribution/README.md) alongside the preserved [original 18 November report](../investigations/2026-11-18_launch_network_public_attribution/SOURCE_REPORT.md).
 
 ### Key findings and their precise scope
 
@@ -33,12 +36,25 @@
 
 The H3Qs USD amount uses historical conversion rather than a single exit-day exchange rate. All profits in this brief are **model-based wallet trading results**, and bridge transfers are **movements of funds**, not additional profits. Do **not** add numbers from overlapping populations.
 
+### November 18 launch-network follow-up: new observations, not proof of an insider
+
+- **Technical link (report grade B):** mint metadata image and description reportedly match @DarkMagaCoin's profile imagery and slogan, with the image's X snowflake at **14 July 01:51:10 UTC** preceding the **02:05:25** mint. An earlier common image source has not been excluded; perceptual-hash equality alone cannot establish pixel-for-pixel equivalence.
+- **Near-immediate attempts (report grade A for transaction results):** financier **G41v** reportedly sent two unsuccessful buy transactions at **02:05:54** and **02:06:10**, each failing pump.fun slippage/error 6002. They are **not successful purchases** and their latency lacks a contemporaneous control sample. G41v's 13 × 0.5 SOL pre-mint transfers were already in the repository.
+- **Chronology correction:** the source reports an archived deleted @DarkMagaCoin post **02:26:35** with mint address, earlier than the **03:00:28** *surviving* post in pass 4. The reported deleted post's X ID encodes 02:26:35 and was checked offline; the archived text still requires independent recovery.
+- **Unresolved trading network:** @ChoupetteJoe's reported list of **19** early addresses has **10** overlaps with the 33-wallet transfer component and **nine** candidates outside. Those nine are **not automatically cluster members**; obtain raw addresses and recompute before extending a financial graph.
+- **Public statements:** mentions of @kikisknees as “lead” and of a developer's friend are statements by public accounts, **not** independently validated operator roles. An ETH-associated $DMAGA mention in May does not identify the Solana token team.
+
+See the [lineage/limitations dossier](../investigations/2026-11-18_launch_network_public_attribution/README.md) and [source claims](../investigations/2026-11-18_launch_network_public_attribution/CLAIM_REGISTER.csv) before reusing these facts as adjudicated evidence.
+
 ### The information timeline (UTC)
 
 | Timestamp | Verifiable observation | Interpretation |
 |---|---|---|
+| **14 Jul 01:51:10** | X ID for @DarkMagaCoin profile image from newly supplied report | Encoded media timestamp pre-mint; asset-origin comparison not complete |
 | **14 Jul 02:05:25** | Solana mint creation | Token precedes the 21 July profile change, but follows a major public political event |
-| **14 Jul 02:33:53** | Earliest located X post sharing official mint in the pass-4 source corpus | Promotion is publicly observable; this is *earliest retrieved*, not first-ever |
+| **14 Jul 02:05:54 / 02:06:10** | Two reported unsuccessful G41v buy attempts | Report says slippage error 6002; receipts not re-fetched here |
+| **14 Jul 02:26:35** | Reported deleted @DarkMagaCoin launch post with mint; X ID decoded | Earlier than the pass-4 surviving DMC post; Wayback body requires independent replay |
+| **14 Jul 02:33:53** | Earliest located bot-style third-party relay of official mint in the pass-4 source corpus | Earlier project-account post reported by new source; this row is specific to pass 4 |
 | **16 Jul 05:40:46** | Archived promotion of red laser-eye profile images | Public narrative predates the exact avatar change |
 | **21 Jul 16:00:08** | Archived post with a now-missing image | Cannot prove whether this was the eventual avatar image |
 | **21 Jul 16:02:29** | @ChrisWinig publishes an image matched to the later Musk avatar | Exact visual publicly documented **before** the avatar-change interval |
@@ -81,4 +97,4 @@ The project's Python and offline receipt tests exercise SPL transfer parsing, ba
 
 This is an **independent, inspectable research portfolio**, not a claim of insider trading by any individual. Its value is in signed-transaction reconstruction, defensible graph inference, adversarial refutation, cross-chain accounting, testable tooling and transparent negative results. Further investigation should produce new receipts or an externally validated, point-in-time signal—not a stronger accusation based on the existing records.
 
-**Version:** 2026-11-18; additive editorial synthesis. The root README, original receipts, frozen studies, historical reports and separate `audit-2026-11-03` branch remain unchanged by this brief.
+**Version:** 2026-11-18; additive editorial synthesis with a source-preserving launch-network addendum. The root README, original receipts, frozen studies, historical reports and separate `audit-2026-11-03` branch remain unchanged by this brief.
