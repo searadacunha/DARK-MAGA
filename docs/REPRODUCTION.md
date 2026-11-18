@@ -1,5 +1,8 @@
 # Reproduction and branch guide
 
+> **Reviewer's entry point (18 November 2026):** [Final forensic case brief](FINAL_CASE_BRIEF_2026-11-18.md) · [Claim-by-claim evidence and correction index](EVIDENCE_INDEX_2026-11-18.md) · [Predictive-signal research status](SIGNAL_VALIDATION_STATUS_2026-11-18.md). These documents summarize the published evidence and open limits; they do not regenerate or replace the frozen studies, archival receipts or historical numerical reports.
+
+
 ## Choose the research version
 
 `main` contains the landing page, the active pipeline, its offline tests and dated research snapshots. `audit-2026-11-03` contains a separate set of audits, accounting corrections and offline pipeline tests. The two branches are not interchangeable.
