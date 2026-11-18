@@ -20,3 +20,12 @@
 - Sources : `docs/TIMELINE.md`.
 - Limites : aucune.
 - Suite : aucune.
+
+## 2026-11-18 | ChatGPT GitHub connector | Import documentaire du rapport de réseau au lancement
+- **Entrées :** `DARK_MAGA_LAUNCH_NETWORK_REPORT.txt` (conversation précédente) et `DARK_MAGA_LAUNCH_NETWORK_REPORT.md` (conversation actuelle). Le contenu textuel a été comparé et est identique.
+- **Action :** une seule copie du rapport sous `investigations/2026-11-18_launch_network_public_attribution/SOURCE_REPORT.md`, plus un guide de portée, un registre CSV des affirmations, un contrôle hors ligne d'horodatages X et des addenda à l'index des preuves et au dossier de synthèse du 18/11.
+- **Nouveaux éléments du rapport source :** concordance de l'image et des métadonnées du lancement, deux achats échoués de G41v à +29/+45 secondes, premier post DMC archivé à 02:26:35Z, liste @ChoupetteJoe (19 adresses dont neuf hors groupe), contexte antérieur du ticker DMAGA et déclarations tierces sur les rôles.
+- **Validations effectuées ici :** horodatages de six snowflakes X contrôlés mathématiquement, cohérence rédactionnelle avec le dossier GitHub. **Non effectuées :** relecture brute des 1 388 signatures, récupération des médias/Wayback, comparaison image pixel par pixel, reconstruction des 19 adresses, reproduction statistique à partir du disque externe.
+- **Interprétation :** grades A/B/C/D du rapport sont conservés comme grades *de la source* ; publication de ce rapport ≠ vérification primaire de toutes ses assertions. Absence persistante de preuve d'identité civile, de propriété de wallets par les comptes X ou d'information privée préalable au changement d'avatar.
+- **Préservation :** README racine, fichiers gelés et rapports calculés historiques non modifiés. Intégration exclusivement additive en dehors des deux documents éditoriaux et de ce journal.
+- **Suite priorisée :** pièces primaires manquantes, recherche d'image antérieure, receipts G41v, neuf wallets de Choupette, comparateurs de vitesse des snipers.
