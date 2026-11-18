@@ -120,3 +120,15 @@ On the audit branch:
 | `viz/index.html` | Visualization tied to its generating report version. |
 
 Before continuing research, read `AGENTS.md`, `state/STATE.md`, `JOURNAL_AGENTS.md` and the latest dated review. Preserve frozen files and the original evidence. Methodological revisions belong in amendments and separate result sets.
+
+## Supplied launch-network report import (18 November 2026)
+
+The [launch-network addendum](../investigations/2026-11-18_launch_network_public_attribution/README.md) preserves a user-supplied report, a claim register and explicit source-level uncertainty. The `.txt` and `.md` versions supplied in adjacent conversations contained the same text. Its cited `raw/` responses, image bytes and historical query log were **not supplied for this integration**. Their absence prevents independent reproduction of the report's claimed RPC error codes, profile image comparison, Wayback post text, 10/19 address overlap or bounded 972/416-signature null result.
+
+A limited local check, requiring no network or external drive, computes six X snowflake IDs' encoded creation seconds:
+
+```bash
+python3 -m unittest discover -s tests -p 'test_launch_network_snowflakes.py' -v
+```
+
+**A pass is timestamp-arithmetic validation only.** It does not establish the availability/authenticity of deleted X posts or their text, owner attribution, exchange identity, bytewise image equivalence, transaction receipt parsing or a predictive trading signal. Preserve the older pass-4 source list as the observations of its own retrieval window. The later 02:26:35 project-account post is a source-reported chronology update, not a retroactive modification of the previous search corpus.
