@@ -1,8 +1,11 @@
-"""Relecture des positifs de h51 : vraies ventes du jeton testé autour du premier achat DMAGA de chaque wallet.
+"""Relecture historique des variations du jeton testé autour du premier achat DMAGA.
 
-Règle unique pour testés et témoins : premier achat DMAGA du wallet dans sa fenêtre (t_buy) ; transactions de l'ATA du jeton
-testé dans [t_buy - 60 min, t_buy + 1 min] ; une « rotation » = solde du jeton en baisse pour le wallet dans cette plage.
-usage: h52_rotation.py retiredio|kllary. Sortie : data/rotation_<test>.csv (une ligne par wallet relu)."""
+Pour RETIREDIO, une rotation *pré-achat* ne peut inclure que des débits dans
+[t_buy - 60 min, t_buy), pour les wallets testés et témoins. La sortie est un
+screen de variations de soldes et ne prouve pas à elle seule une vente DEX.
+Les fichiers historiques déjà exportés ne sont pas régénérés ici.
+KLLARY conserve sa fenêtre historique séparée.
+usage: h52_rotation.py retiredio|kllary. Sortie : data/rotation_<test>.csv."""
 import csv
 import sys
 import duckdb
@@ -10,6 +13,7 @@ from h_lib import DATA, DMAGA_BIG, utc
 import k16_pubrpc as pub
 from h_decode import sol_delta, token_delta
 from h51_ata_test import KLLARY, RETIREDIO, T_BIDEN, T_LOW, T_WINIG
+from h_time_rules import in_prebuy_window
 
 B = str(DMAGA_BIG).replace("/data", "/data_v2")
 WIN = {"dmaga_buyer_biden_to_low": (T_BIDEN, T_LOW), "dmaga_buyer_winig_to_biden": (T_WINIG, T_BIDEN)}
@@ -26,9 +30,14 @@ if __name__ == "__main__":
         tb = con.execute(f"select min(block_time) from '{B}/trades.parquet' where owner='{o}' and kind='swap' and token_delta>0 and block_time>={a} and block_time<{b}").fetchall()[0][0]
         if tb is None:  # kllary : premier achat DMAGA tout court
             tb = con.execute(f"select min(block_time) from '{B}/trades.parquet' where owner='{o}' and kind='swap' and token_delta>0").fetchall()[0][0]
-        lo, hi = (tb - 3600, tb + 60) if test == "retiredio" else (0, 1721634134)
+        lo, hi = (tb - 3600, tb) if test == "retiredio" else (0, 1721634134)
         sigs, _ = pub.sigs(r["ata"], max_pages=3)
-        sel = sorted((x for x in sigs if not x.get("err") and lo <= x["blockTime"] <= hi), key=lambda x: x["slot"])
+        if test == "retiredio":
+            sel = sorted((x for x in sigs if not x.get("err") and in_prebuy_window(x["blockTime"], tb)),
+                         key=lambda x: x["slot"])
+        else:
+            sel = sorted((x for x in sigs if not x.get("err") and lo <= x["blockTime"] <= hi),
+                         key=lambda x: x["slot"])
         sold = bought = sol_in = 0
         last_sell = None
         for x in sel:
